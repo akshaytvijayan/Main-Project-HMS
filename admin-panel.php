@@ -3,8 +3,6 @@
 include('func.php');
 include('newfunc.php');
 $con = mysqli_connect("localhost", "root", "", "myhmsdb");
-
-
 // $pid = $_SESSION['pid'];
 $username = $_SESSION['username'];
 $email = $_SESSION['email'];
@@ -12,7 +10,6 @@ $fname = $_SESSION['fname'];
 $gender = $_SESSION['gender'];
 $lname = $_SESSION['lname'];
 $contact = $_SESSION['contact'];
-
 
 
 if (isset($_POST['app-submit'])) {
@@ -25,7 +22,6 @@ if (isset($_POST['app-submit'])) {
   $contact = $_SESSION['contact'];
   $doctor = $_POST['doctor'];
   $email = $_SESSION['email'];
-  # $fees=$_POST['fees'];
   $docFees = $_POST['docFees'];
 
   $appdate = $_POST['appdate'];
@@ -41,8 +37,9 @@ if (isset($_POST['app-submit'])) {
       $check_query = mysqli_query($con, "select apptime from appointmenttb where doctor='$doctor' and appdate='$appdate' and apptime='$apptime'");
 
       if (mysqli_num_rows($check_query) == 0) {
-        $query = mysqli_query($con, "insert into appointmenttb(pid,fname,lname,gender,email,contact,doctor,docFees,appdate,apptime,userStatus,doctorStatus) values($pid,'$fname','$lname','$gender','$email','$contact','$doctor','$docFees','$appdate','$apptime','1','1')");
 
+        $result = "insert into appointmenttb(pid,fname,lname,gender,email,contact,doctor,docFees,appdate,apptime,userStatus,doctorStatus) values('$pid','$fname','$lname','$gender','$email','$contact','$doctor','$docFees','$appdate','$apptime','1','1')";
+        $query = mysqli_query($con, $result);
         if ($query) {
           echo "<script>alert('Your appointment successfully booked');</script>";
         } else {
@@ -166,6 +163,8 @@ function get_specs()
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css" integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M" crossorigin="anonymous">
 
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+  <!-- Other meta tags, stylesheets, etc. -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 
   <link href="https://fonts.googleapis.com/css?family=IBM+Plex+Sans&display=swap" rel="stylesheet">
   <nav class="navbar navbar-expand-lg navbar-dark bg-primary fixed-top">
@@ -221,16 +220,20 @@ function get_specs()
 <body style="padding-top:50px;">
 
   <div class="container-fluid" style="margin-top:50px;">
-    <h3 style="margin-left: 40%;  padding-bottom: 20px; font-family: 'IBM Plex Sans', sans-serif;"> Welcome &nbsp<?php echo $username ?>
+    <h3 style="margin-left: 40%;  padding-bottom: 20px; font-family: 'IBM Plex Sans', sans-serif;"> Welcome &nbsp
+      <?php echo $username ?>
     </h3>
     <div class="row">
       <div class="col-md-4" style="max-width:25%; margin-top: 3%">
         <div class="list-group" id="list-tab" role="tablist">
           <a class="list-group-item list-group-item-action active" id="list-dash-list" data-toggle="list" href="#list-dash" role="tab" aria-controls="home">Dashboard</a>
+          <a class="list-group-item list-group-item-action" id="list-update-list" data-toggle="list" href="#list-update" role="tab" aria-controls="home">Update Profile</a>
           <a class="list-group-item list-group-item-action" id="list-home-list" data-toggle="list" href="#list-home" role="tab" aria-controls="home">Book Appointment</a>
+          <a class="list-group-item list-group-item-action" href="offlineappoinment.php">Available Doctors</a>
           <a class="list-group-item list-group-item-action" href="#app-hist" id="list-pat-list" role="tab" data-toggle="list" aria-controls="home">Appointment History</a>
           <a class="list-group-item list-group-item-action" href="#list-pres" id="list-pres-list" role="tab" data-toggle="list" aria-controls="home">Prescriptions</a>
-          <a class="list-group-item list-group-item-action" href="patientupdation">Update Profile</a>
+
+
         </div><br>
       </div>
       <div class="col-md-8" style="margin-top: 3%;">
@@ -295,7 +298,82 @@ function get_specs()
           </div>
 
 
+          <div class="tab-pane fade" id="list-update" role="tabpanel" aria-labelledby="list-update-list">
 
+            <div class="container-fluid">
+              <div class="card">
+                <div class="card-body"></div>
+                <center>
+                  <h4>View Profile</h4><a href="editprofile.php"><i class="fa fa-pen"></i></a>
+                </center><br>
+                <?php
+                $query = "SELECT * FROM patreg WHERE email = '$email'";
+                $result = mysqli_query($con, $query);
+
+                if (!$result) {
+                  echo "Error: " . mysqli_error($con);
+                } else {
+                  if (mysqli_num_rows($result) > 0) {
+                    while ($row = mysqli_fetch_array($result)) {
+                ?>
+
+                      <div class="container">
+                        <div class="row">
+
+
+                          <div class="col-sm">
+                            <label for="fname">First Name:</label>
+                            <input type="text" id="fname" name="fname" class="form-control" value="<?php echo $row['fname']; ?>" readonly>
+                          </div>
+                          <div class="col-sm">
+                            <label for="lname">Last Name:</label>
+                            <input type="text" id="lname" name="lname" class="form-control" value="<?php echo $row['lname']; ?>" readonly>
+                          </div>
+                          <div class="col-sm">
+                            <label for="email">Email:</label>
+                            <input type="text" id="email" name="email" class="form-control" value="<?php echo $row['email']; ?>" readonly>
+                          </div>
+                        </div>
+                        <div class="row">
+
+                          <div class="col-sm">
+                            <label for="gender">Gender</label>
+                            <input type="text" id="gender" name="gender" class="form-control" value="<?php echo $row['gender']; ?>" readonly>
+                          </div>
+                          <div class="col-sm">
+                            <label for="contact">Contact:</label>
+                            <input type="text" id="contact" name="contact" class="form-control" value="<?php echo $row['contact']; ?>" readonly>
+                          </div>
+                          <div class="col-sm">
+                            <label for="state">State:</label>
+                            <input type="text" id="state" name="state" class="form-control" value="<?php echo $row['state']; ?>" readonly>
+                          </div>
+                        </div>
+                        <div class="row">
+
+                          <div class="col-sm">
+                            <label for="district">District</label>
+                            <input type="text" id="district" name="district" class="form-control" value="<?php echo $row['district']; ?>" readonly>
+                          </div>
+                          <div class="col-sm">
+                            <label for="age">Age:</label>
+                            <input type="text" id="age" name="age" class="form-control" value="<?php echo $row['age']; ?>" readonly>
+                          </div>
+                          <div class="col-sm">
+                            <label for="place">Place:</label>
+                            <input type="text" id="place" name="place" class="form-control" value="<?php echo $row['place']; ?>" readonly>
+
+                          </div>
+                        </div>
+                      </div>
+                <?php
+                    }
+                  }
+                }
+                ?>
+              </div>
+            </div>
+          </div>
 
 
           <div class="tab-pane fade" id="list-home" role="tabpanel" aria-labelledby="list-home-list">
@@ -368,50 +446,6 @@ function get_specs()
                       </script>
 
 
-
-
-
-                      <!-- <div class="col-md-4"><label for="doctor">Doctors:</label></div>
-                                <div class="col-md-8">
-                                    <select name="doctor" class="form-control" id="doctor1" required="required">
-                                      <option value="" disabled selected>Select Doctor</option>
-                                      
-                                    </select>
-                                </div>
-                                <br><br> -->
-
-                      <!-- <script>
-                                  document.getElementById("spec").onchange = function updateSpecs(event) {
-                                      var selected = document.querySelector(`[data-value=${this.value}]`).getAttribute("value");
-                                      console.log(selected);
-
-                                      var options = document.getElementById("doctor1").querySelectorAll("option");
-
-                                      for (i = 0; i < options.length; i++) {
-                                        var currentOption = options[i];
-                                        var category = options[i].getAttribute("data-spec");
-
-                                        if (category == selected) {
-                                          currentOption.style.display = "block";
-                                        } else {
-                                          currentOption.style.display = "none";
-                                        }
-                                      }
-                                    }
-                                </script> -->
-
-
-                      <!-- <script>
-                    let data = 
-                
-              document.getElementById('spec').onchange = function updateSpecs(e) {
-                let values = data.filter(obj => obj.spec == this.value).map(o => o.username);   
-                document.getElementById('doctor1').value = document.querySelector(`[value=${values}]`).getAttribute('data-value');
-              };
-            </script> -->
-
-
-
                       <div class="col-md-4"><label for="consultancyfees">
                           Consultancy Fees
                         </label></div>
@@ -421,7 +455,8 @@ function get_specs()
                       </div><br><br>
 
                       <div class="col-md-4"><label>Appointment Date</label></div>
-                      <div class="col-md-8"><input type="date" class="form-control datepicker" name="appdate"></div><br><br>
+                      <div class="col-md-8"><input type="date" class="form-control datepicker" name="appdate">
+                      </div><br><br>
 
                       <div class="col-md-4"><label>Appointment Time</label></div>
                       <div class="col-md-8">
@@ -435,7 +470,9 @@ function get_specs()
 
                           while ($row = $result->fetch_assoc()) {
                           ?>
-                            <option value="<?php echo $row['time'] ?>"><?php echo $row['time'] ?></option>
+                            <option value="<?php echo $row['time'] ?>">
+                              <?php echo $row['time'] ?>
+                            </option>
 
                           <?php
 
@@ -452,7 +489,7 @@ function get_specs()
                   </form>
                 </div>
               </div>
-            </div><br>
+            </div>
           </div>
 
           <div class="tab-pane fade" id="app-hist" role="tabpanel" aria-labelledby="list-pat-list">
@@ -485,10 +522,18 @@ function get_specs()
                   #$contact = $row['contact'];
                 ?>
                   <tr>
-                    <td><?php echo $row['doctor']; ?></td>
-                    <td><?php echo $row['docFees']; ?></td>
-                    <td><?php echo $row['appdate']; ?></td>
-                    <td><?php echo $row['apptime']; ?></td>
+                    <td>
+                      <?php echo $row['doctor']; ?>
+                    </td>
+                    <td>
+                      <?php echo $row['docFees']; ?>
+                    </td>
+                    <td>
+                      <?php echo $row['appdate']; ?>
+                    </td>
+                    <td>
+                      <?php echo $row['apptime']; ?>
+                    </td>
 
                     <td>
                       <?php if (($row['userStatus'] == 1) && ($row['doctorStatus'] == 1)) {
@@ -501,7 +546,8 @@ function get_specs()
                       if (($row['userStatus'] == 1) && ($row['doctorStatus'] == 0)) {
                         echo "Cancelled by Doctor";
                       }
-                      ?></td>
+                      ?>
+                    </td>
 
                     <td>
                       <?php if (($row['userStatus'] == 1) && ($row['doctorStatus'] == 1)) { ?>
@@ -556,13 +602,27 @@ function get_specs()
                 while ($row = mysqli_fetch_array($result)) {
                 ?>
                   <tr>
-                    <td><?php echo $row['doctor']; ?></td>
-                    <td><?php echo $row['ID']; ?></td>
-                    <td><?php echo $row['appdate']; ?></td>
-                    <td><?php echo $row['apptime']; ?></td>
-                    <td><?php echo $row['disease']; ?></td>
-                    <td><?php echo $row['allergy']; ?></td>
-                    <td><?php echo $row['prescription']; ?></td>
+                    <td>
+                      <?php echo $row['doctor']; ?>
+                    </td>
+                    <td>
+                      <?php echo $row['ID']; ?>
+                    </td>
+                    <td>
+                      <?php echo $row['appdate']; ?>
+                    </td>
+                    <td>
+                      <?php echo $row['apptime']; ?>
+                    </td>
+                    <td>
+                      <?php echo $row['disease']; ?>
+                    </td>
+                    <td>
+                      <?php echo $row['allergy']; ?>
+                    </td>
+                    <td>
+                      <?php echo $row['prescription']; ?>
+                    </td>
                     <td>
                       <form method="get">
                         <!-- <a href="admin-panel.php?ID=" 
@@ -589,7 +649,8 @@ function get_specs()
 
 
 
-          <div class="tab-pane fade" id="list-messages" role="tabpanel" aria-labelledby="list-messages-list">...</div>
+          <div class="tab-pane fade" id="list-messages" role="tabpanel" aria-labelledby="list-messages-list">...
+          </div>
           <div class="tab-pane fade" id="list-settings" role="tabpanel" aria-labelledby="list-settings-list">
             <form class="form-group" method="post" action="func.php">
               <label>Doctors name: </label>

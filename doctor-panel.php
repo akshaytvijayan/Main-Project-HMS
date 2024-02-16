@@ -45,7 +45,7 @@ if (isset($_GET['cancel'])) {
   <link rel="stylesheet" href="vendor/fontawesome/css/font-awesome.min.css">
   <link rel="shortcut icon" type="image/x-icon" href="images/favicon.png" />
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css" integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M" crossorigin="anonymous">
-
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 
   <link href="https://fonts.googleapis.com/css?family=IBM+Plex+Sans&display=swap" rel="stylesheet">
@@ -108,11 +108,14 @@ if (isset($_GET['cancel'])) {
 
 <body style="padding-top:50px;">
   <div class="container-fluid" style="margin-top:50px;">
-    <h3 style="margin-left: 40%; padding-bottom: 20px;font-family:'IBM Plex Sans', sans-serif;"> Welcome &nbsp<?php echo $_SESSION['dname'] ?> </h3>
+    <h3 style="margin-left: 40%; padding-bottom: 20px;font-family:'IBM Plex Sans', sans-serif;"> Welcome &nbsp DR.
+      <?php echo $_SESSION['dname'] ?>
+    </h3>
     <div class="row">
       <div class="col-md-4" style="max-width:18%;margin-top: 3%;">
         <div class="list-group" id="list-tab" role="tablist">
           <a class="list-group-item list-group-item-action active" href="#list-dash" role="tab" aria-controls="home" data-toggle="list">Dashboard</a>
+          <a class="list-group-item list-group-item-action" id="list-update-list" data-toggle="list" href="#list-update" role="tab" aria-controls="home">Update Profile</a>
           <a class="list-group-item list-group-item-action" href="#list-app" id="list-app-list" role="tab" data-toggle="list" aria-controls="home">Appointments</a>
           <a class="list-group-item list-group-item-action" href="#list-pres" id="list-pres-list" role="tab" data-toggle="list" aria-controls="home"> Prescription List</a>
 
@@ -163,6 +166,70 @@ if (isset($_GET['cancel'])) {
             </div>
           </div>
 
+          <div class="tab-pane fade" id="list-update" role="tabpanel" aria-labelledby="list-update-list">
+
+            <div class="container-fluid">
+              <div class="card">
+                <div class="card-body"></div>
+                <center>
+                  <h4>View Profile</h4><a href="editprofile1.php"><i class="fa fa-pen"></i></a>
+                </center><br>
+                <?php
+                $con = mysqli_connect("localhost", "root", "", "myhmsdb");
+                $dname = $_SESSION['dname'];
+                $query = "SELECT * FROM doctb WHERE username = '$dname'";
+                $result = mysqli_query($con, $query);
+
+                if (!$result) {
+                  echo "Error: " . mysqli_error($con);
+                } else {
+                  if (mysqli_num_rows($result) > 0) {
+                    while ($row = mysqli_fetch_array($result)) {
+                ?>
+                      <div class="container">
+                        <div class="row">
+                          <div class="col-sm">
+                            <label for="username">Doctor Name:</label>
+                            <input type="text" id="username" name="username" class="form-control" value="<?php echo $row['username']; ?>" readonly>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="container">
+                        <div class="row">
+                          <div class="col-sm">
+                            <label for="email">Email</label>
+                            <input type="text" id="email" name="email" class="form-control" value="<?php echo $row['email']; ?>" readonly>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="container">
+                        <div class="row">
+                          <div class="col-sm">
+                            <label for="spec">Specialization:</label>
+                            <input type="text" id="spec" name="spec" class="form-control" value="<?php echo $row['spec']; ?>" readonly>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="container">
+                        <div class="row">
+                          <div class="col-sm">
+                            <label for="amount">Amount :</label>
+                            <input type="text" id="amount" name="amount" class="form-control" value="<?php echo $row['docFees']; ?>" readonly>
+                          </div>
+                        </div>
+                      </div>
+
+                <?php
+                    }
+                  }
+                }
+
+                ?>
+
+
+              </div>
+            </div>
+          </div>
 
           <div class="tab-pane fade" id="list-app" role="tabpanel" aria-labelledby="list-home-list">
 
@@ -194,15 +261,33 @@ if (isset($_GET['cancel'])) {
                 while ($row = mysqli_fetch_array($result)) {
                 ?>
                   <tr>
-                    <td><?php echo $row['pid']; ?></td>
-                    <td><?php echo $row['ID']; ?></td>
-                    <td><?php echo $row['fname']; ?></td>
-                    <td><?php echo $row['lname']; ?></td>
-                    <td><?php echo $row['gender']; ?></td>
-                    <td><?php echo $row['email']; ?></td>
-                    <td><?php echo $row['contact']; ?></td>
-                    <td><?php echo $row['appdate']; ?></td>
-                    <td><?php echo $row['apptime']; ?></td>
+                    <td>
+                      <?php echo $row['pid']; ?>
+                    </td>
+                    <td>
+                      <?php echo $row['ID']; ?>
+                    </td>
+                    <td>
+                      <?php echo $row['fname']; ?>
+                    </td>
+                    <td>
+                      <?php echo $row['lname']; ?>
+                    </td>
+                    <td>
+                      <?php echo $row['gender']; ?>
+                    </td>
+                    <td>
+                      <?php echo $row['email']; ?>
+                    </td>
+                    <td>
+                      <?php echo $row['contact']; ?>
+                    </td>
+                    <td>
+                      <?php echo $row['appdate']; ?>
+                    </td>
+                    <td>
+                      <?php echo $row['apptime']; ?>
+                    </td>
                     <td>
                       <?php if (($row['userStatus'] == 1) && ($row['doctorStatus'] == 1)) {
                         echo "Active";
@@ -214,7 +299,8 @@ if (isset($_GET['cancel'])) {
                       if (($row['userStatus'] == 1) && ($row['doctorStatus'] == 0)) {
                         echo "Cancelled by You";
                       }
-                      ?></td>
+                      ?>
+                    </td>
 
                     <td>
                       <?php if (($row['userStatus'] == 1) && ($row['doctorStatus'] == 1)) { ?>
@@ -285,16 +371,34 @@ if (isset($_GET['cancel'])) {
                 while ($row = mysqli_fetch_array($result)) {
                 ?>
                   <tr>
-                    <td><?php echo $row['pid']; ?></td>
-                    <td><?php echo $row['fname']; ?></td>
-                    <td><?php echo $row['lname']; ?></td>
-                    <td><?php echo $row['ID']; ?></td>
+                    <td>
+                      <?php echo $row['pid']; ?>
+                    </td>
+                    <td>
+                      <?php echo $row['fname']; ?>
+                    </td>
+                    <td>
+                      <?php echo $row['lname']; ?>
+                    </td>
+                    <td>
+                      <?php echo $row['ID']; ?>
+                    </td>
 
-                    <td><?php echo $row['appdate']; ?></td>
-                    <td><?php echo $row['apptime']; ?></td>
-                    <td><?php echo $row['disease']; ?></td>
-                    <td><?php echo $row['allergy']; ?></td>
-                    <td><?php echo $row['prescription']; ?></td>
+                    <td>
+                      <?php echo $row['appdate']; ?>
+                    </td>
+                    <td>
+                      <?php echo $row['apptime']; ?>
+                    </td>
+                    <td>
+                      <?php echo $row['disease']; ?>
+                    </td>
+                    <td>
+                      <?php echo $row['allergy']; ?>
+                    </td>
+                    <td>
+                      <?php echo $row['prescription']; ?>
+                    </td>
 
                   </tr>
                 <?php }
@@ -337,14 +441,30 @@ if (isset($_GET['cancel'])) {
                   #$contact = $row['contact'];
                 ?>
                   <tr>
-                    <td><?php echo $row['fname']; ?></td>
-                    <td><?php echo $row['lname']; ?></td>
-                    <td><?php echo $row['email']; ?></td>
-                    <td><?php echo $row['contact']; ?></td>
-                    <td><?php echo $row['doctor']; ?></td>
-                    <td><?php echo $row['docFees']; ?></td>
-                    <td><?php echo $row['appdate']; ?></td>
-                    <td><?php echo $row['apptime']; ?></td>
+                    <td>
+                      <?php echo $row['fname']; ?>
+                    </td>
+                    <td>
+                      <?php echo $row['lname']; ?>
+                    </td>
+                    <td>
+                      <?php echo $row['email']; ?>
+                    </td>
+                    <td>
+                      <?php echo $row['contact']; ?>
+                    </td>
+                    <td>
+                      <?php echo $row['doctor']; ?>
+                    </td>
+                    <td>
+                      <?php echo $row['docFees']; ?>
+                    </td>
+                    <td>
+                      <?php echo $row['appdate']; ?>
+                    </td>
+                    <td>
+                      <?php echo $row['apptime']; ?>
+                    </td>
                   </tr>
                 <?php } ?>
               </tbody>
@@ -359,7 +479,8 @@ if (isset($_GET['cancel'])) {
                 <div class="col-md-4"><label>Doctor Name:</label></div>
                 <div class="col-md-8"><input type="text" class="form-control" name="doctor" required></div><br><br>
                 <div class="col-md-4"><label>Password:</label></div>
-                <div class="col-md-8"><input type="password" class="form-control" name="dpassword" required></div><br><br>
+                <div class="col-md-8"><input type="password" class="form-control" name="dpassword" required></div>
+                <br><br>
                 <div class="col-md-4"><label>Email ID:</label></div>
                 <div class="col-md-8"><input type="email" class="form-control" name="demail" required></div><br><br>
                 <div class="col-md-4"><label>Consultancy Fees:</label></div>

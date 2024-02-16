@@ -116,22 +116,22 @@
 
                                     <div class="form-group">
                                         <label for="fname">First Name :</label>
-                                        <input type="text" class="form-control" id="fname" placeholder="First Name *" name="fname" onkeydown="return alphaOnly(event);" required />
+                                        <input type="text" class="form-control" id="fname" placeholder="First Name " name="fname" onkeydown="return alphaOnly(event);" required />
                                     </div>
 
                                     <div class="form-group"> <label for="fname">Email :</label>
-                                        <input type="email" class="form-control" placeholder="Your Email *" name="email" pattern="[^@]+@[^@]+\.[a-zA-Z]{2,6}" required />
+                                        <input type="email" class="form-control" placeholder="Your Email " name="email" pattern="[^@\s]+@[^@\s]+\.[^@\s]+" title="Invalid email address" required />
                                     </div>
 
                                     <div class="form-group"><label for="fname">Age :</label>
-                                        <input type="text" class="form-control" placeholder="Your Age *" name="age" />
+                                        <input type="text" class="form-control" placeholder="Your Age " name="age" required />
                                     </div>
 
                                     <div class="form-group"><label for="fname">Your District :</label>
-                                        <input type="text" class="form-control" placeholder="Your District *" name="district" />
+                                        <input type="text" class="form-control" placeholder="Your District " name="district" required />
                                     </div>
                                     <div class="form-group"><label for="fname">Password :</label>
-                                        <input type="password" class="form-control" placeholder="Password *" id="password" name="password" onkeyup='check();' required />
+                                        <input type="password" class="form-control" placeholder="Password " id="password" name="password" onkeyup='check();' required />
                                     </div>
                                     <div class="form-group">
                                         <div class="maxl">
@@ -143,6 +143,10 @@
                                                 <input type="radio" name="gender" value="Female">
                                                 <span>Female </span>
                                             </label>
+                                            <label class="radio inline">
+                                                <input type="radio" name="gender" value="Other">
+                                                <span>Others </span>
+                                            </label>
                                         </div>
                                         <a href="index1.php">Already have an account?</a>
                                     </div>
@@ -150,20 +154,20 @@
 
                                 <div class="col-md-6">
                                     <div class="form-group"><label for="fname">Last Name :</label>
-                                        <input type="text" class="form-control" placeholder="Last Name *" name="lname" onkeydown="return alphaOnly(event);" required />
+                                        <input type="text" class="form-control" placeholder="Last Name " name="lname" onkeydown="return alphaOnly(event);" />
                                     </div>
 
                                     <div class="form-group"><label for="fname">Contact :</label>
-                                        <input type="tel" minlength="10" maxlength="10" name="contact" class="form-control" placeholder="Your Phone *" />
+                                        <input type="tel" minlength="10" maxlength="10" name="contact" class="form-control" placeholder="Your Phone " required />
                                     </div>
                                     <div class="form-group"><label for="fname">Your Place :</label>
-                                        <input type="text" class="form-control" placeholder="Your Place *" name="place" />
+                                        <input type="text" class="form-control" placeholder="Your Place " name="place" required />
                                     </div>
                                     <div class="form-group"><label for="fname">Your State :</label>
-                                        <input type="text" class="form-control" placeholder="Your State *" name="state" />
+                                        <input type="text" class="form-control" placeholder="Your State " name="state" required />
                                     </div>
                                     <div class="form-group"><label for="fname">Confirm Password :</label>
-                                        <input type="password" class="form-control" id="cpassword" placeholder="Confirm Password *" name="cpassword" onkeyup='check();' required /><span id='message'></span>
+                                        <input type="password" class="form-control" id="cpassword" placeholder="Confirm Password " name="cpassword" onkeyup='check();' required /><span id='message'></span>
                                     </div>
                                     <input type="submit" class="btnRegister" name="patsub1" onclick="return checklen();" value="Register" />
                                 </div>
@@ -179,12 +183,12 @@
                             <div class="row register-form">
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <input type="text" class="form-control" placeholder="User Name *" name="username3" onkeydown="return alphaOnly(event);" required />
+                                        <input type="text" class="form-control" placeholder="User Name " name="username3" onkeydown="return alphaOnly(event);" required />
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <input type="password" class="form-control" placeholder="Password *" name="password3" required />
+                                        <input type="password" class="form-control" placeholder="Password " name="password3" required />
                                     </div>
 
                                     <input type="submit" class="btnRegister" name="docsub1" value="Login" />
@@ -199,15 +203,15 @@
                             <div class="row register-form">
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <input type="text" class="form-control" placeholder="User Name *" name="username1" onkeydown="return alphaOnly(event);" required />
+                                        <input type="email" class="form-control" placeholder="Email " name="username1" required />
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <input type="password" class="form-control" placeholder="Password *" name="password2" required />
+                                        <input type="password" class="form-control" placeholder="Password " name="password2" required />
                                     </div>
 
-                                    <input type="submit" class="btnRegister" name="adsub" value="Login" />
+                                    <input type="submit" class="btnRegister" name="loginstaff" value="Login" />
                                 </div>
                             </div>
                         </form>
@@ -220,12 +224,12 @@
                             <div class="row register-form">
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <input type="text" class="form-control" placeholder="User Name *" name="username1" onkeydown="return alphaOnly(event);" required />
+                                        <input type="text" class="form-control" placeholder="User Name " name="username1" onkeydown="return alphaOnly(event);" required />
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <input type="password" class="form-control" placeholder="Password *" name="password2" required />
+                                        <input type="password" class="form-control" placeholder="Password " name="password2" required />
                                     </div>
 
                                     <input type="submit" class="btnRegister" name="adsub" value="Login" />

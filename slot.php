@@ -116,13 +116,21 @@ if (isset($_POST['submit'])) {
     <div class="row">
       <div class="col-md-4" style="max-width:25%;margin-top: 3%;">
         <div class="list-group" id="list-tab" role="tablist">
-          <a class="list-group-item list-group-item-action" href="admin-panel1.php" href="#list-doc">Doctor List</a>
-          <a class="list-group-item list-group-item-action" href="admin-panel1.php" href="#list-pat">Patient List</a>
-          <a class="list-group-item list-group-item-action" href="admin-panel1.php" href="#list-app">Appointment Details</a>
-          <a class="list-group-item list-group-item-action" href="admin-panel1.php" href="#list-pres">Prescription List</a>
+          <a class="list-group-item list-group-item-action" href="admin-panel1.php" href="#list-doc">Dashboard</a>
+
+          <a class="list-group-item list-group-item-action " href="addstaf.php" href="#list-settings">Add Staff</a>
+          <a class="list-group-item list-group-item-action" href="deletestaff.php" href="#list-settings">View all Staffs</a>
+          <a class="list-group-item list-group-item-action " href="leave.php">leave approval</a>
+
           <a class="list-group-item list-group-item-action" href="admin-panel1.php" href="#list-settings">Add Doctor</a>
+          <a class="list-group-item list-group-item-action " href="deletedoctor.php" href="#list-doc">View all Doctors</a>
+          <a class="list-group-item list-group-item-action" href="admin-panel1.php" href="#list-pres">Prescription List</a>
+
+          <a class="list-group-item list-group-item-action" href="deletepatient.php" href="#list-pat">View all Patient </a>
+          <a class="list-group-item list-group-item-action" href="admin-panel1.php" href="#list-app">Appointment Details</a>
+
           <a class="list-group-item list-group-item-action" href="admin-panel1.php" href="#list-mes">Queries</a>
-          <a class="list-group-item list-group-item-action" href="slot.php">Add Slot</a>
+          <a class="list-group-item list-group-item-action active" href="slot.php">Add Slot</a>
 
         </div><br>
       </div>

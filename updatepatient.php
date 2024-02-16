@@ -48,6 +48,7 @@ if (isset($_POST['submit'])) {
     $conditions = $_POST['conditions'];
     $ocondition =  $_POST['ocondition'];
     $allergic =  $_POST['allergic'];
+    $gender = $_POST['gender'];
 
     $sql = "UPDATE  patients SET
 	
@@ -58,7 +59,8 @@ if (isset($_POST['submit'])) {
 	email = '$email',
 	conditions = '$conditions',
 	allergic = '$allergic',
-	ocondition = '$ocondition'
+	ocondition = '$ocondition',
+    gender = '$gender'
 	WHERE id = $id
 	
 	";

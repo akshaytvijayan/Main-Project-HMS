@@ -25,6 +25,30 @@ if(isset($_POST['update_data']))
 	if($result)
 		header("Location:updated.php");
 }
+if(isset($_POST['loginstaff'])){
+	$username=$_POST['username1'];
+	$password=$_POST['password2'];
+	$query="select * from staffdb where email='$username' and password='$password';";
+	$result=mysqli_query($con,$query);
+	if(mysqli_num_rows($result)==1)
+	{
+		$_SESSION['username']=$username;
+		header("Location:staff/admin-panel3.php");
+	}
+	else
+		// header("Location:error2.php");
+		echo("<script>alert('Invalid Username or Password. Try Again!');
+          window.location.href = 'index.php';</script>");
+}
+if(isset($_POST['update_data']))
+{
+	$contact=$_POST['contact'];
+	$status=$_POST['status'];
+	$query="update appointmenttb set payment='$status' where contact='$contact';";
+	$result=mysqli_query($con,$query);
+	if($result)
+		header("Location:updated.php");
+}
 
 
 

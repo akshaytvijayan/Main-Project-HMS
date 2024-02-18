@@ -77,6 +77,23 @@ $username = $_SESSION['username'];
                 background-color: #3c50c1;
                 border-color: #3c50c1;
             }
+
+            .container {
+                max-width: 1000px;
+                margin: 0 auto;
+                padding: 30px;
+                background-color: #fff;
+                border-radius: 5px;
+                box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+
+            }
+
+            .heading {
+                color: green !important;
+                font-weight: bold;
+
+
+            }
         </style>
 
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
@@ -110,10 +127,9 @@ $username = $_SESSION['username'];
             <div class="col-md-4" style="max-width:25%;margin-top: 3%;">
                 <div class="list-group" id="list-tab" role="tablist">
                     <a class="list-group-item list-group-item-action " href="admin-panel3.php" href="#list-dash" role="tab" aria-controls="home">Dashboard</a>
-                    <a class="list-group-item list-group-item-action active" href="viewprofile.php" href="#list-doc">profile</a>
-                    <a class="list-group-item list-group-item-action " href="leave.php" href="#list-doc">leave apply</a>
-                    <a class="list-group-item list-group-item-action " href="ofine.php" href="#list-doc">Offline
-                        booking</a>
+                    <a class="list-group-item list-group-item-action active" href="viewprofile.php" href="#list-doc">View Profile</a>
+                    <a class="list-group-item list-group-item-action " href="leave.php" href="#list-doc">Leave Application</a>
+                    <a class="list-group-item list-group-item-action " href="ofine.php" href="#list-doc">Offline booking</a>
 
                 </div><br>
             </div>
@@ -135,7 +151,9 @@ $username = $_SESSION['username'];
                                 if (mysqli_num_rows($result) > 0) {
                                     while ($row = mysqli_fetch_array($result)) {
                             ?>
-
+                                        <div style="text-align: center;">
+                                            <img src="<?php echo "../msg_img/" . $row['proof']; ?>" width="200px" height="200px" alt="Image">
+                                        </div>
                                         <div class="container">
                                             <div class="row">
 
@@ -150,7 +168,7 @@ $username = $_SESSION['username'];
                                                 </div>
                                                 <div class="col-sm">
                                                     <label for="email">DOB:</label>
-                                                    <input type="text" id="dob" name="dob" class="form-control" value="<?php echo $row['dob']; ?>" readonly>
+                                                    <input type="date" id="age" name="age" class="form-control" value="<?php echo $row['age']; ?>" readonly>
                                                 </div>
                                             </div>
                                             <div class="row">
@@ -166,7 +184,7 @@ $username = $_SESSION['username'];
 
                                                 <div class="col-sm">
                                                     <label for="state">Email:</label>
-                                                    <input type="text" id="emaik" name="email" class="form-control" value="<?php echo $row['email']; ?>" readonly>
+                                                    <input type="text" id="email" name="email" class="form-control" value="<?php echo $row['email']; ?>" readonly>
                                                 </div>
                                             </div>
                                             <div class="row">

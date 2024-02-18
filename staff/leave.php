@@ -177,8 +177,10 @@ $username = $_SESSION['username'];
                         href="#list-doc">profile</a>
                     <a class="list-group-item list-group-item-action active" href="leave.php" href="#list-doc">leave
                         apply</a>
-                        <a class="list-group-item list-group-item-action " href="ofine.php"
-                                href="#list-doc">Offline booking</a>
+                    <a class="list-group-item list-group-item-action " href="ofine.php" href="#list-doc">Offline
+                        booking</a>
+                    <a class="list-group-item list-group-item-action " href="offline.php" href="#list-doc">view Offline
+                        booking</a>
 
 
                 </div><br>
@@ -191,7 +193,7 @@ $username = $_SESSION['username'];
                             <?php
                             $username = $_SESSION['username'];
 
-                            if(isset($_SESSION['status'])) {
+                            if (isset($_SESSION['status'])) {
                                 ?>
                                 <div class="alert alert-success" role="alert">
 

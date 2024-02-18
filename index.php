@@ -116,7 +116,7 @@
 
                                     <div class="form-group">
                                         <label for="fname">First Name :</label>
-                                        <input type="text" class="form-control" id="fname" placeholder="First Name " name="fname" onkeydown="return alphaOnly(event);" required />
+                                        <input type="text" class="form-control" onchange="capitalizeFirstLetter(this)" id="fname" placeholder="First Name " name="fname" onkeydown="return alphaOnly(event);" required />
                                     </div>
 
                                     <div class="form-group"> <label for="fname">Email :</label>
@@ -128,7 +128,7 @@
                                     </div>
 
                                     <div class="form-group"><label for="fname">Your District :</label>
-                                        <input type="text" class="form-control" placeholder="Your District " name="district" required />
+                                        <input type="text" class="form-control" placeholder="Your District " onchange="capitalizeFirstLetter(this)" name="district" required />
                                     </div>
                                     <div class="form-group"><label for="fname">Password :</label>
                                         <input type="password" class="form-control" placeholder="Password " id="password" name="password" onkeyup='check();' required />
@@ -154,17 +154,17 @@
 
                                 <div class="col-md-6">
                                     <div class="form-group"><label for="fname">Last Name :</label>
-                                        <input type="text" class="form-control" placeholder="Last Name " name="lname" onkeydown="return alphaOnly(event);" />
+                                        <input type="text" class="form-control" placeholder="Last Name " onchange="capitalizeFirstLetter(this)" name="lname" onkeydown="return alphaOnly(event);" />
                                     </div>
 
                                     <div class="form-group"><label for="fname">Contact :</label>
                                         <input type="tel" minlength="10" maxlength="10" name="contact" class="form-control" placeholder="Your Phone " required />
                                     </div>
                                     <div class="form-group"><label for="fname">Your Place :</label>
-                                        <input type="text" class="form-control" placeholder="Your Place " name="place" required />
+                                        <input type="text" class="form-control" placeholder="Your Place " onchange="capitalizeFirstLetter(this)" name="place" required />
                                     </div>
                                     <div class="form-group"><label for="fname">Your State :</label>
-                                        <input type="text" class="form-control" placeholder="Your State " name="state" required />
+                                        <input type="text" class="form-control" placeholder="Your State " onchange="capitalizeFirstLetter(this)" name="state" required />
                                     </div>
                                     <div class="form-group"><label for="fname">Confirm Password :</label>
                                         <input type="password" class="form-control" id="cpassword" placeholder="Confirm Password " name="cpassword" onkeyup='check();' required /><span id='message'></span>
@@ -187,9 +187,26 @@
                                     </div>
                                 </div>
                                 <div class="col-md-6">
-                                    <div class="form-group">
-                                        <input type="password" class="form-control" placeholder="Password " name="password3" required />
+                                    <div class="form-group position-relative">
+                                        <input type="password" class="form-control" id="password3" name="password3" placeholder="Password" required />
+                                        <span class="eye-icon" id="togglePassword3">
+                                            <i class="fa fa-eye-slash" aria-hidden="true"></i>
+                                        </span>
                                     </div>
+
+                                    <script>
+                                        const passwordField3 = document.getElementById('password3');
+                                        const togglePasswordButton3 = document.getElementById('togglePassword3');
+
+                                        togglePasswordButton3.addEventListener('click', function() {
+                                            const type = passwordField3.getAttribute('type') === 'password' ? 'text' : 'password';
+                                            passwordField3.setAttribute('type', type);
+                                            // Change eye icon based on password visibility
+                                            togglePasswordButton3.querySelector('i').classList.toggle('fa-eye-slash');
+                                            togglePasswordButton3.querySelector('i').classList.toggle('fa-eye');
+                                        });
+                                    </script>
+
 
                                     <input type="submit" class="btnRegister" name="docsub1" value="Login" />
                                 </div>
@@ -207,8 +224,11 @@
                                     </div>
                                 </div>
                                 <div class="col-md-6">
-                                    <div class="form-group">
-                                        <input type="password" class="form-control" placeholder="Password " name="password2" required />
+                                    <div class="form-group position-relative">
+                                        <input type="password" class="form-control" id="password2" name="password2" placeholder="Password" required />
+                                        <span class="eye-icon" id="togglePassword2">
+                                            <i class="fa fa-eye-slash" aria-hidden="true"></i>
+                                        </span>
                                     </div>
 
                                     <input type="submit" class="btnRegister" name="loginstaff" value="Login" />
@@ -228,9 +248,36 @@
                                     </div>
                                 </div>
                                 <div class="col-md-6">
-                                    <div class="form-group">
-                                        <input type="password" class="form-control" placeholder="Password " name="password2" required />
+                                    <div class="form-group position-relative">
+                                        <input type="password" class="form-control" id="password2" name="password2" placeholder="Password" required />
+                                        <span class="eye-icon" id="togglePassword2">
+                                            <i class="fa fa-eye-slash" aria-hidden="true"></i>
+                                        </span>
                                     </div>
+
+                                    <style>
+                                        .eye-icon {
+                                            position: absolute;
+                                            top: 50%;
+                                            right: 10px;
+                                            /* Adjust as needed */
+                                            transform: translateY(-50%);
+                                            cursor: pointer;
+                                        }
+                                    </style>
+
+                                    <script>
+                                        const passwordField2 = document.getElementById('password2');
+                                        const togglePasswordButton2 = document.getElementById('togglePassword2');
+
+                                        togglePasswordButton2.addEventListener('click', function() {
+                                            const type = passwordField2.getAttribute('type') === 'password' ? 'text' : 'password';
+                                            passwordField2.setAttribute('type', type);
+                                            // Change eye icon based on password visibility
+                                            togglePasswordButton2.querySelector('i').classList.toggle('fa-eye-slash');
+                                            togglePasswordButton2.querySelector('i').classList.toggle('fa-eye');
+                                        });
+                                    </script>
 
                                     <input type="submit" class="btnRegister" name="adsub" value="Login" />
                                 </div>
@@ -244,6 +291,16 @@
 
     </div>
 </body>
+<script>
+    function capitalizeFirstLetter(inputElement) {
+        // Get the value of the input field
+        var value = inputElement.value;
+        // Capitalize the first letter
+        var capitalizedValue = value.charAt(0).toUpperCase() + value.slice(1);
+        // Update the input field with the capitalized value
+        inputElement.value = capitalizedValue;
+    }
+</script>
 
 <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>

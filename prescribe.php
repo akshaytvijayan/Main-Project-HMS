@@ -59,14 +59,17 @@ if (isset($_POST['prescribe']) && isset($_POST['pid']) && isset($_POST['ID']) &&
 
   <link rel="stylesheet" href="vendor/fontawesome/css/font-awesome.min.css">
 
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css" integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css"
+    integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M" crossorigin="anonymous">
 
-  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+    integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 
   <link href="https://fonts.googleapis.com/css?family=IBM+Plex+Sans&display=swap" rel="stylesheet">
   <nav class="navbar navbar-expand-lg navbar-dark bg-primary fixed-top">
     <a class="navbar-brand" href="#"><i class="fa fa-user-plus" aria-hidden="true"></i> NEETHI Hospital </a>
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+      aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
 
@@ -118,7 +121,8 @@ if (isset($_POST['prescribe']) && isset($_POST['pid']) && isset($_POST['ID']) &&
 
 <body style="padding-top:50px;">
   <div class="container-fluid" style="margin-top:50px;">
-    <h3 style="margin-left: 40%;  padding-bottom: 20px; font-family: 'IBM Plex Sans', sans-serif;"> Welcome &nbsp<?php echo $doctor ?>
+    <h3 style="margin-left: 40%;  padding-bottom: 20px; font-family: 'IBM Plex Sans', sans-serif;"> Welcome &nbsp
+      <?php echo $doctor ?>
     </h3>
 
     <div class="tab-pane" id="list-pres" role="tabpanel" aria-labelledby="list-pres-list">
@@ -136,19 +140,39 @@ if (isset($_POST['prescribe']) && isset($_POST['pid']) && isset($_POST['ID']) &&
             <!-- <input type="text"  class="form-control" name="allergy" required> -->
             <textarea id="allergy" cols="86" rows="5" name="allergy" required></textarea>
           </div><br><br><br>
-          <div class="col-md-4"><label>Prescription:</label></div>
+        <div class="row">
+          <div class="col-md-4"><label>Select Medicine:</label></div>
           <div class="col-md-8">
-            <!-- <input type="text" class="form-control"  name="prescription"  required> -->
-            <textarea id="prescription" cols="86" rows="10" name="prescription" required></textarea>
-          </div><br><br><br>
-          <input type="hidden" name="fname" value="<?php echo $fname ?>" />
-          <input type="hidden" name="lname" value="<?php echo $lname ?>" />
-          <input type="hidden" name="appdate" value="<?php echo $appdate ?>" />
-          <input type="hidden" name="apptime" value="<?php echo $apptime ?>" />
-          <input type="hidden" name="pid" value="<?php echo $pid ?>" />
-          <input type="hidden" name="ID" value="<?php echo $ID ?>" />
-          <br><br><br><br>
-          <input type="submit" name="prescribe" value="Prescribe" class="btn btn-primary" style="margin-left: 40pc;">
+          <select id="medicine" name="medicine">
+            <?php
+            $queryTests = "SELECT * FROM drugs";
+            $resultTests = mysqli_query($con, $queryTests);
+            while ($row = mysqli_fetch_assoc($resultTests)) {
+              echo "<option value='{$row['name']}'>{$row['name']}</option>";
+          }
+            ?>
+          </select>
+         </div><br><br><br>
+        <div class="col-md-4">
+          <label>Time of Intake:</label>
+        </div>
+        <div class="col-md-8">
+          <input type="checkbox" id="morning" name="morning">
+          <label for="morning">Morning</label>
+          <input type="checkbox" id="afternoon" name="afternoon">
+          <label for="afternoon">Afternoon</label>
+          <input type="checkbox" id="evening" name="evening">
+          <label for="evening">Evening</label>
+        </div>
+
+        <input type="hidden" name="fname" value="<?php echo $fname ?>" />
+        <input type="hidden" name="lname" value="<?php echo $lname ?>" />
+        <input type="hidden" name="appdate" value="<?php echo $appdate ?>" />
+        <input type="hidden" name="apptime" value="<?php echo $apptime ?>" />
+        <input type="hidden" name="pid" value="<?php echo $pid ?>" />
+        <input type="hidden" name="ID" value="<?php echo $ID ?>" />
+        <br><br><br><br>
+        <input type="submit" name="prescribe" value="Prescribe" class="btn btn-primary" style="margin-left: 40pc;">
 
       </form>
       <br>

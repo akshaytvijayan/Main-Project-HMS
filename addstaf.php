@@ -4,24 +4,55 @@ $con = mysqli_connect("localhost", "root", "", "myhmsdb");
 
 include('newfunc.php');
 
+
+$querys = "SELECT email,phone FROM staffdb";
+$results = mysqli_query($con, $querys);
+
+// Create an empty array to store email values
+$emails = array();
+$phones = array();
+
+// Loop through the result and store email values in the array
+while ($row = mysqli_fetch_assoc($results)) {
+    $emails[] = $row['email'];
+    $phones[] = $row['phone'];
+}
+
+// Convert the array to a JSON string
+$email_json = json_encode($emails);
+$phone_json = json_encode($phones);
+
+// Set $email_json as a value of hidden input field
+echo '<input type="hidden" name="email_array" id="email_array" value="' . htmlspecialchars($email_json) . '">';
+echo '<input type="hidden" name="phone_array" id="phone_array" value="' . htmlspecialchars($phone_json) . '">';
+
 if (isset($_POST['submit'])) {
     $fname = $_POST['fname'];
     $lname = $_POST['lname'];
-    $dob = $_POST['dob'];
+    $age = $_POST['age'];
     $gender = $_POST['gender'];
     $email = $_POST['email'];
     $phoneno = $_POST['phoneno'];
+    $qualification = $_POST['qualification'];
     $location = $_POST['location'];
+    $experience = $_POST['experience'];
     $state = $_POST['state'];
     $district = $_POST['district'];
     $password = $_POST['password'];
-    $query = "insert into staffdb(fname,lname,dob,gender,email,phone,location,state,district,password)values('$fname','$lname','$dob','$gender','$email','$phoneno','$location','$state','$district','$password')";
-    $result = mysqli_query($con, $query);
-    if ($result) {
-        echo "<script>alert('staff added successfully!');</script>";
+    if (!empty($_FILES['imagefile'])) {
+        $img_name = $_FILES['imagefile']['name'];
+        $tmp_img_name = $_FILES['imagefile']['tmp_name'];
+        $folder = 'msg_img/';
+        $query = "insert into staffdb(fname,lname,age,gender,email,phone,qualification,experience,location,state,district,password,proof)values('$fname','$lname','$age','$gender','$email','$phoneno','$qualification','$experience','$location','$state','$district','$password','$img_name')";
+        $result = mysqli_query($con, $query);
+        if ($result) {
+            move_uploaded_file($tmp_img_name, $folder . $img_name);
+            echo "<script>alert('staff added successfully!');</script>";
+        }
+    } else {
+        echo 'No file uploaded';
     }
 }
-
 ?>
 
 
@@ -88,8 +119,54 @@ if (isset($_POST['submit'])) {
             }
 
             .btn-primary {
-                background-color: #3c50c1;
-                border-color: #3c50c1;
+                text-align: center;
+                color: #fff;
+                padding: 10px 20px;
+                border: none;
+                border-radius: 4px;
+                cursor: pointer;
+                font-size: 16px;
+                width: 25%;
+            }
+
+            .btn-danger {
+                text-align: center;
+                color: #fff;
+                padding: 10px 20px;
+                border: none;
+                border-radius: 4px;
+                cursor: pointer;
+                font-size: 16px;
+                width: 25%;
+            }
+
+
+            .container {
+                max-width: 1000px;
+                margin: 0 auto;
+                padding: 30px;
+                background-color: #fff;
+                border-radius: 5px;
+                box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+
+            }
+
+            .heading {
+                color: green !important;
+                font-weight: bold;
+
+
+            }
+
+            h2 {
+                text-align: center;
+                margin-bottom: 30px;
+            }
+
+
+            body {
+                font-family: Arial, sans-serif;
+                background-color: #f2f2f2;
             }
         </style>
 
@@ -113,12 +190,16 @@ if (isset($_POST['submit'])) {
     #inputbtn:hover {
         cursor: pointer;
     }
+
+    .heading-add-doctor {
+        font-weight: bold;
+        color: Black;
+    }
 </style>
 
 <body style="padding-top:50px;">
     <div class="container-fluid" style="margin-top:50px;">
-        <h3 style="margin-left: 40%; padding-bottom: 20px;font-family: 'IBM Plex Sans', sans-serif;"> WELCOME
-            ADMINISTRATOR </h3>
+        <h3 style="margin-left: 40%; padding-bottom: 20px;font-family: 'IBM Plex Sans', sans-serif;"> </h3>
         <div class="row">
             <div class="col-md-4" style="max-width:25%;margin-top: 3%;">
                 <div class="list-group" id="list-tab" role="tablist">
@@ -128,215 +209,346 @@ if (isset($_POST['submit'])) {
                     <a class="list-group-item list-group-item-action" href="deletestaff.php">View all Staffs</a>
                     <a class="list-group-item list-group-item-action" href="leave.php">leave approval</a>
 
-                    <a class="list-group-item list-group-item-action" href="#list-settings" id="list-adoc-list" role="tab" data-toggle="list" aria-controls="home">Add Doctor</a>
+                    <a class="list-group-item list-group-item-action" href="admin-panel1.php">Add Doctor</a>
                     <a class="list-group-item list-group-item-action" href="deletedoctor.php">View all Doctors </a>
-                    <a class="list-group-item list-group-item-action" href="#list-pres" id="list-pres-list" role="tab" data-toggle="list" aria-controls="home">Prescription List</a>
+                    <a class="list-group-item list-group-item-action" href="admin-panel1.php">Prescription List</a>
 
                     <a class="list-group-item list-group-item-action" href="deletepatient.php">View all Patients</a>
-                    <a class="list-group-item list-group-item-action" href="#list-app" id="list-app-list" role="tab" data-toggle="list" aria-controls="home">Appointment Details</a>
-                    <a class="list-group-item list-group-item-action" href="#list-mes" id="list-mes-list" role="tab" data-toggle="list" aria-controls="home">Queries</a>
+                    <a class="list-group-item list-group-item-action" href="admin-panel1.php">Appointment Details</a>
+                    <a class="list-group-item list-group-item-action" href="admin-panel1.php">Queries</a>
                     <a class="list-group-item list-group-item-action" href="slot.php">Add Slot</a>
                 </div><br>
             </div>
-            <div class="col-md-8" style="margin-top: 3%;">
-                <div class="tab-content" id="nav-tabContent" style="width: 950px;">
+            <div class="container">
+                <h2 class="heading ">STAFF REGISTRATION</h2>
+                <div class="col-md-8" style="margin-top: 3%;">
+                    <div class="tab-content" id="nav-tabContent" style="width: 950px;">
 
-                    <form class="form-group" method="post">
-                        <div class="row">
-                            <div class="col-md-4"><label>First name</label></div>
-                            <div class="col-md-8"><input type="text" class="form-control" name="fname" placeholder="Enter First Name " onkeydown="return alphaOnly(event);" required></div><br><br>
-                            <div class="col-md-4"><label>Last name</label></div>
-                            <div class="col-md-8"><input type="text" class="form-control" name="lname" placeholder="Enter Last Name " onkeydown="return alphaOnly(event);"></div><br><br>
-
-                            <div class="col-md-4"><label>DOB:</label></div>
-                            <div class="col-md-8"><input type="date" placeholder="Enter Date of Birth " class="form-control" name="dob" id="dob" required>
+                        <form class="form-group" method="post" enctype="multipart/form-data">
+                            <div class="col-12 mb-4">
+                                <span class="heading-add-doctor">Personal Information</span>
                             </div>
-                            <br><br>
+                            <div class="row">
+                                <div class="col-md-4"><label>First name :</label></div>
+                                <div class="col-md-8"><input type="text" class="form-control" name="fname" placeholder="Enter First Name " onkeydown="return alphaOnly(event);" required></div>
+                                <br><br>
+                                <div class="col-md-4"><label>Last name :</label></div>
+                                <div class="col-md-8"><input type="text" class="form-control" name="lname" placeholder="Enter Last Name " onkeydown="return alphaOnly(event);"></div><br><br>
 
-                            <div class="col-md-4"><label>Gender:</label></div>
-                            <div class="col-md-8"><select name="gender" placeholder="Gender" class="form-control" required>
-                                    <option value="" disabled selected>Select Gender</option>
-                                    <option value="Male">Male</option>
-                                    <option value="Female">Female</option>
-                                    <option value="Other">Others</option>
-                                </select></div><br><br>
-                            <div class="col-md-4"><label>Email ID:</label></div>
-                            <div class="col-md-8"><input type="email" class="form-control" placeholder="Enter Email " name="email" pattern="[^@\s]+@[^@\s]+\.[^@\s]+" title="Invalid email address" required></div>
-                            <br><br>
-                            <div class="col-md-4"><label>Phone Number:</label></div>
-                            <div class="col-md-8"><input type="phone" class="form-control" name="phoneno" placeholder="123-45-678" maxlength="10" title="Invalid phone number" required></div>
-                            <br><br>
-                            <div class="col-md-4"><label>Address:</label></div>
-                            <div class="col-md-8"><textarea cols="80" rows="3" placeholder="Enter Address " id="location" name="location" required></textarea>
-                            </div><br><br>
-                            <div class="col-md-4"><label>Qualification:</label></div>
-                            <div class="col-md-8"> <textarea cols="80" rows="3" name="qualification" id="qualification" placeholder="Enter Qualification" required></textarea>
-                            </div><br><br>
-                            <div class="col-md-4"><label>Experience:</label></div>
-                            <div class="col-md-8"><textarea cols="80" rows="3" placeholder="Enter experience " name="experience" id="experience" required></textarea>
-                            </div><br><br>
-                            <!-- <div class="col-md-4"><label for="file">Upload Id Proof:</label></div>
-                            <div class="col-md-8"><input type="file" name="file" id="file" accept="image/*,.pdf,.doc,.docx">
-                            </div><br><br> -->
-                            <script>
-                                function updateDistricts() {
-                                    var stateSelect = document.getElementById("state");
-                                    var districtSelect = document.getElementById("district");
-                                    var selectedState = stateSelect.options[stateSelect.selectedIndex].value;
+                                <div class="col-md-4"><label>DOB :</label></div>
+                                <div class="col-md-8">
+                                    <input type="date" class="form-control" id="age" name="age" required>
+                                    <script>
+                                        // Get today's date
+                                        var today = new Date();
 
-                                    districtSelect.innerHTML = "";
+                                        // Calculate the minimum birth date allowed (18 years ago)
+                                        var minBirthDate = new Date(today.getFullYear() - 18, today.getMonth(), today.getDate());
 
-                                    var placeholderOption = document.createElement("option");
-                                    placeholderOption.text = "Select District";
-                                    placeholderOption.value = "";
-                                    districtSelect.appendChild(placeholderOption);
+                                        // Convert the minimum birth date to a string in yyyy-mm-dd format
+                                        var minBirthDateString = minBirthDate.toISOString().split('T')[0];
 
-                                    // Add districts for each state
+                                        // Set the 'min' attribute of the date input to the minimum birth date
+                                        document.getElementById('age').setAttribute('max', minBirthDateString);
+                                    </script>
+                                </div><br><br>
+                                <div class="col-md-4"><label>Gender :</label></div>
+                                <div class="col-md-8"><select name="gender" placeholder="Gender" class="form-control" required>
+                                        <option value="" disabled selected>Select Gender</option>
+                                        <option value="Male">Male</option>
+                                        <option value="Female">Female</option>
+                                        <option value="Other">Other</option>
+                                    </select></div><br><br>
+                                <div class="col-md-4"><label>Email ID :</label></div>
+                                <div class="col-md-8">
+                                    <input type="email" class="form-control" placeholder="Enter Email id" name="email" id="email" onkeyup="return checkSimilar();" required>
+                                    <span id="email_error_message"></span>
+                                    <script>
+                                        function checkSimilar() {
+                                            var emailArray = JSON.parse(document.getElementById('email_array').value);
+                                            var inputEmail = document.getElementById('email').value;
+                                            var errorMessageSpan = document.getElementById('email_error_message');
+                                            var emailInput = document.getElementById('email');
 
-                                    if (selectedState === "Andhra Pradesh") {
-                                        var districts = ["Anantapur", "Chittoor", "East Godavari", "Guntur", "Krishna", "Kurnool", "Nellore", "Prakasam", "Srikakulam", "Visakhapatnam", "Vizianagaram", "West Godavari", "Y.S.R. Kadapa"];
-                                    } else if (selectedState === "Arunachal Pradesh") {
-                                        var districts = ["Tawang", "West Kameng", "East Kameng", "Papum Pare", "Kurung Kumey", "Kra Daadi", "Lower Subansiri", "Upper Subansiri", "West Siang", "East Siang", "Siang", "Upper Siang"];
-                                    } else if (selectedState === "Assam") {
-                                        var districts = ["Baksa", "Barpeta", "Biswanath", "Bongaigaon", "Cachar", "Charaideo", "Chirang", "Darrang", "Dhemaji", "Dhubri", "Dibrugarh", "Dima Hasao", "Goalpara", "Golaghat", "Hailakandi", "Hojai", "Jorhat", "Kamrup", "Kamrup Metropolitan", "Karbi Anglong"];
-                                    } else if (selectedState === "West Bengal") {
-                                        var districts = ["Alipurduar", "Bankura", "Birbhum", "Cooch Behar", "Dakshin Dinajpur", "Darjeeling", "Hooghly", "Howrah", "Jalpaiguri", "Jhargram", "Kalimpong", "Kolkata", "Malda", "Murshidabad", "Nadia", "North 24 Parganas", "Paschim Medinipur", "Purba Medinipur", "Purulia", "South 24 Parganas", "Uttar Dinajpur"];
-                                    } else if (selectedState === "Uttar Pradesh") {
-                                        var districts = ["Agra", "Aligarh", "Ambedkar Nagar", "Amethi", "Amroha", "Auraiya", "Ayodhya", "Azamgarh", "Baghpat", "Bahraich", "Ballia", "Balrampur", "Banda", "Barabanki", "Bareilly", "Basti", "Bhadohi", "Bijnor", "Budaun", "Bulandshahr"];
-                                    } else if (selectedState === "Bihar") {
-                                        var districts = ["Araria", "Arwal", "Aurangabad", "Banka", "Begusarai", "Bhagalpur", "Bhojpur", "Buxar", "Darbhanga", "East Champaran", "Gaya", "Gopalganj", "Jamui", "Jehanabad", "Kaimur", "Katihar", "Khagaria", "Kishanganj", "Lakhisarai", "Madhepura"];
-                                    } else if (selectedState === "Uttarakhand") {
-                                        var districts = ["Almora", "Bageshwar", "Chamoli", "Champawat", "Dehradun", "Haridwar", "Nainital", "Pauri Garhwal", "Pithoragarh", "Rudraprayag", "Tehri Garhwal", "Udham Singh Nagar", "Uttarkashi"];
-                                    } else if (selectedState === "Kerala") {
-                                        var districts = ["Alappuzha", "Ernakulam", "Idukki", "Kannur", "Kasaragod", "Kollam", "Kottayam", "Kozhikode", "Malappuram", "Palakkad", "Pathanamthitta", "Thiruvananthapuram", "Thrissur", "Wayanad"];
-                                    } else if (selectedState === "Chhattisgarh") {
-                                        var districts = ["Balod", "Baloda Bazar", "Balrampur", "Bastar", "Bemetara", "Bijapur", "Bilaspur", "Dantewada", "Dhamtari", "Durg", "Gariaband", "Gaurela-Pendra-Marwahi", "Janjgir-Champa", "Jashpur", "Kabirdham", "Kanker", "Kondagaon", "Korba", "Koriya", "Mahasamund", "Mungeli", "Narayanpur", "Raigarh", "Raipur", "Rajnandgaon", "Sukma", "Surajpur", "Surguja"];
-                                    } else if (selectedState === "Karnataka") {
-                                        var districts = ["Bagalkot", "Ballari", "Belagavi", "Bengaluru Rural", "Bengaluru Urban", "Bidar", "Chamarajanagar", "Chikkaballapur", "Chikkamagaluru", "Chitradurga", "Dakshina Kannada", "Davanagere", "Dharwad", "Gadag", "Hassan", "Haveri", "Kalaburagi", "Kodagu", "Kolar", "Koppal", "Mandya", "Mysuru", "Raichur", "Ramanagara", "Shivamogga", "Tumakuru", "Udupi", "Uttara Kannada", "Vijayapura", "Yadgir"];
-                                    } else if (selectedState === "Goa") {
-                                        var districts = ["North Goa", "South Goa"];
-                                    } else if (selectedState === "Himachal Pradesh") {
-                                        var districts = ["Bilaspur", "Chamba", "Hamirpur", "Kangra", "Kinnaur", "Kullu", "Lahaul And Spiti", "Mandi", "Shimla", "Sirmaur", "Solan", "Una"];
-                                    } else if (selectedState === "Jharkhand") {
-                                        var districts = ["Bokaro", "Chatra", "Deoghar", "Dhanbad", "Dumka", "East Singhbhum", "Garhwa", "Giridih", "Godda", "Gumla", "Hazaribagh", "Jamtara", "Khunti", "Koderma", "Latehar", "Lohardaga", "Pakur", "Palamu", "Ramgarh", "Ranchi", "Sahebganj", "Seraikela Kharsawan", "Simdega", "West Singhbhum"];
-                                    } else if (selectedState === "Haryana") {
-                                        var districts = ["Ambala", "Bhiwani", "Charkhi Dadri", "Faridabad", "Fatehabad", "Gurugram", "Hisar", "Jhajjar", "Jind", "Kaithal", "Karnal", "Kurukshetra", "Mahendragarh", "Nuh", "Palwal", "Panchkula", "Panipat", "Rewari", "Rohtak", "Sirsa", "Sonipat", "Yamunanagar"];
-                                    } else if (selectedState === "Gujarat") {
-                                        var districts = ["Ahmedabad", "Amreli", "Anand", "Aravalli", "Banaskantha", "Bharuch", "Bhavnagar", "Botad", "Chhota Udaipur", "Dahod", "Dang", "Devbhoomi Dwarka", "Gandhinagar", "Gir Somnath", "Jamnagar", "Junagadh", "Kheda", "Kutch", "Mahisagar", "Mehsana", "Morbi", "Narmada", "Navsari", "Panchmahal", "Patan", "Porbandar", "Rajkot", "Sabarkantha", "Surat", "Surendranagar", "Tapi", "Vadodara", "Valsad"];
-                                    } else if (selectedState === "Madhya Pradesh") {
-                                        var districts = ["Agar Malwa", "Alirajpur", "Anuppur", "Ashoknagar", "Balaghat", "Barwani", "Betul", "Bhind", "Bhopal", "Burhanpur", "Chhatarpur", "Chhindwara", "Damoh", "Datia", "Dewas", "Dhar", "Dindori", "Guna", "Gwalior", "Harda", "Hoshangabad", "Indore", "Jabalpur", "Jhabua", "Katni", "Khandwa", "Khargone", "Mandla", "Mandsaur", "Morena", "Narsinghpur", "Neemuch", "Niwari", "Panna", "Raisen", "Rajgarh", "Ratlam", "Rewa", "Sagar", "Satna", "Sehore", "Seoni", "Shahdol", "Shajapur", "Sheopur", "Shivpuri", "Sidhi", "Singrauli", "Tikamgarh", "Ujjain", "Umaria", "Vidisha"];
-                                    } else if (selectedState === "Maharashtra") {
-                                        var districts = ["Ahmednagar", "Akola", "Amravati", "Aurangabad", "Beed", "Bhandara", "Buldhana", "Chandrapur", "Dhule", "Gadchiroli", "Gondia", "Hingoli", "Jalgaon", "Jalna", "Kolhapur", "Latur", "Mumbai City", "Mumbai Suburban", "Nagpur", "Nanded", "Nandurbar", "Nashik", "Osmanabad", "Palghar", "Parbhani", "Pune", "Raigad", "Ratnagiri", "Sangli", "Satara", "Sindhudurg", "Solapur", "Thane", "Wardha", "Washim", "Yavatmal"];
-                                    } else if (selectedState === "Manipur") {
-                                        var districts = ["Bishnupur", "Chandel", "Churachandpur", "Imphal East", "Imphal West", "Jiribam", "Kakching", "Kamjong", "Kangpokpi", "Noney", "Pherzawl", "Senapati", "Tamenglong", "Tengnoupal", "Thoubal", "Ukhrul"];
-                                    } else if (selectedState === "Punjab") {
-                                        var districts = ["Amritsar", "Barnala", "Bathinda", "Faridkot", "Fatehgarh Sahib", "Fazilka", "Ferozepur", "Gurdaspur", "Hoshiarpur", "Jalandhar", "Kapurthala", "Ludhiana", "Mansa", "Moga", "Muktsar", "Pathankot", "Patiala", "Rupnagar", "Sahibzada Ajit Singh Nagar", "Sangrur", "Shaheed Bhagat Singh Nagar", "Sri Muktsar Sahib", "Tarn Taran"];
-                                    } else if (selectedState === "Rajasthan") {
-                                        var districts = ["Ajmer", "Alwar", "Banswara", "Baran", "Barmer", "Bharatpur", "Bhilwara", "Bikaner", "Bundi", "Chittorgarh", "Churu", "Dausa", "Dholpur", "Dungarpur", "Hanumangarh", "Jaipur", "Jaisalmer", "Jalore", "Jhalawar", "Jhunjhunu", "Jodhpur", "Karauli", "Kota", "Nagaur", "Pali", "Pratapgarh", "Rajsamand", "Sawai Madhopur", "Sikar", "Sirohi", "Sri Ganganagar", "Tonk", "Udaipur"];
-                                    } else if (selectedState === "Telangana") {
-                                        var districts = ["Adilabad", "Bhadradri Kothagudem", "Hyderabad", "Jagtial", "Jangaon", "Jayashankar Bhupalpally"];
-                                    } else if (selectedState === "Meghalaya") {
-                                        var districts = ["East Garo Hills", "East Jaintia Hills", "East Khasi Hills", "North Garo Hills", "Ri Bhoi", "South Garo Hills", "South West Garo Hills", "South West Khasi Hills", "West Garo Hills", "West Jaintia Hills", "West Khasi Hills"];
-                                    } else if (selectedState === "Mizoram") {
-                                        var districts = ["Aizawl", "Champhai", "Hnahthial", "Khawzawl", "Kolasib", "Lawngtlai", "Lunglei", "Mamit", "Saiha", "Saitual", "Serchhip"];
-                                    } else if (selectedState === "Nagaland") {
-                                        var districts = ["Dimapur", "Kiphire", "Kohima", "Longleng", "Mokokchung", "Mon", "Peren", "Phek", "Tuensang", "Wokha", "Zunheboto"];
-                                    } else if (selectedState === "Odisha") {
-                                        var districts = ["Angul", "Balangir", "Balasore", "Bargarh", "Bhadrak", "Boudh", "Cuttack", "Deogarh", "Dhenkanal", "Gajapati", "Ganjam", "Jagatsinghpur", "Jajpur", "Jharsuguda", "Kalahandi", "Kandhamal", "Kendrapara", "Kendujhar", "Khordha", "Koraput", "Malkangiri", "Mayurbhanj", "Nabarangpur", "Nayagarh", "Nuapada", "Puri", "Rayagada", "Sambalpur", "Subarnapur", "Sundargarh"];
-                                    } else if (selectedState === "Sikkim") {
-                                        var districts = ["East Sikkim", "North Sikkim", "South Sikkim", "West Sikkim"];
-                                    } else if (selectedState === "Tamil Nadu") {
-                                        var districts = ["Ariyalur", "Chengalpattu", "Chennai", "Coimbatore", "Cuddalore", "Dharmapuri", "Dindigul", "Erode", "Kallakurichi", "Kancheepuram", "Kanyakumari", "Karur", "Krishnagiri", "Madurai", "Nagapattinam", "Namakkal", "Nilgiris", "Perambalur", "Pudukkottai", "Ramanathapuram", "Ranipet", "Salem", "Sivaganga", "Tenkasi", "Thanjavur", "Theni", "Thoothukudi", "Tiruchirappalli", "Tirunelveli", "Tirupathur", "Tiruppur", "Tiruvallur", "Tiruvannamalai", "Tiruvarur", "Vellore", "Viluppuram", "Virudhunagar"];
-                                    } else if (selectedState === "Tripura") {
-                                        var districts = ["Dhalai", "Gomati", "Khowai", "North Tripura", "Sepahijala", "South Tripura", "Unakoti", "West Tripura"];
-                                    } else if (selectedState === "Other") {
-                                        var districts = ["Other"];
-                                    }
+                                            // Check if the input email exists in the array
+                                            if (emailArray.includes(inputEmail)) {
+                                                // Email already exists
+                                                errorMessageSpan.innerHTML = 'Email already in use';
+                                                errorMessageSpan.style.color = 'red';
+                                                emailInput.style.border = '2px solid red';
+                                                return false; // Prevent form submission
+                                            } else {
+                                                // Email is unique
+                                                errorMessageSpan.innerHTML = ''; // Clear error message
+                                                errorMessageSpan.style.color = ''; // Reset color
+                                                emailInput.style.border = ''; // Reset border
+                                                return true; // Allow form submission
+                                            }
+                                        }
+                                    </script>
+                                </div>
+                                <br><br>
+                                <div class="col-md-4"><label>Phone Number :</label></div>
+                                <div class="col-md-8"><input type="phone" class="form-control" id="phone" name="phoneno" maxlength="10" placeholder="Enter Phone Number" onkeyup="return checkPhoneDuplicate();" required>
+                                    <span id="phone_error_message"></span>
+                                    <script>
+                                        function checkPhoneDuplicate() {
+                                            var phoneArray = JSON.parse(document.getElementById('phone_array').value);
+                                            var inputPhone = document.getElementById('phone').value;
+                                            var errorMessageSpan = document.getElementById('phone_error_message');
+                                            var phoneInput = document.getElementById('phone');
+
+                                            // Check if the input phone number exists in the array
+                                            if (phoneArray.includes(inputPhone)) {
+                                                // Phone number already exists
+                                                errorMessageSpan.innerHTML = 'Phone number already in use';
+                                                errorMessageSpan.style.color = 'red';
+                                                phoneInput.style.border = '2px solid red';
+                                                return false; // Prevent form submission
+                                            } else {
+                                                // Phone number is unique
+                                                errorMessageSpan.innerHTML = ''; // Clear error message
+                                                errorMessageSpan.style.color = ''; // Reset color
+                                                phoneInput.style.border = ''; // Reset phone input border
+                                                return true; // Allow form submission
+                                            }
+                                        }
+                                    </script>
+                                    <br><br>
+                                </div>
+                                <div class="col-md-4"><label>Qualification :</label></div>
+                                <div class="col-md-8"> <textarea cols="72" style="resize: none;" rows="3" class="form-control" name="qualification" id="qualification" placeholder="Enter Qualification" required></textarea>
+                                </div><br><br><br><br>
+                                <div class="col-md-4"><label>Experience :</label></div>
+                                <div class="col-md-8"><textarea cols="72" style="resize: none;" rows="3" class="form-control" placeholder="Enter experience " name="experience" id="experience" required></textarea>
+                                </div><br><br><br><br><br>
+                                <div class="col-md-4"> <label class="control-label">Upload Photo :</label></div>
+                                <div class="col-md-8"> <input type="file" class="form-control1 ng-invalid ng-invalid-required ng-touched" name="imagefile" accept="image/*" id="imagefile">
+                                </div><br><br>
+                                <div class="col-12 mb-4">
+                                    <span class="heading-add-doctor">Location Information</span>
+                                </div><br><br>
+                                <script>
+                                    function updateDistricts() {
+                                        var stateSelect = document.getElementById("state");
+                                        var districtSelect = document.getElementById("district");
+                                        var selectedState = stateSelect.options[stateSelect.selectedIndex].value;
+
+                                        districtSelect.innerHTML = "";
+
+                                        var placeholderOption = document.createElement("option");
+                                        placeholderOption.text = "Select District";
+                                        placeholderOption.value = "";
+                                        districtSelect.appendChild(placeholderOption);
+
+                                        // Add districts for each state
+
+                                        if (selectedState === "Andhra Pradesh") {
+                                            var districts = ["Anantapur", "Chittoor", "East Godavari", "Guntur", "Krishna", "Kurnool", "Nellore", "Prakasam", "Srikakulam", "Visakhapatnam", "Vizianagaram", "West Godavari", "Y.S.R. Kadapa"];
+                                        } else if (selectedState === "Arunachal Pradesh") {
+                                            var districts = ["Tawang", "West Kameng", "East Kameng", "Papum Pare", "Kurung Kumey", "Kra Daadi", "Lower Subansiri", "Upper Subansiri", "West Siang", "East Siang", "Siang", "Upper Siang"];
+                                        } else if (selectedState === "Assam") {
+                                            var districts = ["Baksa", "Barpeta", "Biswanath", "Bongaigaon", "Cachar", "Charaideo", "Chirang", "Darrang", "Dhemaji", "Dhubri", "Dibrugarh", "Dima Hasao", "Goalpara", "Golaghat", "Hailakandi", "Hojai", "Jorhat", "Kamrup", "Kamrup Metropolitan", "Karbi Anglong"];
+                                        } else if (selectedState === "West Bengal") {
+                                            var districts = ["Alipurduar", "Bankura", "Birbhum", "Cooch Behar", "Dakshin Dinajpur", "Darjeeling", "Hooghly", "Howrah", "Jalpaiguri", "Jhargram", "Kalimpong", "Kolkata", "Malda", "Murshidabad", "Nadia", "North 24 Parganas", "Paschim Medinipur", "Purba Medinipur", "Purulia", "South 24 Parganas", "Uttar Dinajpur"];
+                                        } else if (selectedState === "Uttar Pradesh") {
+                                            var districts = ["Agra", "Aligarh", "Ambedkar Nagar", "Amethi", "Amroha", "Auraiya", "Ayodhya", "Azamgarh", "Baghpat", "Bahraich", "Ballia", "Balrampur", "Banda", "Barabanki", "Bareilly", "Basti", "Bhadohi", "Bijnor", "Budaun", "Bulandshahr"];
+                                        } else if (selectedState === "Bihar") {
+                                            var districts = ["Araria", "Arwal", "Aurangabad", "Banka", "Begusarai", "Bhagalpur", "Bhojpur", "Buxar", "Darbhanga", "East Champaran", "Gaya", "Gopalganj", "Jamui", "Jehanabad", "Kaimur", "Katihar", "Khagaria", "Kishanganj", "Lakhisarai", "Madhepura"];
+                                        } else if (selectedState === "Uttarakhand") {
+                                            var districts = ["Almora", "Bageshwar", "Chamoli", "Champawat", "Dehradun", "Haridwar", "Nainital", "Pauri Garhwal", "Pithoragarh", "Rudraprayag", "Tehri Garhwal", "Udham Singh Nagar", "Uttarkashi"];
+                                        } else if (selectedState === "Kerala") {
+                                            var districts = ["Alappuzha", "Ernakulam", "Idukki", "Kannur", "Kasaragod", "Kollam", "Kottayam", "Kozhikode", "Malappuram", "Palakkad", "Pathanamthitta", "Thiruvananthapuram", "Thrissur", "Wayanad"];
+                                        } else if (selectedState === "Chhattisgarh") {
+                                            var districts = ["Balod", "Baloda Bazar", "Balrampur", "Bastar", "Bemetara", "Bijapur", "Bilaspur", "Dantewada", "Dhamtari", "Durg", "Gariaband", "Gaurela-Pendra-Marwahi", "Janjgir-Champa", "Jashpur", "Kabirdham", "Kanker", "Kondagaon", "Korba", "Koriya", "Mahasamund", "Mungeli", "Narayanpur", "Raigarh", "Raipur", "Rajnandgaon", "Sukma", "Surajpur", "Surguja"];
+                                        } else if (selectedState === "Karnataka") {
+                                            var districts = ["Bagalkot", "Ballari", "Belagavi", "Bengaluru Rural", "Bengaluru Urban", "Bidar", "Chamarajanagar", "Chikkaballapur", "Chikkamagaluru", "Chitradurga", "Dakshina Kannada", "Davanagere", "Dharwad", "Gadag", "Hassan", "Haveri", "Kalaburagi", "Kodagu", "Kolar", "Koppal", "Mandya", "Mysuru", "Raichur", "Ramanagara", "Shivamogga", "Tumakuru", "Udupi", "Uttara Kannada", "Vijayapura", "Yadgir"];
+                                        } else if (selectedState === "Goa") {
+                                            var districts = ["North Goa", "South Goa"];
+                                        } else if (selectedState === "Himachal Pradesh") {
+                                            var districts = ["Bilaspur", "Chamba", "Hamirpur", "Kangra", "Kinnaur", "Kullu", "Lahaul And Spiti", "Mandi", "Shimla", "Sirmaur", "Solan", "Una"];
+                                        } else if (selectedState === "Jharkhand") {
+                                            var districts = ["Bokaro", "Chatra", "Deoghar", "Dhanbad", "Dumka", "East Singhbhum", "Garhwa", "Giridih", "Godda", "Gumla", "Hazaribagh", "Jamtara", "Khunti", "Koderma", "Latehar", "Lohardaga", "Pakur", "Palamu", "Ramgarh", "Ranchi", "Sahebganj", "Seraikela Kharsawan", "Simdega", "West Singhbhum"];
+                                        } else if (selectedState === "Haryana") {
+                                            var districts = ["Ambala", "Bhiwani", "Charkhi Dadri", "Faridabad", "Fatehabad", "Gurugram", "Hisar", "Jhajjar", "Jind", "Kaithal", "Karnal", "Kurukshetra", "Mahendragarh", "Nuh", "Palwal", "Panchkula", "Panipat", "Rewari", "Rohtak", "Sirsa", "Sonipat", "Yamunanagar"];
+                                        } else if (selectedState === "Gujarat") {
+                                            var districts = ["Ahmedabad", "Amreli", "Anand", "Aravalli", "Banaskantha", "Bharuch", "Bhavnagar", "Botad", "Chhota Udaipur", "Dahod", "Dang", "Devbhoomi Dwarka", "Gandhinagar", "Gir Somnath", "Jamnagar", "Junagadh", "Kheda", "Kutch", "Mahisagar", "Mehsana", "Morbi", "Narmada", "Navsari", "Panchmahal", "Patan", "Porbandar", "Rajkot", "Sabarkantha", "Surat", "Surendranagar", "Tapi", "Vadodara", "Valsad"];
+                                        } else if (selectedState === "Madhya Pradesh") {
+                                            var districts = ["Agar Malwa", "Alirajpur", "Anuppur", "Ashoknagar", "Balaghat", "Barwani", "Betul", "Bhind", "Bhopal", "Burhanpur", "Chhatarpur", "Chhindwara", "Damoh", "Datia", "Dewas", "Dhar", "Dindori", "Guna", "Gwalior", "Harda", "Hoshangabad", "Indore", "Jabalpur", "Jhabua", "Katni", "Khandwa", "Khargone", "Mandla", "Mandsaur", "Morena", "Narsinghpur", "Neemuch", "Niwari", "Panna", "Raisen", "Rajgarh", "Ratlam", "Rewa", "Sagar", "Satna", "Sehore", "Seoni", "Shahdol", "Shajapur", "Sheopur", "Shivpuri", "Sidhi", "Singrauli", "Tikamgarh", "Ujjain", "Umaria", "Vidisha"];
+                                        } else if (selectedState === "Maharashtra") {
+                                            var districts = ["Ahmednagar", "Akola", "Amravati", "Aurangabad", "Beed", "Bhandara", "Buldhana", "Chandrapur", "Dhule", "Gadchiroli", "Gondia", "Hingoli", "Jalgaon", "Jalna", "Kolhapur", "Latur", "Mumbai City", "Mumbai Suburban", "Nagpur", "Nanded", "Nandurbar", "Nashik", "Osmanabad", "Palghar", "Parbhani", "Pune", "Raigad", "Ratnagiri", "Sangli", "Satara", "Sindhudurg", "Solapur", "Thane", "Wardha", "Washim", "Yavatmal"];
+                                        } else if (selectedState === "Manipur") {
+                                            var districts = ["Bishnupur", "Chandel", "Churachandpur", "Imphal East", "Imphal West", "Jiribam", "Kakching", "Kamjong", "Kangpokpi", "Noney", "Pherzawl", "Senapati", "Tamenglong", "Tengnoupal", "Thoubal", "Ukhrul"];
+                                        } else if (selectedState === "Punjab") {
+                                            var districts = ["Amritsar", "Barnala", "Bathinda", "Faridkot", "Fatehgarh Sahib", "Fazilka", "Ferozepur", "Gurdaspur", "Hoshiarpur", "Jalandhar", "Kapurthala", "Ludhiana", "Mansa", "Moga", "Muktsar", "Pathankot", "Patiala", "Rupnagar", "Sahibzada Ajit Singh Nagar", "Sangrur", "Shaheed Bhagat Singh Nagar", "Sri Muktsar Sahib", "Tarn Taran"];
+                                        } else if (selectedState === "Rajasthan") {
+                                            var districts = ["Ajmer", "Alwar", "Banswara", "Baran", "Barmer", "Bharatpur", "Bhilwara", "Bikaner", "Bundi", "Chittorgarh", "Churu", "Dausa", "Dholpur", "Dungarpur", "Hanumangarh", "Jaipur", "Jaisalmer", "Jalore", "Jhalawar", "Jhunjhunu", "Jodhpur", "Karauli", "Kota", "Nagaur", "Pali", "Pratapgarh", "Rajsamand", "Sawai Madhopur", "Sikar", "Sirohi", "Sri Ganganagar", "Tonk", "Udaipur"];
+                                        } else if (selectedState === "Telangana") {
+                                            var districts = ["Adilabad", "Bhadradri Kothagudem", "Hyderabad", "Jagtial", "Jangaon", "Jayashankar Bhupalpally"];
+                                        } else if (selectedState === "Meghalaya") {
+                                            var districts = ["East Garo Hills", "East Jaintia Hills", "East Khasi Hills", "North Garo Hills", "Ri Bhoi", "South Garo Hills", "South West Garo Hills", "South West Khasi Hills", "West Garo Hills", "West Jaintia Hills", "West Khasi Hills"];
+                                        } else if (selectedState === "Mizoram") {
+                                            var districts = ["Aizawl", "Champhai", "Hnahthial", "Khawzawl", "Kolasib", "Lawngtlai", "Lunglei", "Mamit", "Saiha", "Saitual", "Serchhip"];
+                                        } else if (selectedState === "Nagaland") {
+                                            var districts = ["Dimapur", "Kiphire", "Kohima", "Longleng", "Mokokchung", "Mon", "Peren", "Phek", "Tuensang", "Wokha", "Zunheboto"];
+                                        } else if (selectedState === "Odisha") {
+                                            var districts = ["Angul", "Balangir", "Balasore", "Bargarh", "Bhadrak", "Boudh", "Cuttack", "Deogarh", "Dhenkanal", "Gajapati", "Ganjam", "Jagatsinghpur", "Jajpur", "Jharsuguda", "Kalahandi", "Kandhamal", "Kendrapara", "Kendujhar", "Khordha", "Koraput", "Malkangiri", "Mayurbhanj", "Nabarangpur", "Nayagarh", "Nuapada", "Puri", "Rayagada", "Sambalpur", "Subarnapur", "Sundargarh"];
+                                        } else if (selectedState === "Sikkim") {
+                                            var districts = ["East Sikkim", "North Sikkim", "South Sikkim", "West Sikkim"];
+                                        } else if (selectedState === "Tamil Nadu") {
+                                            var districts = ["Ariyalur", "Chengalpattu", "Chennai", "Coimbatore", "Cuddalore", "Dharmapuri", "Dindigul", "Erode", "Kallakurichi", "Kancheepuram", "Kanyakumari", "Karur", "Krishnagiri", "Madurai", "Nagapattinam", "Namakkal", "Nilgiris", "Perambalur", "Pudukkottai", "Ramanathapuram", "Ranipet", "Salem", "Sivaganga", "Tenkasi", "Thanjavur", "Theni", "Thoothukudi", "Tiruchirappalli", "Tirunelveli", "Tirupathur", "Tiruppur", "Tiruvallur", "Tiruvannamalai", "Tiruvarur", "Vellore", "Viluppuram", "Virudhunagar"];
+                                        } else if (selectedState === "Tripura") {
+                                            var districts = ["Dhalai", "Gomati", "Khowai", "North Tripura", "Sepahijala", "South Tripura", "Unakoti", "West Tripura"];
+                                        } else if (selectedState === "Other") {
+                                            var districts = ["Other"];
+                                        }
 
 
 
-                                    if (districts) {
-                                        for (var i = 0; i < districts.length; i++) {
-                                            var option = document.createElement("option");
-                                            option.text = districts[i];
-                                            option.value = districts[i];
-                                            districtSelect.appendChild(option);
+                                        if (districts) {
+                                            for (var i = 0; i < districts.length; i++) {
+                                                var option = document.createElement("option");
+                                                option.text = districts[i];
+                                                option.value = districts[i];
+                                                districtSelect.appendChild(option);
+                                            }
                                         }
                                     }
-                                }
-                            </script>
+                                </script>
 
-                            <div class="col-md-4">
-                                <label for="state">State:</label>
+                                <div class="col-md-4">
+                                    <label for="state">State :</label>
+                                </div>
+                                <div class="col-md-8">
+                                    <select id="state" class="form-control" name="state" onchange="updateDistricts()" required>
+                                        <option value="">Select State</option>
+                                        <option value="Andhra Pradesh">Andhra Pradesh</option>
+                                        <option value="Arunachal Pradesh">Arunachal Pradesh</option>
+                                        <option value="Assam">Assam</option>
+                                        <option value="Bihar">Bihar</option>
+                                        <option value="Chhattisgarh">Chhattisgarh</option>
+                                        <option value="Goa">Goa</option>
+                                        <option value="Gujarat">Gujarat</option>
+                                        <option value="Haryana">Haryana</option>
+                                        <option value="Himachal Pradesh">Himachal Pradesh</option>
+                                        <option value="Jharkhand">Jharkhand</option>
+                                        <option value="Karnataka">Karnataka</option>
+                                        <option value="Kerala">Kerala</option>
+                                        <option value="Madhya Pradesh">Madhya Pradesh</option>
+                                        <option value="Maharashtra">Maharashtra</option>
+                                        <option value="Manipur">Manipur</option>
+                                        <option value="Meghalaya">Meghalaya</option>
+                                        <option value="Mizoram">Mizoram</option>
+                                        <option value="Nagaland">Nagaland</option>
+                                        <option value="Odisha">Odisha</option>
+                                        <option value="Punjab">Punjab</option>
+                                        <option value="Rajasthan">Rajasthan</option>
+                                        <option value="Sikkim">Sikkim</option>
+                                        <option value="Tamil Nadu">Tamil Nadu</option>
+                                        <option value="Telangana">Telangana</option>
+                                        <option value="Tripura">Tripura</option>
+                                        <option value="Uttar Pradesh">Uttar Pradesh</option>
+                                        <option value="Uttarakhand">Uttarakhand</option>
+                                        <option value="West Bengal">West Bengal</option>
+                                        <option value="Other">Other</option>
+                                    </select>
+                                </div>
+                                <br><br>
+
+                                <div class="col-md-4">
+                                    <label for="district">District :</label>
+                                </div>
+                                <div class="col-md-8">
+                                    <select id="district" class="form-control" name="district" required>
+                                        <option value="">Select District</option>
+                                    </select>
+                                </div>
+                                <br><br>
+                                <div class="col-md-4"><label>Address:</label></div>
+                                <div class="col-md-8"><textarea cols="72" rows="3" class="form-control" placeholder="Enter Address " id="location" name="location" required></textarea>
+                                </div><br><br><br><br>
+                                <div class="col-12 mb-4">
+                                    <span class="heading-add-doctor">Security Information</span>
+                                </div>
+                                <div class="col-md-4"><label>Password :</label></div>
+                                <div class="col-md-8">
+                                    <input type="password" placeholder="Enter Password" class="form-control" name="password" id="password" required>
+                                </div>
+                                <br><br>
+                                <div class="col-md-4"><label>Confirm Password :</label></div>
+                                <div class="col-md-8" id='cpass'>
+                                    <input type="password" class="form-control" placeholder="Re-Enter Password" name="cpassword" id="cpassword" onkeyup="return matchPass();" required>
+                                </div><br><br>
+                                <div class="text-center" style="margin-left:22%;">
+                                    <input type="checkbox" id="showPasswordCheckbox" onchange="togglePasswordVisibility()">
+                                    <label for="showPasswordCheckbox">Show Password</label>
+                                </div>
                             </div>
-                            <div class="col-md-8">
-                                <select id="state" class="form-control" name="state" onchange="updateDistricts()" required>
-                                    <option value="">Select State</option>
-                                    <option value="Andhra Pradesh">Andhra Pradesh</option>
-                                    <option value="Arunachal Pradesh">Arunachal Pradesh</option>
-                                    <option value="Assam">Assam</option>
-                                    <option value="Bihar">Bihar</option>
-                                    <option value="Chhattisgarh">Chhattisgarh</option>
-                                    <option value="Goa">Goa</option>
-                                    <option value="Gujarat">Gujarat</option>
-                                    <option value="Haryana">Haryana</option>
-                                    <option value="Himachal Pradesh">Himachal Pradesh</option>
-                                    <option value="Jharkhand">Jharkhand</option>
-                                    <option value="Karnataka">Karnataka</option>
-                                    <option value="Kerala">Kerala</option>
-                                    <option value="Madhya Pradesh">Madhya Pradesh</option>
-                                    <option value="Maharashtra">Maharashtra</option>
-                                    <option value="Manipur">Manipur</option>
-                                    <option value="Meghalaya">Meghalaya</option>
-                                    <option value="Mizoram">Mizoram</option>
-                                    <option value="Nagaland">Nagaland</option>
-                                    <option value="Odisha">Odisha</option>
-                                    <option value="Punjab">Punjab</option>
-                                    <option value="Rajasthan">Rajasthan</option>
-                                    <option value="Sikkim">Sikkim</option>
-                                    <option value="Tamil Nadu">Tamil Nadu</option>
-                                    <option value="Telangana">Telangana</option>
-                                    <option value="Tripura">Tripura</option>
-                                    <option value="Uttar Pradesh">Uttar Pradesh</option>
-                                    <option value="Uttarakhand">Uttarakhand</option>
-                                    <option value="West Bengal">West Bengal</option>
-                                    <option value="Other">Other</option>
-                                </select>
+                            <div class="col-12">
+                                <span style="margin-left:45%;" id="password_error"></span>
                             </div>
-                            <br><br>
-
-                            <div class="col-md-4">
-                                <label for="district">District:</label>
-                            </div>
-                            <div class="col-md-8">
-                                <select id="district" class="form-control" name="district" required>
-                                    <option value="">Select District</option>
-                                </select>
-                            </div>
-                            <br><br>
 
 
 
-
-
-                            <div class="col-md-4"><label>Password:</label></div>
-                            <div class="col-md-8"><input type="password" placeholder="Enter Password" class="form-control" onkeyup='check();' name="password" id="password" required></div><br><br>
-
-
+                    </div>
+                </div>
+                <div class="col-12 mb-4">
+                    <div class="row">
+                        <div class="col-6" style="margin-left:25%;">
+                            &nbsp &nbsp&nbsp &nbsp <input type="submit" class="btn btn-primary" onclick="return confirm('Are you sure')" value="Submit" id="submit" name="submit">&nbsp &nbsp&nbsp &nbsp&nbsp &nbsp
+                            <input type="reset" class="btn btn-danger" value="Cancel" id="reset" name="reset">
                         </div>
-                        <div class="col-md-12">
-                            <div class="form-group">
-                                <input type="submit" class="btn btn-secondary submit p-3" value="Create an account" id="btn" name="submit">
-                    </form>
+                    </div>
                 </div>
 
 
+                </form>
+            </div>
+        </div>
+    </div>
+    <script>
+        function togglePasswordVisibility() {
+            var passwordField = document.getElementById('password');
+            var confirmPasswordField = document.getElementById('cpassword');
+            var showPasswordCheckbox = document.getElementById('showPasswordCheckbox');
+
+            if (showPasswordCheckbox.checked) {
+                passwordField.type = 'text';
+                confirmPasswordField.type = 'text';
+            } else {
+                passwordField.type = 'password';
+                confirmPasswordField.type = 'password';
+            }
+        }
+
+        function matchPass() {
+            var password = document.getElementById('password').value;
+            var confirmPassword = document.getElementById('cpassword').value;
+            var passwordErrorSpan = document.getElementById('password_error');
+            var confirmPasswordInput = document.getElementById('cpassword');
+
+            if (password !== confirmPassword) {
+                // Passwords do not match
+                passwordErrorSpan.innerHTML = 'Passwords do not match';
+                passwordErrorSpan.style.color = 'red';
+                confirmPasswordInput.style.border = '2px solid red';
+                return false; // Prevent form submission
+            } else {
+                // Passwords match
+                passwordErrorSpan.innerHTML = 'Passwords match';
+                passwordErrorSpan.style.color = 'green';
+                confirmPasswordInput.style.border = ''; // Reset border
+                return true; // Allow form submission
+            }
+        }
+    </script>
 
 
-                <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
-                <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js" integrity="sha384-b/U6ypiBEHpOf/4+1nzFpr53nxSS+GLCkfwBdFNTxtclqqenISfwAzpKaMNFNmj4" crossorigin="anonymous"></script>
-                <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js" integrity="sha384-h0AbiXch4ZDo7tp9hKZ4TsHbi047NrKGLO3SEJAg45jXxnGIfYzk4Si90RDIqNm1" crossorigin="anonymous"></script>
-                <script src="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/6.10.1/sweetalert2.all.min.js"></script>
+
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js" integrity="sha384-b/U6ypiBEHpOf/4+1nzFpr53nxSS+GLCkfwBdFNTxtclqqenISfwAzpKaMNFNmj4" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js" integrity="sha384-h0AbiXch4ZDo7tp9hKZ4TsHbi047NrKGLO3SEJAg45jXxnGIfYzk4Si90RDIqNm1" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/6.10.1/sweetalert2.all.min.js"></script>
 </body>
 
 </html>

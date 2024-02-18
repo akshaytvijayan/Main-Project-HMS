@@ -32,6 +32,62 @@ include("header.php");
     border-top-right-radius: 5% 5%;
     border-bottom-right-radius: 5% 5%;
   }
+
+  .password-container {
+    position: relative;
+    display: inline-block;
+  }
+
+  .password-toggle {
+    position: absolute;
+    top: 50%;
+    right: 10px;
+    transform: translateY(-50%);
+    cursor: pointer;
+  }
+
+
+
+  /* Hide the password characters by default */
+  input[type="password"] {
+    -webkit-text-security: disc;
+  }
+
+  /* Show the password characters when the input is in focus  */
+  input[type="password"]:focus {
+    -webkit-text-security: none;
+  }
+
+  /* Style for eye icon */
+  .input-group-text {
+    cursor: pointer;
+  }
+
+  .fa-eye,
+  .fa-eye-slash {
+    transition: color 0.3s ease;
+  }
+
+  /* Styles when password is visible */
+  #password2[type="text"]+.input-group-append .input-group-text {
+    color: #007bff;
+    /* Change to blue color when password is visible */
+  }
+
+  .position-relative {
+    position: relative;
+  }
+
+  .eye-icon {
+    position: absolute;
+    top: 50%;
+    right: 20px;
+    /* Adjust as needed */
+    transform: translateY(-50%);
+    cursor: pointer;
+    color: #777;
+    /* Eye icon color */
+  }
 </style>
 
 <body style="background: -webkit-linear-gradient(left, #3931af, #00c6ff); background-size: cover;">
@@ -96,8 +152,35 @@ include("header.php");
                 <div class="row" style="margin-top: 10%">
                   <div class="col-md-4"><label>Email-ID: </label></div>
                   <div class="col-md-8"><input type="text" name="email" class="form-control" placeholder="enter email ID" required data-parsley-type="email" data-parsley-trigger="keyup" /></div><br><br>
+
                   <div class="col-md-4" style="margin-top: 8%"><label>Password: </label></div>
-                  <div class="col-md-8" style="margin-top: 8%"><input type="password" class="form-control" name="password2" placeholder="enter password" required data-parsley-trigger="keyup" /></div><br><br><br>
+                  <div class="col-md-8" style="margin-top: 8%">
+                    <div class="position-relative">
+                      <input type="password" class="form-control" id="password2" name="password2" placeholder="Enter password" required data-parsley-trigger="keyup">
+                      <span class="eye-icon" id="togglePassword2">
+                        <i class="fa fa-eye-slash" aria-hidden="true"></i>
+                      </span>
+                    </div>
+                  </div>
+
+
+
+
+                  <script>
+                    const passwordField2 = document.getElementById('password2');
+                    const togglePasswordButton2 = document.getElementById('togglePassword2');
+
+                    togglePasswordButton2.addEventListener('click', function() {
+                      const type = passwordField2.getAttribute('type') === 'password' ? 'text' : 'password';
+                      passwordField2.setAttribute('type', type);
+                      // Change eye icon based on password visibility
+                      togglePasswordButton2.querySelector('i').classList.toggle('fa-eye-slash');
+                      togglePasswordButton2.querySelector('i').classList.toggle('fa-eye');
+                    });
+                  </script>
+
+
+
                 </div>
                 <label for="forgotpassword" style="padding-left: 70px;margin-top: 4%"><a href="contact.html">Forgot Your Password.....?</a></label>
                 <div class="row">

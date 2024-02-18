@@ -10,13 +10,15 @@ if (isset($_POST['submit'])) {
     $fname = $_POST['fname'];
     $lname = $_POST['lname'];
     $email = $_POST['email'];
-    $dob = $_POST['dob'];
+    $age = $_POST['age'];
     $phone = $_POST['contact'];
     $state = $_POST['state'];
     $district = $_POST['district'];
     $location = $_POST['location'];
+    $qualification = $_POST['qualification'];
+    $experience = $_POST['experience'];
 
-    $sql = "UPDATE staffdb SET fname='$fname',lname='$lname',email='$email',dob='$dob',phone='$phone',state='$state',district='$district',location='$location' WHERE email='$username'";
+    $sql = "UPDATE staffdb SET fname='$fname',lname='$lname',email='$email',age='$age',phone='$phone',state='$state',district='$district',location='$location' WHERE email='$username'";
 
     if ($con->query($sql) === TRUE) {
         echo "<script>alert('Record updated successfully')
@@ -96,8 +98,96 @@ if (isset($_POST['submit'])) {
             }
 
             .btn-primary {
+                text-align: center;
+                color: #fff;
+                padding: 10px 20px;
+                border: none;
+                border-radius: 4px;
+                cursor: pointer;
+                font-size: 16px;
+                width: 25%;
+            }
+
+            .btn-danger {
+                text-align: center;
+                color: #fff;
+                padding: 10px 20px;
+                border: none;
+                border-radius: 4px;
+                cursor: pointer;
+                font-size: 16px;
+                width: 25%;
+            }
+
+
+            .container {
+                max-width: 1000px;
+                margin: 0 auto;
+                padding: 30px;
+                background-color: #fff;
+                border-radius: 5px;
+                box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+
+            }
+
+            .heading {
+                color: green !important;
+                font-weight: bold;
+
+
+            }
+
+            h2 {
+                text-align: center;
+                margin-bottom: 30px;
+            }
+
+
+            body {
+                font-family: Arial, sans-serif;
+                background-color: #f2f2f2;
+            }
+
+            .bg-primary {
+                background: -webkit-linear-gradient(left, #3931af, #00c6ff);
+            }
+
+            .col-md-4 {
+                max-width: 20% !important;
+            }
+
+            .list-group-item.active {
+                z-index: 2;
+                color: #fff;
+                background-color: #342ac1;
+                border-color: #007bff;
+            }
+
+            .text-primary {
+                color: #342ac1 !important;
+            }
+
+            #cpass {
+                display: -webkit-box;
+            }
+
+            #list-app {
+                font-size: 15px;
+            }
+
+            .btn-primary {
                 background-color: #3c50c1;
                 border-color: #3c50c1;
+            }
+
+            .btn-success {
+                text-align: center;
+                padding: 10px 20px;
+                border: none;
+                border-radius: 4px;
+                cursor: pointer;
+                font-size: 16px;
+                width: 15%;
             }
         </style>
 
@@ -134,18 +224,22 @@ if (isset($_POST['submit'])) {
                     <a class="list-group-item list-group-item-action " href="admin-panel3.php" href="#list-dash" role="tab" aria-controls="home">Dashboard</a>
                     <a class="list-group-item list-group-item-action active" href="viewprofile.php" href="#list-doc">Profile</a>
                     <a class="list-group-item list-group-item-action " href="leave.php" href="#list-doc">Leave apply</a>
-                    <a class="list-group-item list-group-item-action " href="ofine.php" href="#list-doc">Offline booking</a>
-
+                    <a class="list-group-item list-group-item-action " href="ofine.php" href="#list-doc">Offline
+                        booking</a>
+                    <a class="list-group-item list-group-item-action " href="offline.php" href="#list-doc">view Offline
+                        booking</a>
                 </div><br>
             </div>
-            <div class="col-md-8" style="margin-top: 3%;">
-                <div class="tab-content" id="nav-tabContent" style="width: 950px;">
+            <div class="container">
+                <h2 class="heading ">PROFILE UPDATION PANEL</h2>
+                <div class="col-md-8" style="margin-top: 3%;">
+                    <div class="tab-content" id="nav-tabContent" style="width: 950px;">
 
-                    <div class="card-body">
+
                         <form name="myForm" method="POST" onsubmit="return validation();">
                             <table>
                                 <tbody>
-                                    <tr>
+                                    <!-- <tr>
                                         <td>Name</td>
                                         <td>:</td>
                                         <td>
@@ -153,12 +247,12 @@ if (isset($_POST['submit'])) {
                                             echo $_SESSION['username'];
                                             ?>
                                         </td>
-                                    </tr>
+                                    </tr> -->
                                     <?php
                                     while ($row = mysqli_fetch_array($rs)) {
                                     ?>
                                         <tr>
-                                            <td>First name</td>
+                                            <td>First Name</td>
                                             <td>:</td>
                                             <td>
                                                 <input type="text" class="form-control" name="fname" id="name" value="<?php echo $row['fname']; ?>" autocomplete="off">
@@ -170,7 +264,7 @@ if (isset($_POST['submit'])) {
                                         </tr>
 
                                         <tr>
-                                            <td>last name</td>
+                                            <td>Last Name</td>
                                             <td>:</td>
                                             <td>
                                                 <input type="text" class="form-control" name="lname" id="lname" value="<?php echo $row['lname']; ?> " autocomplete="off" maxlength="30">
@@ -195,44 +289,56 @@ if (isset($_POST['submit'])) {
                                             <td>DOB</td>
                                             <td>:</td>
                                             <td>
-                                                <input type="text" class="form-control" value="<?php echo $row['dob']; ?> " rows="5" id="dob" name="dob" required required maxlength="30">
+                                                <input type="text" class="form-control" value="<?php echo $row['age']; ?> " rows="5" id="age" name="age" required maxlength="11">
                                             </td>
                                         </tr>
 
                                         <tr>
-                                            <td>phone number</td>
+                                            <td>Phone Number</td>
                                             <td>:</td>
                                             <td>
-                                                <input type="text" class="form-control" value="<?php echo $row['phone']; ?> " min="10" maxlength="10" id="contact" name="contact" required maxlength="10">
+                                                <input type="text" class="form-control" value="<?php echo $row['phone']; ?> " id="contact" name="contact" required maxlength="10">
                                             </td>
                                         </tr>
                                         <tr>
                                             <td><span id="msg2" style="color:red;"> </span></td>
                                         </tr>
-                                        <td>state</td>
+                                        <td>State</td>
                                         <td>:</td>
                                         <td>
                                             <input type="text" class="form-control" value="<?php echo $row['state']; ?> " min="10" maxlength="10" id="state" name="state" required maxlength="30">
                                         </td>
                                         </tr>
-                                        <td>district</td>
+                                        <td>District</td>
                                         <td>:</td>
                                         <td>
-                                            <input type="text" class="form-control" value="<?php echo $row['district']; ?> " min="10" maxlength="10" id="district" name="district" required>
+                                            <input type="text" class="form-control" value="<?php echo $row['district']; ?> " id="district" name="district" required>
                                         </td>
                                         </tr>
                                         <td>Location</td>
                                         <td>:</td>
                                         <td>
-                                            <input type="text" class="form-control" value="<?php echo $row['location']; ?> " min="10" maxlength="10" id="location" name="location" required>
+                                            <input type="text" class="form-control" value="<?php echo $row['location']; ?> " id="location" name="location" required>
+                                        </td>
+                                        </tr>
+                                        <td>Qualification </td>
+                                        <td>:</td>
+                                        <td>
+                                            <input type="text" class="form-control" value="<?php echo $row['qualification']; ?> " id="qualification" name="qualification" required>
+                                        </td>
+                                        </tr>
+                                        <td>Experience</td>
+                                        <td>:</td>
+                                        <td>
+                                            <input type="text" class="form-control" value="<?php echo $row['experience']; ?> " id="experience" name="experience" required>
                                         </td>
                                         </tr>
                                     <?php
                                     } ?>
                                 </tbody>
                             </table>
-                            <div>
-                                <input type="submit" value="Update your account" id="btn" name="submit">
+                            <div style="text-align: center;">
+                                <input type="submit" class="btn btn-success" onclick="return confirm('Are you sure you want to update the details?')" value="Submit" id="submit" name="submit">
                             </div>
                         </form>
                     </div>

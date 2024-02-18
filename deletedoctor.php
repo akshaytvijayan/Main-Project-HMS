@@ -22,6 +22,8 @@ include('newfunc.php');
     <link rel="stylesheet" type="text/css" href="font-awesome-4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="style.css">
     <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" integrity="sha512-vhF+Jfb6sibzliENWJKOC5VDSvT5gPvdlPR65RkdPc/y/BF0vGSvNkS+2MKwruqkJ1UqB8rMVyo1POJPr2Iy4g==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
     <link rel="stylesheet" href="vendor/fontawesome/css/font-awesome.min.css">
     <link href="https://fonts.googleapis.com/css?family=IBM+Plex+Sans&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css" integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M" crossorigin="anonymous">
@@ -144,6 +146,30 @@ include('newfunc.php');
         background-color: #007bff;
         color: white;
     }
+
+    /* Styles for the status switch */
+    .status-switch {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .status-btn {
+        padding: 5px 10px;
+        cursor: pointer;
+        border: none;
+        border-radius: 5px;
+    }
+
+    .active {
+        background-color: #82ff73;
+        color: black;
+    }
+
+    .inactive {
+        background-color: #ff341f;
+        color: black;
+    }
 </style>
 
 
@@ -208,21 +234,33 @@ include('newfunc.php');
                                                     <tr>
                                                         <th>Id</th>
                                                         <th> Name</th>&nbsp;&nbsp;
-                                                        <th> Specialization</th>&nbsp;&nbsp;
+                                                        <th> Image</th>&nbsp;&nbsp;
+                                                        <th> Specialization<select name="spec" class="form-control" id="spec">
+                                                                <option value="" disabled selected>Select Specialization</option>
+                                                                <?php
+                                                                display_specs();
+                                                                ?>
+                                                            </select></th>&nbsp;&nbsp;
                                                         <th>Username</th>&nbsp;&nbsp;
                                                         <th>Email</th>
                                                         <th>Gender</th>
-                                                        <!-- <th>Phone no</th> -->
-                                                        <th>Address</th>
+                                                        <th>Phone no</th>
+                                                        <!-- <th>Address</th> -->
+                                                        <th>State</th>
                                                         <th>District</th>
                                                         <th>Fees</th>
-                                                        <th>Delete</th>
+                                                        <th>Status</th>
+                                                        <th>Date of join</th>
+                                                        <th>Action</th>
                                                     </tr>
                                                     <?php
                                                     $s = 1;
-                                                    $query = "SELECT * FROM doctb ORDER BY pid ASC";
+                                                    $query = "SELECT * FROM doctb ORDER BY did DESC";
                                                     $result = mysqli_query($con, $query);
                                                     while ($row = mysqli_fetch_array($result)) {
+
+                                                        $did = $row['did'];
+                                                        $dname = $row['name'];
                                                     ?>
 
 
@@ -233,8 +271,11 @@ include('newfunc.php');
                                                             <td>
                                                                 <?php echo $row['name']; ?>
                                                             </td>
+                                                            <td><img src="<?php echo "msg_img/" . $row['image']; ?>" width="200px" height="200px" alt=" Images" /></td>
+
                                                             <td>
                                                                 <?php echo $row['spec']; ?>
+
                                                             </td>
                                                             <td>
                                                                 <?php echo $row['username']; ?>
@@ -245,8 +286,11 @@ include('newfunc.php');
                                                             <td>
                                                                 <?php echo $row['gender']; ?>
                                                             </td>
-                                                            <!-- <td>
+                                                            <td>
                                                                 <?php echo $row['contact']; ?>
+                                                            </td>
+                                                            <!-- <td>
+                                                                <?php echo $row['location']; ?>
                                                             </td> -->
                                                             <td>
                                                                 <?php echo $row['place']; ?>
@@ -257,12 +301,28 @@ include('newfunc.php');
                                                             <td>
                                                                 <?php echo $row['docFees']; ?>
                                                             </td>
+                                                            <td>
+                                                                <div class="status-switch">
+                                                                    <button class="status-btn active">Active</button>
+                                                                </div>
+                                                            </td>
+
+
+                                                            <td>
+                                                                <?php echo $row['joiningDate']; ?>
+                                                            </td>
 
 
                                                             <td>
                                                                 <form action="" method="POST">
-                                                                    <input type="hidden" name="id" value="<?php echo $row['pid']; ?>" />
-                                                                    <button type="submit" name="delete" class="btn btn-danger" onclick="return confirm('Do you really want to delete?')">Delete</button>
+                                                                    <input type="hidden" name="id" value="<?php echo $row['did']; ?>" />
+                                                                    <!-- <button type="submit" name="delete" class="btn btn-danger" onclick="return confirm('Do you really want to delete?')">Delete</button> -->
+                                                                    <!-- <a href="docviewmore.php"> class="btn btn-success"> -->
+                                                                    <a href="docviewmore.php?did=<?php echo $did; ?>&dname=<?php echo $dname; ?>" class="btn btn-success">
+                                                                        <button type="button" class="btn btn-success">
+                                                                            <i class="fa fa-pen"></i> View More
+                                                                        </button>
+                                                                    </a>
                                                                 </form>
                                                             </td>
                                                         </tr>
@@ -276,7 +336,7 @@ include('newfunc.php');
 
                                     if (isset($_POST['delete'])) {
                                         $id = $_POST['id'];
-                                        $select = "DELETE FROM  doctb  WHERE pid='$id'";
+                                        $select = "DELETE FROM  doctb  WHERE did='$id'";
                                         $result = mysqli_query($con, $select);
                                         echo '<script type="text/javascript">';
                                         echo 'window.location.href= "deletedoctor.php";';
@@ -301,8 +361,8 @@ include('newfunc.php');
                 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js" integrity="sha384-h0AbiXch4ZDo7tp9hKZ4TsHbi047NrKGLO3SEJAg45jXxnGIfYzk4Si90RDIqNm1" crossorigin="anonymous"></script>
                 <script src="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/6.10.1/sweetalert2.all.min.js"></script>
 
+                <!-- Search functionality -->
                 <script>
-                    // Search functionality
                     $(document).ready(function() {
                         $("#searchInput").on("keyup", function() {
                             var value = $(this).val().toLowerCase();
@@ -312,6 +372,72 @@ include('newfunc.php');
                         });
                     });
                 </script>
+
+                <script>
+                    document.getElementById('spec').onchange = function foo() {
+                        let spec = this.value;
+                        console.log(spec)
+                        let docs = [...document.getElementById('doctor').options];
+
+                        docs.forEach((el, ind, arr) => {
+                            arr[ind].setAttribute("style", "");
+                            if (el.getAttribute("data-spec") != spec) {
+                                arr[ind].setAttribute("style", "display: none");
+                            }
+                        });
+                    };
+                </script>
+
+                <script>
+                    // Sorting functionality for dropdown
+                    $(document).ready(function() {
+                        $("#spec").change(function() {
+                            var spec = $(this).val().toLowerCase(); // Get the selected specialization
+                            var rows = $("#builder tbody tr").get(); // Get all table rows
+
+                            rows.sort(function(a, b) {
+                                var aSpec = $(a).attr("data-spec").toLowerCase(); // Get specialization of row a
+                                var bSpec = $(b).attr("data-spec").toLowerCase(); // Get specialization of row b
+
+                                // Compare specializations
+                                if (spec === "" || aSpec === spec) {
+                                    return -1; // a should come before b
+                                } else if (bSpec === spec) {
+                                    return 1; // b should come before a
+                                } else {
+                                    return 0; // a and b remain unchanged
+                                }
+                            });
+
+                            // Reorder table rows based on sorted array
+                            $.each(rows, function(index, row) {
+                                $("#builder tbody").append(row);
+                            });
+                        });
+                    });
+                </script>
+
+                <!-- active and inactive -->
+                <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+                <script>
+                    $(document).ready(function() {
+                        $(".status-btn").click(function() {
+                            // Toggle the 'active' class
+                            $(this).toggleClass("active inactive");
+
+                            // Toggle the text between 'Active' and 'Inactive'
+                            var newText = $(this).text() === "Active" ? "Inactive" : "Active";
+                            $(this).text(newText);
+
+                            // Add your logic to handle the state change here
+                        });
+                    });
+                </script>
+
+
+
+
+
 </body>
 
 </html>

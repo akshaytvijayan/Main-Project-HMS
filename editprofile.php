@@ -3,10 +3,9 @@
 include('func.php');
 include('newfunc.php');
 $con = mysqli_connect("localhost", "root", "", "myhmsdb");
-$pid = $_SESSION['pid'];
+echo $pid = $_SESSION['pid'];
 $username = $_SESSION['username'];
-$pid = $_SESSION['pid'];
-$sql = "select * from patreg where pid='$pid'";
+echo $sql = "select * from patreg where pid='$pid'";
 $rs = mysqli_query($con, $sql);
 if (isset($_POST['submit'])) {
     $fname = $_POST['fname'];
@@ -213,7 +212,7 @@ if (isset($_POST['submit'])) {
                                         <td>Last name</td>
                                         <td>:</td>
                                         <td>
-                                            <input type="text" class="form-control" name="lname" id="lname" value="<?php echo $row['lname']; ?> " autocomplete="off" maxlength="30">
+                                            <input type="text" class="form-control" name="lname" id="lname" value="<?php echo $row['lname']; ?> " autocomplete="off">
                                         </td>
 
                                     </tr>
@@ -235,7 +234,7 @@ if (isset($_POST['submit'])) {
                                         <td>Age</td>
                                         <td>:</td>
                                         <td>
-                                            <input type="text" class="form-control" value="<?php echo $row['age']; ?> " rows="5" id="age" name="age" required required maxlength="30">
+                                            <input type="text" class="form-control" value="<?php echo $row['age']; ?> " rows="5" id="age" name="age" required required maxlength="3">
                                         </td>
                                     </tr>
 
@@ -252,7 +251,7 @@ if (isset($_POST['submit'])) {
                                         <td>Phone number</td>
                                         <td>:</td>
                                         <td>
-                                            <input type="text" class="form-control" value="<?php echo $row['contact']; ?> " min="10" maxlength="10" id="contact" name="contact" required maxlength="10">
+                                            <input type="text" class="form-control" value="<?php echo $row['contact']; ?> " id="contact" name="contact" required maxlength="10">
                                         </td>
                                     </tr>
                                     <tr>
@@ -261,19 +260,19 @@ if (isset($_POST['submit'])) {
                                     <td>State</td>
                                     <td>:</td>
                                     <td>
-                                        <input type="text" class="form-control" value="<?php echo $row['state']; ?> " min="10" maxlength="10" id="state" name="state" required maxlength="30">
+                                        <input type="text" class="form-control" value="<?php echo $row['state']; ?> " min="10" maxlength="10" id="state" name="state" required>
                                     </td>
                                     </tr>
                                     <td>District</td>
                                     <td>:</td>
                                     <td>
-                                        <input type="text" class="form-control" value="<?php echo $row['district']; ?> " min="10" maxlength="10" id="district" name="district" required>
+                                        <input type="text" class="form-control" value="<?php echo $row['district']; ?> " id="district" name="district" required>
                                     </td>
                                     </tr>
                                     <td>Address:</td>
                                     <td>:</td>
                                     <td>
-                                        <input type="text" class="form-control" value="<?php echo $row['place']; ?> " min="10" maxlength="10" id="place" name="place" required>
+                                        <input type="text" class="form-control" value="<?php echo $row['place']; ?> " id="place" name="place" required>
                                     </td>
                                     </tr>
                                 <?php

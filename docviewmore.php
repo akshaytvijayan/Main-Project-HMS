@@ -3,9 +3,10 @@
 include('func.php');
 include('newfunc.php');
 $con = mysqli_connect("localhost", "root", "", "myhmsdb");
-$doctor = $_SESSION['dname'];
-$sql = "select * from doctb where username='$doctor'";
-$rs = mysqli_query($con, $sql);
+// $doctor = $_SESSION['dname'];
+$did = $_GET['did'];
+$dname = $_GET['dname'];
+
 if (isset($_POST['submit'])) {
     $fname = $_POST['username'];
     $spec = $_POST['spec'];
@@ -23,7 +24,7 @@ if (isset($_POST['submit'])) {
 
     if ($con->query($sql) === TRUE) {
         echo "<script>alert('Record updated successfully')
-    window.location='editprofile1.php'</script>";
+    window.location='docviewmore.php'</script>";
     } else {
         echo "Error updating record: " . $con->error;
     }
@@ -55,14 +56,20 @@ if (isset($_POST['submit'])) {
         </button>
 
         <style>
+            button:hover {
+                cursor: pointer;
+            }
+
+            #inputbtn:hover {
+                cursor: pointer;
+            }
+
             .btn-outline-light:hover {
                 color: #25bef7;
                 background-color: #f8f9fa;
                 border-color: #f8f9fa;
             }
-        </style>
 
-        <style>
             .bg-primary {
                 background: -webkit-linear-gradient(left, #3931af, #00c6ff);
             }
@@ -106,52 +113,29 @@ if (isset($_POST['submit'])) {
     </nav>
 </head>
 
-<style type="text/css">
-    button:hover {
-        cursor: pointer;
-    }
 
-    #inputbtn:hover {
-        cursor: pointer;
-    }
-</style>
 
 <body style="padding-top:50px;">
     <div class="container-fluid" style="margin-top:50px;">
         <h3 style="margin-left: 40%; padding-bottom: 20px;font-family:'IBM Plex Sans', sans-serif;"> Welcome &nbsp DR.
-            <?php echo $_SESSION['dname'] ?>
+            <?php echo $dname; ?>
         </h3>
-        <div class="row">
-            <div class="col-md-4" style="max-width:18%;margin-top: 3%;">
-                <div class="list-group" id="list-tab" role="tablist">
-                    <a class="list-group-item list-group-item-action " href="doctor-panel.php" data-toggle="list">Dashboard</a>
-                    <a class="list-group-item list-group-item-action active" href="doctor-panel.php" aria-controls="home">Update Profile</a>
-                    <a class="list-group-item list-group-item-action" href="doctor-panel.php" data-toggle="list" aria-controls="home">Appointments</a>
-                    <a class="list-group-item list-group-item-action" href="doctor-panel.php" aria-controls="home">
-                        Prescription List</a>
-
-                </div><br>
-            </div>
+        <div class="row justify-content-center">
             <div class="col-md-8" style="margin-top: 3%;">
-                <div class="tab-content" id="nav-tabContent" style="width: 950px;">
-
+                <div class="card">
                     <div class="card-body">
-                        <form name="myForm" method="POST" onsubmit="return validation();">
-                            <table>
+                        <form name="" method="POST">
+                            <table class="table">
                                 <tbody>
-                                    <!-- <tr>
-                                        <td>Name</td>
-                                        <td>:</td>
-                                        <td>
-                                            <?php
-                                            echo $_SESSION['dname'];
-                                            ?>
-                                        </td>
-                                    </tr> -->
+
                                     <?php
+                                    $sqll = "select * from doctb where did='$did'";
+                                    $rs = mysqli_query($con, $sqll);
                                     while ($row = mysqli_fetch_array($rs)) {
                                     ?>
                                         <tr>
+                                            <!-- <h2>hi</h2> -->
+
                                             <td>First name</td>
                                             <td>:</td>
                                             <td>
@@ -239,12 +223,29 @@ if (isset($_POST['submit'])) {
                                             <input type="text" class="form-control" value="<?php echo $row['experience']; ?> " id="experience" name="experience" required>
                                         </td>
                                         </tr>
+
+                                        <td>Appointment Date</td>
+                                        <td>:</td>
+                                        <td>
+                                            <input type="text" class="form-control" value="<?php echo $row['joiningDate']; ?> " id="joiningDate" name="joiningDate" required>
+                                        </td>
+                                        </tr>
+
+                                        <td>Resignation Date</td>
+                                        <td>:</td>
+                                        <td>
+                                            <input type="text" class="form-control" value="<?php echo $row[' ']; ?> " id="resignDate" name="resignDate" required>
+                                        </td>
+
+
+                                        </tr>
                                     <?php
                                     } ?>
-                                </tbody>
                             </table>
-                            <div>
-                                <input type="submit" class="btn-success" value="Update Your Profile" id="btn" name="submit">
+                            <div class="text-center">
+                                <button type="submit" class="btn btn-primary btn-lg" name="submit">Update Profile</button>
+                                <a href="javascript:history.go(-1);" class="btn btn-outline-secondary btn-lg ml-2">Back</a>
+
                             </div>
                         </form>
                     </div>

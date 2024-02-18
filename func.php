@@ -42,7 +42,7 @@ if (isset($_POST['patsub'])) {
 
   // Check if username already exists
   $username = $_POST['username'];
-  $check_query = "SELECT * FROM patreg WHERE username='$username'";
+  $check_query = "SELECT * FROM patreg WHERE fname='$username'";
   $check_result = mysqli_query($con, $check_query);
 
   if (mysqli_num_rows($check_result) > 0) {

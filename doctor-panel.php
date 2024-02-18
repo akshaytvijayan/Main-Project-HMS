@@ -49,36 +49,46 @@ if (isset($_GET['cancel'])) {
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 
   <link href="https://fonts.googleapis.com/css?family=IBM+Plex+Sans&display=swap" rel="stylesheet">
+  <style>
+    .btn-outline-light:hover {
+      color: #25bef7;
+      background-color: #f8f9fa;
+      border-color: #f8f9fa;
+    }
+
+    .bg-primary {
+      background: -webkit-linear-gradient(left, #3931af, #00c6ff);
+    }
+
+    .list-group-item.active {
+      z-index: 2;
+      color: #fff;
+      background-color: #342ac1;
+      border-color: #007bff;
+    }
+
+    .text-primary {
+      color: #342ac1 !important;
+    }
+
+    button:hover {
+      cursor: pointer;
+    }
+
+    #inputbtn:hover {
+      cursor: pointer;
+    }
+  </style>
+
+</head>
+
+
+<body>
   <nav class="navbar navbar-expand-lg navbar-dark bg-primary fixed-top">
     <a class="navbar-brand" href="#"><i class="fa fa-user-plus" aria-hidden="true"></i> NEETHI Hospital </a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
-
-    <style>
-      .btn-outline-light:hover {
-        color: #25bef7;
-        background-color: #f8f9fa;
-        border-color: #f8f9fa;
-      }
-    </style>
-
-    <style>
-      .bg-primary {
-        background: -webkit-linear-gradient(left, #3931af, #00c6ff);
-      }
-
-      .list-group-item.active {
-        z-index: 2;
-        color: #fff;
-        background-color: #342ac1;
-        border-color: #007bff;
-      }
-
-      .text-primary {
-        color: #342ac1 !important;
-      }
-    </style>
 
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
       <ul class="navbar-nav mr-auto">
@@ -95,34 +105,26 @@ if (isset($_GET['cancel'])) {
       </form>
     </div>
   </nav>
-</head>
-<style type="text/css">
-  button:hover {
-    cursor: pointer;
-  }
 
-  #inputbtn:hover {
-    cursor: pointer;
-  }
-</style>
-
-<body style="padding-top:50px;">
-  <div class="container-fluid" style="margin-top:50px;">
-    <h3 style="margin-left: 40%; padding-bottom: 20px;font-family:'IBM Plex Sans', sans-serif;"> Welcome &nbsp DR.
-      <?php echo $_SESSION['dname'] ?>
-    </h3>
+  <div class="container-fluid" style="margin-top:100px;">
+    <div class="text-center">
+      <h3 style="font-family:'IBM Plex Sans', sans-serif;"> Welcome &nbsp DR.
+        <?php echo $_SESSION['dname'] ?>
+      </h3>
+    </div>
     <div class="row">
       <div class="col-md-4" style="max-width:18%;margin-top: 3%;">
         <div class="list-group" id="list-tab" role="tablist">
           <a class="list-group-item list-group-item-action active" href="#list-dash" role="tab" aria-controls="home" data-toggle="list">Dashboard</a>
           <a class="list-group-item list-group-item-action" id="list-update-list" data-toggle="list" href="#list-update" role="tab" aria-controls="home">Update Profile</a>
-          <a class="list-group-item list-group-item-action" href="#list-app" id="list-app-list" role="tab" data-toggle="list" aria-controls="home">Appointments</a>
+          <a class="list-group-item list-group-item-action" href="#list-app" id="list-app-list" role="tab" data-toggle="list" aria-controls="home">Online Appointments</a>
+          <a class="list-group-item list-group-item-action" href="offline.php">Offline Appointments</a>
           <a class="list-group-item list-group-item-action" href="#list-pres" id="list-pres-list" role="tab" data-toggle="list" aria-controls="home"> Prescription List</a>
 
-        </div><br>
+        </div>
       </div>
-      <div class="col-md-8" style="margin-top: 3%;">
-        <div class="tab-content" id="nav-tabContent" style="width: 950px;">
+      <div class="col-md-8 mt-5">
+        <div class="tab-content mt-5" id="nav-tabContent" style="width: 950px;">
           <div class="tab-pane fade show active" id="list-dash" role="tabpanel" aria-labelledby="list-dash-list">
 
             <div class="container-fluid container-fullw bg-white">
@@ -186,6 +188,9 @@ if (isset($_GET['cancel'])) {
                   if (mysqli_num_rows($result) > 0) {
                     while ($row = mysqli_fetch_array($result)) {
                 ?>
+                      <div style="text-align: center;">
+                        <img src="<?php echo "msg_img/" . $row['image']; ?>" width="200px" height="200px" alt=" Images" />
+                      </div>
                       <div class="container">
                         <div class="row">
                           <div class="col-sm">
@@ -406,9 +411,6 @@ if (isset($_GET['cancel'])) {
               </tbody>
             </table>
           </div>
-
-
-
 
           <div class="tab-pane fade" id="list-app" role="tabpanel" aria-labelledby="list-pat-list">
 

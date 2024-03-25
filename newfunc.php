@@ -25,18 +25,7 @@ if(isset($_POST['update_data']))
   header("Location:updated.php");
 }
 
-// function display_docs()
-// {
-//  global $con;
-//  $query="select * from doctb";
-//  $result=mysqli_query($con,$query);
-//  while($row=mysqli_fetch_array($result))
-//  {
-//   $username=$row['username'];
-//   $price=$row['docFees'];
-//   echo '<option value="' .$username. '" data-value="'.$price.'">'.$username.'</option>';
-//  }
-// }
+
 
 
 function display_specs() {
@@ -50,31 +39,7 @@ function display_specs() {
   }
 }
 
-function display_docs()
-{
- global $con;
- $query = "select * from doctb";
- $result = mysqli_query($con,$query);
- while( $row = mysqli_fetch_array($result) )
- {
-  $username = $row['username'];
-  $price = $row['docFees'];
-  $spec = $row['spec'];
-  echo '<option value="' .$username. '" data-value="'.$price.'" data-spec="'.$spec.'">'.$username.'</option>';
- }
-}
 
-// function display_specs() {
-//   global $con;
-//   $query = "select distinct(spec) from doctb";
-//   $result = mysqli_query($con,$query);
-//   while($row = mysqli_fetch_array($result))
-//   {
-//     $spec = $row['spec'];
-//     $username = $row['username'];
-//     echo '<option value = "' .$spec. '">'.$spec.'</option>';
-//   }
-// }
 
 
 if(isset($_POST['doc_sub']))

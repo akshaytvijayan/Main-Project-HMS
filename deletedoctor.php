@@ -235,20 +235,15 @@ include('newfunc.php');
                                                         <th>Id</th>
                                                         <th> Name</th>&nbsp;&nbsp;
                                                         <th> Image</th>&nbsp;&nbsp;
-                                                        <th> Specialization<select name="spec" class="form-control" id="spec">
-                                                                <option value="" disabled selected>Select Specialization</option>
-                                                                <?php
-                                                                display_specs();
-                                                                ?>
-                                                            </select></th>&nbsp;&nbsp;
-                                                        <th>Username</th>&nbsp;&nbsp;
+                                                        <th> Specialization</th>&nbsp;&nbsp;
+                                                        <!-- <th>Username</th>&nbsp;&nbsp; -->
                                                         <th>Email</th>
                                                         <th>Gender</th>
-                                                        <th>Phone no</th>
-                                                        <!-- <th>Address</th> -->
+                                                        <!-- <th>Phone no</th>
+                                                         <th>Address</th> 
                                                         <th>State</th>
                                                         <th>District</th>
-                                                        <th>Fees</th>
+                                                        <th>Fees</th> -->
                                                         <th>Status</th>
                                                         <th>Date of join</th>
                                                         <th>Action</th>
@@ -258,27 +253,19 @@ include('newfunc.php');
                                                     $query = "SELECT * FROM doctb ORDER BY did DESC";
                                                     $result = mysqli_query($con, $query);
                                                     while ($row = mysqli_fetch_array($result)) {
-
                                                         $did = $row['did'];
                                                         $dname = $row['name'];
                                                     ?>
-
-
-                                                        <tr>
+                                                        <tr data-spec="<?php echo $row['spec']; ?>">
                                                             <td>
-                                                                <?php echo $s++; ?>
+                                                                <?php echo $s; ?>
                                                             </td>
                                                             <td>
                                                                 <?php echo $row['name']; ?>
                                                             </td>
-                                                            <td><img src="<?php echo "msg_img/" . $row['image']; ?>" width="200px" height="200px" alt=" Images" /></td>
-
+                                                            <td><img src="<?php echo "msg_img/" . $row['image']; ?>" width="50px" height="50px" alt=" Images" /></td>
                                                             <td>
                                                                 <?php echo $row['spec']; ?>
-
-                                                            </td>
-                                                            <td>
-                                                                <?php echo $row['username']; ?>
                                                             </td>
                                                             <td>
                                                                 <?php echo $row['email']; ?>
@@ -287,25 +274,63 @@ include('newfunc.php');
                                                                 <?php echo $row['gender']; ?>
                                                             </td>
                                                             <td>
-                                                                <?php echo $row['contact']; ?>
-                                                            </td>
-                                                            <!-- <td>
-                                                                <?php echo $row['location']; ?>
-                                                            </td> -->
-                                                            <td>
-                                                                <?php echo $row['place']; ?>
-                                                            </td>
-                                                            <td>
-                                                                <?php echo $row['district']; ?>
-                                                            </td>
-                                                            <td>
-                                                                <?php echo $row['docFees']; ?>
-                                                            </td>
-                                                            <td>
+                                                                <?php
+                                                                $status = $row['status'];
+                                                                $button_class = ($status == 'active') ? 'btn-success' : 'btn-danger';
+                                                                ?>
                                                                 <div class="status-switch">
-                                                                    <button class="status-btn active">Active</button>
+                                                                    <form action="inactive.php" method="GET" onsubmit="return confirmStatusChange(<?php echo $did; ?>, '<?php echo $status; ?>')">
+                                                                        <input type="hidden" id="did_<?php echo $did; ?>" name="did" value="<?php echo $did ?>">
+                                                                        <input type="hidden" name="dname" value="<?php echo $dname; ?>">
+                                                                        <button type="submit" class="btn <?php echo $button_class; ?>">
+                                                                            <i class="fa fa-pen"></i>
+                                                                            <input type="hidden" id="status_<?php echo $did; ?>" name="status" value="<?php echo $status ?>">
+                                                                            <?php echo $status; ?>
+                                                                        </button>
+                                                                        <input type="hidden" id="reason_<?php echo $did; ?>" name="reason">
+                                                                    </form>
                                                                 </div>
                                                             </td>
+                                                            <script>
+                                                                function confirmStatusChange(did, status) {
+                                                                    alert("ID: " + did + ", Status: " + status); 
+                                                                    var reasonInput = document.getElementById('reason_' + did);
+                                                                    var statusInput = document.getElementById('status_' + did);
+
+                                                                    if (status === 'active') {
+                                                                        var reason = prompt('Please provide a reason for changing status to inactive:');
+                                                                        if (reason !== null) {
+                                                                            reasonInput.value = reason;
+                                                                            return true; // Continue with the form submission
+                                                                        } else {
+                                                                            return false; // Cancel the form submission
+                                                                        }
+                                                                    } else {
+                                                                        reasonInput.value = '';
+                                                                        return true; // Continue with the form submission
+                                                                    }
+                                                                }
+                                                            </script>
+
+                                                            <!-- <script>
+                                                                function confirmStatusChange(did, status) {
+                                                                    // alert("hi?")
+                                                                    alert("ID: " + did + ", Status: " + status);                                                                    // var id=document.getElementById('did').value;
+                                                                    // // alert(id);
+                                                                    // var status=document.getElementById('status').value;
+                                                                    // alert(status);
+                                                                    if (status == 'active') {
+                                                                        var reason = prompt('Please provide a reason for changing status to inactive:');
+                                                                        // if (reason != null) {
+                                                                        alert(reason);
+                                                                        document.getElementById('reason').value = reason;
+                                                                        document.getElementById('did').value = did;
+                                                                        return true; // Continue with the link click
+                                                                    }
+                                                                    // return true; // Continue with the link click for other cases
+                                                                }
+                                                            </script> -->
+
 
 
                                                             <td>
@@ -318,8 +343,8 @@ include('newfunc.php');
                                                                     <input type="hidden" name="id" value="<?php echo $row['did']; ?>" />
                                                                     <!-- <button type="submit" name="delete" class="btn btn-danger" onclick="return confirm('Do you really want to delete?')">Delete</button> -->
                                                                     <!-- <a href="docviewmore.php"> class="btn btn-success"> -->
-                                                                    <a href="docviewmore.php?did=<?php echo $did; ?>&dname=<?php echo $dname; ?>" class="btn btn-success">
-                                                                        <button type="button" class="btn btn-success">
+                                                                    <a href="docviewmore.php?did=<?php echo $did; ?>&dname=<?php echo $dname; ?>">
+                                                                        <button type="button" class="btn btn-primary">
                                                                             <i class="fa fa-pen"></i> View More
                                                                         </button>
                                                                     </a>
@@ -328,6 +353,7 @@ include('newfunc.php');
                                                         </tr>
 
                                                     <?php
+                                                    $s++;
                                                     }
                                                     ?>
                                                 </table>
@@ -352,87 +378,62 @@ include('newfunc.php');
                         <!-- End  Basic Table  -->
                     </div>
                 </div>
+            </div>
+        </div>
 
 
 
 
-                <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
-                <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js" integrity="sha384-b/U6ypiBEHpOf/4+1nzFpr53nxSS+GLCkfwBdFNTxtclqqenISfwAzpKaMNFNmj4" crossorigin="anonymous"></script>
-                <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js" integrity="sha384-h0AbiXch4ZDo7tp9hKZ4TsHbi047NrKGLO3SEJAg45jXxnGIfYzk4Si90RDIqNm1" crossorigin="anonymous"></script>
-                <script src="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/6.10.1/sweetalert2.all.min.js"></script>
+        <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js" integrity="sha384-b/U6ypiBEHpOf/4+1nzFpr53nxSS+GLCkfwBdFNTxtclqqenISfwAzpKaMNFNmj4" crossorigin="anonymous"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js" integrity="sha384-h0AbiXch4ZDo7tp9hKZ4TsHbi047NrKGLO3SEJAg45jXxnGIfYzk4Si90RDIqNm1" crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/6.10.1/sweetalert2.all.min.js"></script>
 
-                <!-- Search functionality -->
-                <script>
-                    $(document).ready(function() {
-                        $("#searchInput").on("keyup", function() {
-                            var value = $(this).val().toLowerCase();
-                            $("#builder tbody tr").filter(function() {
-                                $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
-                            });
-                        });
+        <!-- Search functionality -->
+        <script>
+            $(document).ready(function() {
+                $("#searchInput").on("keyup", function() {
+                    var value = $(this).val().toLowerCase();
+                    $("#builder tbody tr").filter(function() {
+                        $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
                     });
-                </script>
+                });
+            });
+        </script>
 
-                <script>
-                    document.getElementById('spec').onchange = function foo() {
-                        let spec = this.value;
-                        console.log(spec)
-                        let docs = [...document.getElementById('doctor').options];
+        <script>
+            document.getElementById('spec').onchange = function foo() {
+                let spec = this.value;
+                console.log(spec)
+                let docs = [...document.getElementById('doctor').options];
 
-                        docs.forEach((el, ind, arr) => {
-                            arr[ind].setAttribute("style", "");
-                            if (el.getAttribute("data-spec") != spec) {
-                                arr[ind].setAttribute("style", "display: none");
-                            }
-                        });
-                    };
-                </script>
+                docs.forEach((el, ind, arr) => {
+                    arr[ind].setAttribute("style", "");
+                    if (el.getAttribute("data-spec") != spec) {
+                        arr[ind].setAttribute("style", "display: none");
+                    }
+                });
+            };
+        </script>
 
-                <script>
-                    // Sorting functionality for dropdown
-                    $(document).ready(function() {
-                        $("#spec").change(function() {
-                            var spec = $(this).val().toLowerCase(); // Get the selected specialization
-                            var rows = $("#builder tbody tr").get(); // Get all table rows
 
-                            rows.sort(function(a, b) {
-                                var aSpec = $(a).attr("data-spec").toLowerCase(); // Get specialization of row a
-                                var bSpec = $(b).attr("data-spec").toLowerCase(); // Get specialization of row b
 
-                                // Compare specializations
-                                if (spec === "" || aSpec === spec) {
-                                    return -1; // a should come before b
-                                } else if (bSpec === spec) {
-                                    return 1; // b should come before a
-                                } else {
-                                    return 0; // a and b remain unchanged
-                                }
-                            });
+        <!-- active and inactive -->
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+        <script>
+            $(document).ready(function() {
+                $(".status-btn").click(function() {
+                    // Toggle the 'active' class
+                    $(this).toggleClass("active inactive");
 
-                            // Reorder table rows based on sorted array
-                            $.each(rows, function(index, row) {
-                                $("#builder tbody").append(row);
-                            });
-                        });
-                    });
-                </script>
+                    // Toggle the text between 'Active' and 'Inactive'
+                    var newText = $(this).text() === "Active" ? "Inactive" : "Active";
+                    $(this).text(newText);
 
-                <!-- active and inactive -->
-                <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-                <script>
-                    $(document).ready(function() {
-                        $(".status-btn").click(function() {
-                            // Toggle the 'active' class
-                            $(this).toggleClass("active inactive");
-
-                            // Toggle the text between 'Active' and 'Inactive'
-                            var newText = $(this).text() === "Active" ? "Inactive" : "Active";
-                            $(this).text(newText);
-
-                            // Add your logic to handle the state change here
-                        });
-                    });
-                </script>
+                    // Add your logic to handle the state change here
+                });
+            });
+        </script>
 
 
 

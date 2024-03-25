@@ -2,7 +2,21 @@
 <?php
 include('func1.php');
 $con = mysqli_connect("localhost", "root", "", "myhmsdb");
-$doctor = $_SESSION['dname'];
+$demail = $_SESSION['demail'];
+
+
+// if(isset($_SESSION['demail'])) {
+//     $message = "Welcome Doctor : " . $demail;
+//     echo "<script>alert('$message');</script>";
+// } else {
+
+//     header("Location: index.php");
+//     exit;
+// }
+
+
+
+
 if (isset($_GET['cancel'])) {
   $query = mysqli_query($con, "update appointmenttb set doctorStatus='0' where ID = '" . $_GET['ID'] . "'");
   if ($query) {
@@ -109,7 +123,7 @@ if (isset($_GET['cancel'])) {
   <div class="container-fluid" style="margin-top:100px;">
     <div class="text-center">
       <h3 style="font-family:'IBM Plex Sans', sans-serif;"> Welcome &nbsp DR.
-        <?php echo $_SESSION['dname'] ?>
+        <?php echo $_SESSION['demail'] ?>
       </h3>
     </div>
     <div class="row">
@@ -117,14 +131,16 @@ if (isset($_GET['cancel'])) {
         <div class="list-group" id="list-tab" role="tablist">
           <a class="list-group-item list-group-item-action active" href="#list-dash" role="tab" aria-controls="home" data-toggle="list">Dashboard</a>
           <a class="list-group-item list-group-item-action" id="list-update-list" data-toggle="list" href="#list-update" role="tab" aria-controls="home">Update Profile</a>
+          <a class="list-group-item list-group-item-action" href="changepassdoc.php">Change Password</a>
           <a class="list-group-item list-group-item-action" href="#list-app" id="list-app-list" role="tab" data-toggle="list" aria-controls="home">Online Appointments</a>
           <a class="list-group-item list-group-item-action" href="offline.php">Offline Appointments</a>
-          <a class="list-group-item list-group-item-action" href="#list-pres" id="list-pres-list" role="tab" data-toggle="list" aria-controls="home"> Prescription List</a>
+          <a class="list-group-item list-group-item-action " href="viewpre.php"> Prescription List</a>
+
 
         </div>
       </div>
       <div class="col-md-8 mt-5">
-        <div class="tab-content mt-5" id="nav-tabContent" style="width: 950px;">
+        <div class="tab-content mt-5" id="nav-tabContent" style="width: 100%;">
           <div class="tab-pane fade show active" id="list-dash" role="tabpanel" aria-labelledby="list-dash-list">
 
             <div class="container-fluid container-fullw bg-white">
@@ -170,16 +186,15 @@ if (isset($_GET['cancel'])) {
 
           <div class="tab-pane fade" id="list-update" role="tabpanel" aria-labelledby="list-update-list">
 
-            <div class="container-fluid">
+            <div class="container-fluid mb-5">
               <div class="card">
-                <div class="card-body"></div>
                 <center>
                   <h4>View Profile</h4><a href="editprofile1.php"><i class="fa fa-pen"></i></a>
                 </center><br>
                 <?php
                 $con = mysqli_connect("localhost", "root", "", "myhmsdb");
-                $dname = $_SESSION['dname'];
-                $query = "SELECT * FROM doctb WHERE username = '$dname'";
+                $demail = $_SESSION['demail'];
+                $query = "SELECT * FROM doctb WHERE email = '$demail'";
                 $result = mysqli_query($con, $query);
 
                 if (!$result) {
@@ -191,7 +206,7 @@ if (isset($_GET['cancel'])) {
                       <div style="text-align: center;">
                         <img src="<?php echo "msg_img/" . $row['image']; ?>" width="200px" height="200px" alt=" Images" />
                       </div>
-                      <div class="container">
+                      <div class="container w-75">
                         <div class="row">
                           <div class="col-sm">
                             <label for="username">Doctor Name:</label>
@@ -199,7 +214,7 @@ if (isset($_GET['cancel'])) {
                           </div>
                         </div>
                       </div>
-                      <div class="container">
+                      <div class="container w-75">
                         <div class="row">
                           <div class="col-sm">
                             <label for="email">Email</label>
@@ -207,7 +222,7 @@ if (isset($_GET['cancel'])) {
                           </div>
                         </div>
                       </div>
-                      <div class="container">
+                      <div class="container w-75">
                         <div class="row">
                           <div class="col-sm">
                             <label for="spec">Specialization:</label>
@@ -215,14 +230,14 @@ if (isset($_GET['cancel'])) {
                           </div>
                         </div>
                       </div>
-                      <div class="container">
+                      <div class="container w-75">
                         <div class="row">
                           <div class="col-sm">
                             <label for="amount">Amount :</label>
                             <input type="text" id="amount" name="amount" class="form-control" value="<?php echo $row['docFees']; ?>" readonly>
                           </div>
                         </div>
-                      </div>
+                      </div><br>
 
                 <?php
                     }
@@ -236,20 +251,22 @@ if (isset($_GET['cancel'])) {
             </div>
           </div>
 
+
+          <!-- online -->
           <div class="tab-pane fade" id="list-app" role="tabpanel" aria-labelledby="list-home-list">
 
             <table class="table table-hover">
               <thead>
                 <tr>
-                  <th scope="col">Patient ID</th>
-                  <th scope="col">Appointment ID</th>
+                  <!-- <th scope="col">Patient ID</th>
+                  <th scope="col">Appointment ID</th> -->
                   <th scope="col">First Name</th>
                   <th scope="col">Last Name</th>
                   <th scope="col">Gender</th>
                   <th scope="col">Email</th>
                   <th scope="col">Contact</th>
                   <th scope="col">Appointment Date</th>
-                  <th scope="col">Appointment Time</th>
+                  <th scope="col">Registered Date</th>
                   <th scope="col">Current Status</th>
                   <th scope="col">Action</th>
                   <th scope="col">Prescribe</th>
@@ -260,17 +277,23 @@ if (isset($_GET['cancel'])) {
                 <?php
                 $con = mysqli_connect("localhost", "root", "", "myhmsdb");
                 global $con;
-                $dname = $_SESSION['dname'];
-                $query = "select pid,ID,fname,lname,gender,email,contact,appdate,apptime,userStatus,doctorStatus from appointmenttb where doctor='$dname';";
+                $demail = $_SESSION['demail'];
+                $sml = "SELECT username FROM `doctb` WHERE email='$demail'";
+                $sml_result = mysqli_query($con, $sml);
+                $username_row = mysqli_fetch_array($sml_result);
+                $username = $username_row['username']; // Extracting the username from the array
+
+                $query = "SELECT * FROM appointmenttb WHERE doctor='$username'  and status='request' ORDER BY id ASC";
                 $result = mysqli_query($con, $query);
+
                 while ($row = mysqli_fetch_array($result)) {
                 ?>
                   <tr>
-                    <td>
+                    <!-- <td>
                       <?php echo $row['pid']; ?>
                     </td>
                     <td>
-                      <?php echo $row['ID']; ?>
+                      <?php echo $row['ID']; ?> -->
                     </td>
                     <td>
                       <?php echo $row['fname']; ?>
@@ -288,7 +311,7 @@ if (isset($_GET['cancel'])) {
                       <?php echo $row['contact']; ?>
                     </td>
                     <td>
-                      <?php echo $row['appdate']; ?>
+                      <?php echo $row['user_date']; ?>
                     </td>
                     <td>
                       <?php echo $row['apptime']; ?>
@@ -323,7 +346,7 @@ if (isset($_GET['cancel'])) {
 
                       <?php if (($row['userStatus'] == 1) && ($row['doctorStatus'] == 1)) { ?>
 
-                        <a href="prescribe.php?pid=<?php echo $row['pid'] ?>&ID=<?php echo $row['ID'] ?>&fname=<?php echo $row['fname'] ?>&lname=<?php echo $row['lname'] ?>&appdate=<?php echo $row['appdate'] ?>&apptime=<?php echo $row['apptime'] ?>" tooltip-placement="top" tooltip="Remove" title="prescribe">
+                        <a href="prescribe.php?pid=<?php echo $row['pid'] ?>&ID=<?php echo $row['ID'] ?>&fname=<?php echo $row['fname'] ?>&lname=<?php echo $row['lname'] ?>&appdate=<?php echo $row['appdate'] ?>&apptime=<?php echo $row['apptime'] ?>&user_date=<?php echo $row['user_date'] ?>" tooltip-placement="top" tooltip="Remove" title="prescribe">
                           <button class="btn btn-success">Prescibe</button></a>
                       <?php } else {
 
@@ -331,6 +354,7 @@ if (isset($_GET['cancel'])) {
                       } ?>
 
                     </td>
+
 
 
                   </tr></a>
@@ -365,7 +389,7 @@ if (isset($_GET['cancel'])) {
                 $con = mysqli_connect("localhost", "root", "", "myhmsdb");
                 global $con;
 
-                $query = "select pid,fname,lname,ID,appdate,apptime,disease,allergy,prescription from prestb where doctor='$doctor';";
+                $query = "select pid,fname,lname,ID,appdate,apptime,disease,allergy,prescription from prestb where doctor='$username';";
 
                 $result = mysqli_query($con, $query);
                 if (!$result) {

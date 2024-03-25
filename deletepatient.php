@@ -193,7 +193,8 @@ include('newfunc.php');
                                                         <th>Phone no</th>
                                                         <th>Address</th>
                                                         <th>District</th>
-                                                        <th>Delete</th>
+                                                        <th>State</th>
+                                                        <th>Enrollment Date </th>
                                                     </tr>
                                                     <?php
                                                     $s = 1;
@@ -228,15 +229,13 @@ include('newfunc.php');
                                                             <td>
                                                                 <?php echo $row['district']; ?>
                                                             </td>
-
-
-
                                                             <td>
-                                                                <form action="" method="POST">
-                                                                    <input type="hidden" name="id" value="<?php echo $row['pid']; ?>" />
-                                                                    <button type="submit" name="delete" class="btn btn-danger" onclick="return confirm('Do you really want to delete?')">Delete</button>
-                                                                </form>
+                                                                <?php echo $row['state']; ?>
                                                             </td>
+                                                            <td>
+                                                                <?php echo $row['regdate']; ?>
+                                                            </td>
+
                                                         </tr>
 
                                                     <?php
@@ -272,17 +271,23 @@ include('newfunc.php');
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js" integrity="sha384-b/U6ypiBEHpOf/4+1nzFpr53nxSS+GLCkfwBdFNTxtclqqenISfwAzpKaMNFNmj4" crossorigin="anonymous"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js" integrity="sha384-h0AbiXch4ZDo7tp9hKZ4TsHbi047NrKGLO3SEJAg45jXxnGIfYzk4Si90RDIqNm1" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/6.10.1/sweetalert2.all.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
-        // Search functionality
         $(document).ready(function() {
+            console.log("Document ready");
             $("#searchInput").on("keyup", function() {
+                console.log("Keyup event triggered");
                 var value = $(this).val().toLowerCase();
+                console.log("Search value:", value);
                 $("#builder tbody tr").filter(function() {
+                    console.log("Filtering table rows");
                     $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
                 });
             });
         });
     </script>
+
+
 </body>
 
 </html>

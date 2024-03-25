@@ -138,6 +138,9 @@ $username = $_SESSION['username'];
                                 // Execute the query
                                 $result = mysqli_query($con, $query);
 
+
+
+
                                 // Check if the query was successful
                                 if ($result) {
                                     // Check if any rows were returned
@@ -146,6 +149,23 @@ $username = $_SESSION['username'];
                                         echo '<div class="container text-center">';
                                         echo '<div class="row">';
                                         while ($row = mysqli_fetch_assoc($result)) {
+
+                                            $dobb = $row['age'];
+
+                                            // Convert the date of birth to a DateTime object
+                                            $dobDateTime = DateTime::createFromFormat('Y-m-d', $dobb);
+
+                                            // Get the current date
+                                            $currentDate = new DateTime();
+
+                                            // Calculate the difference between the current date and the date of birth
+                                            $ageInterval = $currentDate->diff($dobDateTime);
+
+                                            // Get the years from the difference
+                                            $age = $ageInterval->y;
+
+                                            // Display the age
+                                            // echo "Age: " . $age;
                                             echo '<div class="col-md-10">';
                                             echo '<table class="table">';
                                             echo '<tbody>';
@@ -155,10 +175,10 @@ $username = $_SESSION['username'];
                                             echo '<td>Doctor Name:</td>';
                                             echo '<td><b>DR ' . $row['username'] . '</b></td>';
                                             echo '</tr>';
-                                            echo '<tr>';
-                                            echo '<td>Name:</td>';
-                                            echo '<td>' . $row['username'] . '</td>';
-                                            echo '</tr>';
+                                            // echo '<tr>';
+                                            // echo '<td>Name:</td>';
+                                            // echo '<td>' . $row['username'] . '</td>';
+                                            // echo '</tr>';
                                             echo '<tr>';
                                             echo '<td>Specialization:</td>';
                                             echo '<td>' . $row['spec'] . '</td>';
@@ -167,12 +187,16 @@ $username = $_SESSION['username'];
                                             echo '<td>Doctor Fees:</td>';
                                             echo '<td>' . $row['docFees'] . '</td>';
                                             echo '</tr>';
+
+
                                             echo '<tr>';
-                                            echo '<td>Doctor Fees:</td>';
+                                            echo '<td>Doctor age:</td>';
                                             echo '<td>' . $row['age'] . '</td>';
                                             echo '</tr>';
+
+
                                             echo '<tr>';
-                                            echo '<td>Doctor Fees:</td>';
+                                            echo '<td>Doctor qualification:</td>';
                                             echo '<td>' . $row['qualification'] . '</td>';
                                             echo '</tr>';
                                             echo '<tr>';
@@ -180,7 +204,7 @@ $username = $_SESSION['username'];
                                             echo '<td>' . $row['gender'] . '</td>';
                                             echo '</tr>';
                                             echo '<tr>';
-                                            echo '<td>Avialable Time:</td>';
+                                            echo '<td>Avialable Days:</td>';
                                             echo '<td>' . $row['avialabletime'] . '</td>';
                                             echo '</tr>';
                                             echo '<tr>';
@@ -188,12 +212,16 @@ $username = $_SESSION['username'];
                                             echo '<td>' . $row['experience'] . '</td>';
                                             echo '</tr>';
                                             echo '<tr>';
-                                            echo '<td>Place:</td>';
-                                            echo '<td>' . $row['place'] . '</td>';
+                                            echo '<td>Address:</td>';
+                                            echo '<td>' . $row['location'] . '</td>';
                                             echo '</tr>';
                                             echo '<tr>';
                                             echo '<td>District:</td>';
                                             echo '<td>' . $row['district'] . '</td>';
+                                            echo '</tr>';
+                                            echo '<tr>';
+                                            echo '<td>State:</td>';
+                                            echo '<td>' . $row['place'] . '</td>';
                                             echo '</tr>';
                                             echo '<tr>';
                                             echo '<td>Contact:</td>';

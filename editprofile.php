@@ -68,6 +68,126 @@ if (isset($_POST['submit'])) {
                 background: -webkit-linear-gradient(left, #3931af, #00c6ff);
             }
 
+            .col-md-4 {
+                max-width: 20% !important;
+            }
+
+            .list-group-item.active {
+                z-index: 2;
+                color: #fff;
+                background-color: #342ac1;
+                border-color: #007bff;
+            }
+
+            .text-primary {
+                color: #342ac1 !important;
+            }
+
+            #cpass {
+                display: -webkit-box;
+            }
+
+            #list-app {
+                font-size: 15px;
+            }
+
+            .btn-primary {
+                text-align: center;
+                color: #fff;
+                padding: 10px 20px;
+                border: none;
+                border-radius: 4px;
+                cursor: pointer;
+                font-size: 16px;
+                width: 15%;
+            }
+
+            .btn-danger {
+                text-align: center;
+                color: #fff;
+                padding: 10px 20px;
+                border: none;
+                border-radius: 4px;
+                cursor: pointer;
+                font-size: 16px;
+                width: 15%;
+            }
+
+
+            .container {
+                max-width: 1000px;
+                margin: 0 auto;
+                padding: 30px;
+                background-color: #fff;
+                border-radius: 5px;
+                box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+
+            }
+
+            .heading {
+                color: green !important;
+                font-weight: bold;
+
+
+            }
+
+            h2 {
+                text-align: center;
+                margin-bottom: 30px;
+            }
+
+
+            body {
+                font-family: Arial, sans-serif;
+                background-color: #f2f2f2;
+            }
+
+            .bg-primary {
+                background: -webkit-linear-gradient(left, #3931af, #00c6ff);
+            }
+
+            .col-md-4 {
+                max-width: 20% !important;
+            }
+
+            .list-group-item.active {
+                z-index: 2;
+                color: #fff;
+                background-color: #342ac1;
+                border-color: #007bff;
+            }
+
+            .text-primary {
+                color: #342ac1 !important;
+            }
+
+            #cpass {
+                display: -webkit-box;
+            }
+
+            #list-app {
+                font-size: 15px;
+            }
+
+            .btn-primary {
+                background-color: #3c50c1;
+                border-color: #3c50c1;
+            }
+
+            .btn-success {
+                text-align: center;
+                padding: 10px 20px;
+                border: none;
+                border-radius: 4px;
+                cursor: pointer;
+                font-size: 16px;
+                width: 15%;
+            }
+
+            .bg-primary {
+                background: -webkit-linear-gradient(left, #3931af, #00c6ff);
+            }
+
             .list-group-item.active {
                 z-index: 2;
                 color: #fff;
@@ -97,67 +217,7 @@ if (isset($_POST['submit'])) {
         </div>
     </nav>
 </head>
-<style type="text/css">
-    button:hover {
-        cursor: pointer;
-    }
 
-    #inputbtn:hover {
-        cursor: pointer;
-    }
-
-    input[type=text],
-    select {
-        width: 100%;
-        padding: 12px 20px;
-        margin: 8px 0;
-        display: inline-block;
-        border: 1px solid #ccc;
-        border-radius: 4px;
-        box-sizing: border-box;
-    }
-
-    input[type=submit] {
-        width: 50%;
-        background-color: #4CAF50;
-        color: white;
-        padding: 14px 20px;
-        margin: 8px 0;
-        border: none;
-        border-radius: 4px;
-        cursor: pointer;
-    }
-
-    input[type=submit]:hover {
-        background-color: #45a049;
-    }
-
-    /* Main */
-    .main {
-        margin-top: 2%;
-        margin-left: 20%;
-        margin-right: 20%;
-        font-size: 28px;
-        padding: 0 10px;
-        width: 58%;
-    }
-
-    .main h2 {
-        color: #333;
-        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        font-size: 24px;
-        margin-bottom: 10px;
-    }
-
-    .main .card {
-        background-color: #fff;
-        border-radius: 18px;
-        box-shadow: 1px 1px 8px 0 grey;
-        height: auto;
-        /* margin-bottom: 20px; */
-        padding: 20px 0 20px 50px;
-    }
-</style>
 
 
 <div class="container-fluid" style="margin-top:50px;">
@@ -177,22 +237,14 @@ if (isset($_POST['submit'])) {
 
             </div><br>
         </div>
-        <div class="col-md-8" style="margin-top: 3%;">
-            <div class="tab-content" id="nav-tabContent" style="width: 950px;">
-
-                <div class="card-body">
+        <div class="container profile-edit">
+            <h2 class="heading">PATIENT PROFILE</h2>
+            <div class="col-md-8 mx-auto" style="margin-top: 3%;">
+                <div class="tab-content" id="nav-tabContent">
                     <form name="myForm" method="POST" onsubmit="return validation();">
-                        <table>
+
+                        <table class="mx-auto">
                             <tbody>
-                                <!-- <tr>
-                                    <td>Name</td>
-                                    <td>:</td>
-                                    <td>
-                                        <?php
-                                        echo $_SESSION['email'];
-                                        ?>
-                                    </td>
-                                </tr> -->
                                 <?php
                                 while ($row = mysqli_fetch_array($rs)) {
                                 ?>
@@ -200,7 +252,7 @@ if (isset($_POST['submit'])) {
                                         <td>First name</td>
                                         <td>:</td>
                                         <td>
-                                            <input type="text" class="form-control" name="fname" id="name" value="<?php echo $row['fname']; ?>" autocomplete="off" onkeyup="return Validstr1()" required pattern="[a-zA-Z]{3,30}" oninvalid="setCustomValidity('input is incorrect !!')" oninput="setCustomValidity('')" maxlength="30" onkeyup="return validation()">
+                                            <input type="text" class="form-control" name="fname" id="name" value="<?php echo $row['fname']; ?>" autocomplete="off" onkeyup="return Validstr1()" required pattern="[a-zA-Z]{3,30}" oninvalid="setCustomValidity('input is incorrect !!')" oninput="setCustomValidity('')" maxlength="30" onkeyup="return validation()" readonly>
                                         </td>
 
                                     </tr>
@@ -234,7 +286,7 @@ if (isset($_POST['submit'])) {
                                         <td>Age</td>
                                         <td>:</td>
                                         <td>
-                                            <input type="text" class="form-control" value="<?php echo $row['age']; ?> " rows="5" id="age" name="age" required required maxlength="3">
+                                            <input type="text" class="form-control" value="<?php echo $row['age']; ?> " rows="5" id="age" name="age" required required maxlength="3" readonly>
                                         </td>
                                     </tr>
 
@@ -242,7 +294,7 @@ if (isset($_POST['submit'])) {
                                         <td>Gender</td>
                                         <td>:</td>
                                         <td>
-                                            <input type="text" class="form-control" value="<?php echo $row['gender']; ?> " rows="5" id="gender" name="gender" required required maxlength="30">
+                                            <input type="text" class="form-control" value="<?php echo $row['gender']; ?> " rows="5" id="gender" name="gender" required required maxlength="30" readonly>
                                         </td>
                                     </tr>
 
@@ -260,7 +312,7 @@ if (isset($_POST['submit'])) {
                                     <td>State</td>
                                     <td>:</td>
                                     <td>
-                                        <input type="text" class="form-control" value="<?php echo $row['state']; ?> " min="10" maxlength="10" id="state" name="state" required>
+                                        <input type="text" class="form-control" value="<?php echo $row['state']; ?> " min="10" maxlength="10" id="state" name="state" readonly>
                                     </td>
                                     </tr>
                                     <td>District</td>
@@ -279,8 +331,10 @@ if (isset($_POST['submit'])) {
                                 } ?>
                             </tbody>
                         </table>
-                        <div>
-                            <input type="submit" value="Update your account" id="btn" name="submit">
+                        <br><br>
+                        <div style="text-align: center;">
+                            <input type="submit" class="btn-success" value="Submit" id="btn" name="submit">
+                            <a href="admin-panel.php" id="btn" class="btn btn-danger">Back</a>
                         </div>
                     </form>
                 </div>

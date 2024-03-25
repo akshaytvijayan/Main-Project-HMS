@@ -1,12 +1,12 @@
 <?php
 session_start();
-$con=mysqli_connect("localhost","root","","myhmsdb");
-if(isset($_POST['search_submit'])){
-  $contact=$_POST['contact'];
+$con = mysqli_connect("localhost", "root", "", "myhmsdb");
+if (isset($_POST['search_submit'])) {
+  $contact = $_POST['contact'];
   $docname = $_SESSION['dname'];
- $query="select * from appointmenttb where contact='$contact' and doctor='$docname';";
- $result=mysqli_query($con,$query);
- echo '<!DOCTYPE html>
+  $query = "select * from appointmenttb where contact='$contact' and doctor='$docname';";
+  $result = mysqli_query($con, $query);
+  echo '<!DOCTYPE html>
 <html lang="en">
   <head>
     <!-- Required meta tags -->
@@ -32,23 +32,23 @@ if(isset($_POST['search_submit'])){
   </thead>
   <tbody>
   ';
-  while($row=mysqli_fetch_array($result)){
-    $fname=$row['fname'];
-    $lname=$row['lname'];
-    $email=$row['email'];
-    $contact=$row['contact'];
-    $appdate=$row['appdate'];
-    $apptime=$row['apptime'];
+  while ($row = mysqli_fetch_array($result)) {
+    $fname = $row['fname'];
+    $lname = $row['lname'];
+    $email = $row['email'];
+    $contact = $row['contact'];
+    $appdate = $row['appdate'];
+    $apptime = $row['apptime'];
     echo '<tr>
-      <td>'.$fname.'</td>
-      <td>'.$lname.'</td>
-      <td>'.$email.'</td>
-      <td>'.$contact.'</td>
-      <td>'.$appdate.'</td>
-      <td>'.$apptime.'</td>
+      <td>' . $fname . '</td>
+      <td>' . $lname . '</td>
+      <td>' . $email . '</td>
+      <td>' . $contact . '</td>
+      <td>' . $appdate . '</td>
+      <td>' . $apptime . '</td>
     </tr>';
   }
-echo '</tbody></table></div> 
+  echo '</tbody></table></div> 
 <div><a href="doctor-panel.php" class="btn btn-light">Go Back</a></div>
 <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
@@ -58,5 +58,3 @@ echo '</tbody></table></div>
   </body>
 </html>';
 }
-
-?>

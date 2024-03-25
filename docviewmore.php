@@ -1,11 +1,24 @@
 <!DOCTYPE html>
+<script type="text/javascript">
+    window.history.forward(); // Disable back button
+    window.onload = function() {
+        // Display warning message
+        if (window.history && window.history.pushState) {
+            window.history.pushState('forward', null, '');
+            $(window).on('popstate', function() {
+                alert('Back button is disabled.');
+                window.history.pushState('forward', null, '');
+            });
+        }
+    };
+</script>
 <?php
 include('func.php');
 include('newfunc.php');
 $con = mysqli_connect("localhost", "root", "", "myhmsdb");
 // $doctor = $_SESSION['dname'];
 $did = $_GET['did'];
-$dname = $_GET['dname'];
+$demail = $_GET['demail'];
 
 if (isset($_POST['submit'])) {
     $fname = $_POST['username'];
@@ -14,17 +27,19 @@ if (isset($_POST['submit'])) {
     $age = $_POST['age'];
     $contact = $_POST['contact'];
     $docFee = $_POST['docfee'];
+    $location = $_POST['location'];
     $district = $_POST['district'];
     $place = $_POST['place'];
     $qualification = $_POST['qualification'];
     $avialabletime = $_POST['avialabletime'];
     $experience = $_POST['experience'];
+    $resignDate = $_POST['resignDate'];
 
-    $sql = "UPDATE doctb SET username='$fname',spec='$spec',email='$email',age='$age',contact='$contact',docFees='$docFee',district='$district',place='$place',qualification='$qualification',avialabletime='$avialabletime',experience='$experience' WHERE username='$doctor'";
+    $sql = "UPDATE doctb SET username='$fname',spec='$spec',email='$email',age='$age',contact='$contact',docFees='$docFee',district='$district',place='$place',qualification='$qualification',location='$location',avialabletime='$avialabletime',experience='$experience',resignDate='$resignDate' WHERE email='$demail'";
 
     if ($con->query($sql) === TRUE) {
         echo "<script>alert('Record updated successfully')
-    window.location='docviewmore.php'</script>";
+    window.location='deletedoctor.php'</script>";
     } else {
         echo "Error updating record: " . $con->error;
     }
@@ -68,6 +83,13 @@ if (isset($_POST['submit'])) {
                 color: #25bef7;
                 background-color: #f8f9fa;
                 border-color: #f8f9fa;
+            }
+
+            h2 {
+                text-align: center;
+                margin-bottom: 30px;
+                color: green !important;
+                font-weight: bold;
             }
 
             .bg-primary {
@@ -118,7 +140,7 @@ if (isset($_POST['submit'])) {
 <body style="padding-top:50px;">
     <div class="container-fluid" style="margin-top:50px;">
         <h3 style="margin-left: 40%; padding-bottom: 20px;font-family:'IBM Plex Sans', sans-serif;"> Welcome &nbsp DR.
-            <?php echo $dname; ?>
+            <?php echo $demail; ?>
         </h3>
         <div class="row justify-content-center">
             <div class="col-md-8" style="margin-top: 3%;">
@@ -127,15 +149,17 @@ if (isset($_POST['submit'])) {
                         <form name="" method="POST">
                             <table class="table">
                                 <tbody>
-
+                                    <h2 class="heading">VIEW PROFILE</h2>
                                     <?php
                                     $sqll = "select * from doctb where did='$did'";
                                     $rs = mysqli_query($con, $sqll);
                                     while ($row = mysqli_fetch_array($rs)) {
+                                        $status = $row['status'];
                                     ?>
                                         <tr>
-                                            <!-- <h2>hi</h2> -->
-
+                                            <div style="text-align: center;">
+                                                <img src="<?php echo "msg_img/" . $row['image']; ?>" width="100px" height="100px" alt="Image">
+                                            </div><br>
                                             <td>First name</td>
                                             <td>:</td>
                                             <td>
@@ -151,7 +175,7 @@ if (isset($_POST['submit'])) {
                                             <td>Specification</td>
                                             <td>:</td>
                                             <td>
-                                                <input type="text" class="form-control" name="spec" id="spec" value="<?php echo $row['spec']; ?> " autocomplete="off">
+                                                <input type="text" class="form-control" name="spec" id="spec" value="<?php echo $row['spec']; ?> " autocomplete="off" readonly>
                                             </td>
 
                                         </tr>
@@ -173,7 +197,7 @@ if (isset($_POST['submit'])) {
                                             <td>DOB</td>
                                             <td>:</td>
                                             <td>
-                                                <input type="text" class="form-control" value="<?php echo $row['age']; ?> " rows="5" id="age" name="age" required maxlength="30">
+                                                <input type="text" class="form-control" value="<?php echo $row['age']; ?> " rows="5" id="age" name="age" required maxlength="30" readonly>
                                             </td>
                                         </tr>
 
@@ -181,7 +205,7 @@ if (isset($_POST['submit'])) {
                                             <td>Phone Number</td>
                                             <td>:</td>
                                             <td>
-                                                <input type="text" class="form-control" value="<?php echo $row['contact']; ?> " min="10" maxlength="10" id="contact" name="contact" required maxlength="10">
+                                                <input type="text" class="form-control" value="<?php echo $row['contact']; ?> " min="10" maxlength="10" id="contact" name="contact" required maxlength="10" readonly>
                                             </td>
                                         </tr>
                                         <tr>
@@ -190,63 +214,80 @@ if (isset($_POST['submit'])) {
                                         <td>Doctor Fee</td>
                                         <td>:</td>
                                         <td>
-                                            <input type="text" class="form-control" value="<?php echo $row['docFees']; ?> " id="docfee" name="docfee" required maxlength="30">
-                                        </td>
-                                        </tr>
-                                        <td>District</td>
-                                        <td>:</td>
-                                        <td>
-                                            <input type="text" class="form-control" value="<?php echo $row['district']; ?> " min="10" maxlength="10" id="district" name="district" required>
+                                            <input type="text" class="form-control" value="<?php echo $row['docFees']; ?> " id="docfee" name="docfee" maxlength="30" readonly>
                                         </td>
                                         </tr>
                                         <td>Address</td>
                                         <td>:</td>
                                         <td>
-                                            <input type="text" class="form-control" value="<?php echo $row['place']; ?> " id="place" name="place" required>
+                                            <input type="text" class="form-control" value="<?php echo $row['location']; ?> " id="location" name="location" readonly>
+                                        </td>
+                                        </tr>
+                                        <td>District</td>
+                                        <td>:</td>
+                                        <td>
+                                            <input type="text" class="form-control" value="<?php echo $row['district']; ?> " min="10" maxlength="10" id="district" name="district" readonly>
+                                        </td>
+                                        </tr>
+                                        <td>State</td>
+                                        <td>:</td>
+                                        <td>
+                                            <input type="text" class="form-control" value="<?php echo $row['place']; ?> " id="place" name="place" readonly>
                                         </td>
                                         </tr>
                                         <td>Qualification</td>
                                         <td>:</td>
                                         <td>
-                                            <input type="text" class="form-control" value="<?php echo $row['qualification']; ?> " id=" qualification" name="qualification" required>
+                                            <input type="text" class="form-control" value="<?php echo $row['qualification']; ?> " id=" qualification" name="qualification" readonly>
                                         </td>
                                         </tr>
                                         <td>Available Days</td>
                                         <td>:</td>
                                         <td>
-                                            <input type="text" class="form-control" value="<?php echo $row['avialabletime']; ?> " id="avialabletime" name="avialabletime" required>
+                                            <input type="text" class="form-control" value="<?php echo $row['avialabletime']; ?> " id="avialabletime" name="avialabletime" readonly>
                                         </td>
                                         </tr>
                                         <td>Experience</td>
                                         <td>:</td>
                                         <td>
-                                            <input type="text" class="form-control" value="<?php echo $row['experience']; ?> " id="experience" name="experience" required>
+                                            <input type="text" class="form-control" value="<?php echo $row['experience']; ?> " id="experience" name="experience" readonly>
                                         </td>
                                         </tr>
 
-                                        <td>Appointment Date</td>
+                                        <td>Appointment Date and Time</td>
                                         <td>:</td>
                                         <td>
-                                            <input type="text" class="form-control" value="<?php echo $row['joiningDate']; ?> " id="joiningDate" name="joiningDate" required>
+                                            <input type="text" class="form-control" value="<?php echo $row['joiningDate']; ?> " id="joiningDate" name="joiningDate" readonly>
                                         </td>
                                         </tr>
+                                        <?php
+                                        if ($status == "inactive") {
+                                        ?>
+                                            <td>Status Description </td>
+                                            <td>:</td>
+                                            <td>
+                                                <input type="text" class="form-control" value="<?php echo $row['inactiveReason']; ?> " id="inactiveReason" name="inactiveReason" readonly>
+                                            </td>
+                                            </tr>
 
-                                        <td>Resignation Date</td>
-                                        <td>:</td>
-                                        <td>
-                                            <input type="text" class="form-control" value="<?php echo $row[' ']; ?> " id="resignDate" name="resignDate" required>
-                                        </td>
+                                            <td>Resignation/Leave Date</td>
+                                            <td>:</td>
+                                            <td>
+                                                <input type="date" class="form-control" value="<?php echo $row['resignDate']; ?> " id="resignDate" name="resignDate" required>
+                                                <br><br>
+                                                <div class="col-md-12">
+                                                    <button type="submit" class="btn btn-primary btn-lg" name="submit">Update Profile</button>
+                                                    <button type="reset" class="btn btn-secondary btn-lg" name="reset">Reset</button>
 
-
+                                                </div>
+                                            </td>
+                                        <?php }
+                                        ?>
                                         </tr>
                                     <?php
                                     } ?>
                             </table>
-                            <div class="text-center">
-                                <button type="submit" class="btn btn-primary btn-lg" name="submit">Update Profile</button>
-                                <a href="javascript:history.go(-1);" class="btn btn-outline-secondary btn-lg ml-2">Back</a>
 
-                            </div>
                         </form>
                     </div>
                 </div>

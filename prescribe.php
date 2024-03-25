@@ -1,13 +1,15 @@
 <!DOCTYPE html>
 <?php
 include('func1.php');
-$pid = '';
-$ID = '';
-$appdate = '';
-$apptime = '';
-$fname = '';
-$lname = '';
-$doctor = $_SESSION['dname'];
+$pid = $_GET['pid'];
+$ID = $_GET['ID'];
+$appdate = $_GET['appdate'];
+$apptime = $_GET['apptime'];
+$user_date = $_GET['user_date'];
+$fname = $_GET['fname'];
+$lname = $_GET['lname'];
+$doctor = $_SESSION['demail'];
+
 if (isset($_GET['pid']) && isset($_GET['ID']) && ($_GET['appdate']) && isset($_GET['apptime']) && isset($_GET['fname']) && isset($_GET['lname'])) {
   $pid = $_GET['pid'];
   $ID = $_GET['ID'];
@@ -20,26 +22,71 @@ if (isset($_GET['pid']) && isset($_GET['ID']) && ($_GET['appdate']) && isset($_G
 
 
 if (isset($_POST['prescribe']) && isset($_POST['pid']) && isset($_POST['ID']) && isset($_POST['appdate']) && isset($_POST['apptime']) && isset($_POST['lname']) && isset($_POST['fname'])) {
+  // Fetching values from $_POST
   $appdate = $_POST['appdate'];
-  $apptime = $_POST['apptime'];
+  $apptime = $_POST['user_date'];
   $disease = $_POST['disease'];
-  $allergy = $_POST['allergy'];
+  $allergy = $_POST['allergies'];
   $fname = $_POST['fname'];
   $lname = $_POST['lname'];
   $pid = $_POST['pid'];
   $ID = $_POST['ID'];
-  $prescription = $_POST['prescription'];
+  $M_count = $_POST['M_count']; // Get the count of medicines
+  // echo "<script>";
+  // echo "alert('count : " . $M_count . "');";
+  // echo "</script>";
 
-  $query = mysqli_query($con, "insert into prestb(doctor,pid,ID,fname,lname,appdate,apptime,disease,allergy,prescription) values ('$doctor','$pid','$ID','$fname','$lname','$appdate','$apptime','$disease','$allergy','$prescription')");
+  // // Alerting the values
+  // echo "<script>";
+  // echo "alert('Appointment Date: " . $appdate . "\\nAppointment Time: " . $apptime . "\\nDisease: " . $disease . "\\nAllergies: " . $allergy . "\\nFirst Name: " . $fname . "\\nLast Name: " . $lname . "\\nPatient ID: " . $pid . "\\nID: " . $ID . "');";
+  // echo "</script>";
+
+  $query = mysqli_query($con, "INSERT INTO `prestb`(`doctor`, `pid`, `ID`, `fname`, `lname`, `appdate`, `apptime`, `userdate`, `disease`, `allergy`) VALUES  ('$doctor','$pid','$ID','$fname','$lname','$appdate','$apptime','$user_date','$disease','$allergy')");
   if ($query) {
-    echo "<script>alert('Prescribed successfully!');</script>";
+    $prestb_id = mysqli_insert_id($con);
+    // echo "<script>alert('Prescribed successfully!');</script>";
+    // Loop through the submitted values based on the count
+    $count=0;
+    for ($i = 1; $i <= $M_count; $i++) {
+      // Fetch the values for each medicine
+      $M_qty = $_POST['M_qty' . $i];
+      $M_type = $_POST['M_type' . $i];
+      $med_name = $_POST['med_name' . $i];
+      $med_type = $_POST['med_type' . $i];
+
+      // Initialize $time_intake variable to an empty string
+      $time_intake = '';
+
+      // Inside the loop
+      $morning = isset($_POST['morning' . $i]) ? 'Morning' : ''; // Set to 'Morning' if checkbox is checked
+      $afternoon = isset($_POST['afternoon' . $i]) ? 'Afternoon' : ''; // Set to 'Afternoon' if checkbox is checked
+      $evening = isset($_POST['evening' . $i]) ? 'Evening' : ''; // Set to 'Evening' if checkbox is checked
+
+      // Concatenate the selected values into $time_intake separated by commas
+      $time_intake .= ($morning ? 'Morning' : '') . ($morning && ($afternoon || $evening) ? ', ' : '') . ($afternoon ? 'Afternoon' : '') . ($afternoon && $evening ? ', ' : '') . ($evening ? 'Evening' : '');
+
+      // Now $time_intake will contain the selected values separated by commas
+      $suggestion = isset($_POST['suggestion' . $i]) ? $_POST['suggestion' . $i] : 'No Suggestion';
+
+      $med_query = "INSERT INTO medicines (`prestb_id`, `M_qty`, `M_type`, `med_name`, `med_type`, `time_intake`, `suggestion`) VALUES ('$prestb_id','$M_qty', '$M_type', '$med_name', '$med_type', '$time_intake', '$suggestion')";
+      $med_result = mysqli_query($con, $med_query);
+      if ($med_result) {
+        $count= $count+1;
+        if($count==$M_count){
+          session_start();
+          $_SESSION['pid'] = $prestb_id;
+          $_SESSION['id'] = $ID;
+          $_SESSION['disease'] = $disease;
+          // echo "<script>alert('Prescribed successfully!');</script>";
+          header("Location: medical_test.php");
+        }
+      } else {
+        echo "<script>alert('Unable to process your request. Try again!');</script>";
+      }
+    }
   } else {
     echo "<script>alert('Unable to process your request. Try again!');</script>";
   }
-  // else{
-  //   echo "<script>alert('GET is not working!');</script>";
-  // }initial
-  // enga error?
 }
 
 ?>
@@ -93,6 +140,26 @@ if (isset($_POST['prescribe']) && isset($_POST['pid']) && isset($_POST['ID']) &&
         background-color: #3c50c1;
         border-color: #3c50c1;
       }
+
+      button:hover {
+        cursor: pointer;
+      }
+
+      #inputbtn:hover {
+        cursor: pointer;
+      }
+
+      .f-c-r-o {
+        cursor: not-allowed;
+        box-shadow: none;
+        border: 1px solid #ccc;
+      }
+
+      .f-c-r-o:focus {
+        cursor: not-allowed;
+        box-shadow: none;
+        border: 1px solid #ccc;
+      }
     </style>
 
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
@@ -109,73 +176,131 @@ if (isset($_POST['prescribe']) && isset($_POST['pid']) && isset($_POST['ID']) &&
   </nav>
 
 </head>
-<style type="text/css">
-  button:hover {
-    cursor: pointer;
-  }
-
-  #inputbtn:hover {
-    cursor: pointer;
-  }
-</style>
 
 <body style="padding-top:50px;">
-  <div class="container-fluid" style="margin-top:50px;">
-    <h3 style="margin-left: 40%;  padding-bottom: 20px; font-family: 'IBM Plex Sans', sans-serif;"> Welcome &nbsp
-      <?php echo $doctor ?>
-    </h3>
-
-    <div class="tab-pane" id="list-pres" role="tabpanel" aria-labelledby="list-pres-list">
-      <form class="form-group" name="prescribeform" method="post" action="prescribe.php">
-
-        <div class="row">
-          <div class="col-md-4"><label>Disease:</label></div>
-          <div class="col-md-8">
-            <!-- <input type="text" class="form-control" name="disease" required> -->
-            <textarea id="disease" cols="86" rows="5" name="disease" required></textarea>
-          </div><br><br><br>
-
-          <div class="col-md-4"><label>Allergies:</label></div>
-          <div class="col-md-8">
-            <!-- <input type="text"  class="form-control" name="allergy" required> -->
-            <textarea id="allergy" cols="86" rows="5" name="allergy" required></textarea>
-          </div><br><br><br>
-        <div class="row">
-          <div class="col-md-4"><label>Select Medicine:</label></div>
-          <div class="col-md-8">
-          <select id="medicine" name="medicine">
-            <?php
-            $queryTests = "SELECT * FROM drugs";
-            $resultTests = mysqli_query($con, $queryTests);
-            while ($row = mysqli_fetch_assoc($resultTests)) {
-              echo "<option value='{$row['name']}'>{$row['name']}</option>";
-          }
-            ?>
-          </select>
-         </div><br><br><br>
-        <div class="col-md-4">
-          <label>Time of Intake:</label>
-        </div>
-        <div class="col-md-8">
-          <input type="checkbox" id="morning" name="morning">
-          <label for="morning">Morning</label>
-          <input type="checkbox" id="afternoon" name="afternoon">
-          <label for="afternoon">Afternoon</label>
-          <input type="checkbox" id="evening" name="evening">
-          <label for="evening">Evening</label>
-        </div>
-
-        <input type="hidden" name="fname" value="<?php echo $fname ?>" />
-        <input type="hidden" name="lname" value="<?php echo $lname ?>" />
-        <input type="hidden" name="appdate" value="<?php echo $appdate ?>" />
-        <input type="hidden" name="apptime" value="<?php echo $apptime ?>" />
-        <input type="hidden" name="pid" value="<?php echo $pid ?>" />
-        <input type="hidden" name="ID" value="<?php echo $ID ?>" />
-        <br><br><br><br>
-        <input type="submit" name="prescribe" value="Prescribe" class="btn btn-primary" style="margin-left: 40pc;">
-
-      </form>
-      <br>
-
+  <div class="container-fluid" style="margin-top:100px;">
+    <div class="text-center">
+      <h3 style="font-family:'IBM Plex Sans', sans-serif;"> Welcome &nbsp DR.
+        <?php echo $_SESSION['demail'] ?>
+      </h3>
     </div>
+    <div class="row">
+      <div class="col-md-4" style="max-width:18%;margin-top: 3%;">
+        <div class="list-group" id="list-tab" role="tablist">
+          <a class="list-group-item list-group-item-action active" href="doctor-panel.php" role="tab"
+            aria-controls="home" data-toggle="list">Dashboard</a>
+          <a class="list-group-item list-group-item-action" id="doctor-panel.php" data-toggle="list" href="#list-update"
+            role="tab" aria-controls="home">Update Profile</a>
+          <a class="list-group-item list-group-item-action" href="doctor-panel.php" id="list-app-list" role="tab"
+            data-toggle="list" aria-controls="home">Online Appointments</a>
+          <a class="list-group-item list-group-item-action" href="offline.php">Offline Appointments</a>
+          <a class="list-group-item list-group-item-action" href="doctor-panel.php" id="list-pres-list" role="tab"
+            data-toggle="list" aria-controls="home"> Prescription List</a>
+        </div>
+      </div>
+
+
+      <div class="col-md-8 mt-5">
+        <div class="tab-content mt-5" id="nav-tabContent" style="width: 100%;">
+          <div class="tab-pane fade show active" id="list-dash" role="tabpanel" aria-labelledby="list-dash-list">
+            <div class="container">
+
+              <hr style="border-top: 3px solid #8c8b8b;">
+              <div class="text-center">
+                <h1>PRESCRIPTION</h1>
+              </div>
+              <hr style="border-top: 3px solid #8c8b8b;">
+              <div class="col-md-12">
+                <div class="row mb-3">
+
+                  <div class="col-4">
+                    <label for="">Patient Name:</label>
+                    <input type="text" class="form-control f-c-r-o" name="p_name" id="p_name"
+                      value="<?php echo $fname . '&nbsp;' . $lname; ?>" readonly>
+                  </div>
+                  <div class="col-4">
+                    <label for="">Selected Day:</label>
+                    <input type="text" class="form-control f-c-r-o" name="p_day" id="p_day"
+                      style="font-weight:bolder;color:red;" value="<?php echo $appdate; ?>,<?php echo $user_date; ?>"
+                      readonly>
+                  </div>
+                  <div class="col-4">
+                    <label for="t_day">Today's day:</label>
+                    <input type="text" class="form-control f-c-r-o" name="t_day" id="t_day" style="font-weight:bolder;"
+                      value="<?php echo date('l'); ?>" readonly>
+                  </div>
+                </div>
+                <form action="" method="post">
+                  <div class="row my-5">
+                    <div class="col-6">
+                      <label>Findings \ Disease:</label>
+                      <textarea class="form-control" style="resize:none" rows="2" name="disease" id="disease"
+                        required></textarea>
+                    </div>
+                    <div class="col-6">
+                      <label>Allergies:</label>
+                      <textarea class="form-control" style="resize:none" rows="2" name="allergies" id="allergies"
+                        required></textarea>
+                    </div>
+                  </div>
+
+                  <!-- medicines -->
+                  <div class="rowmy-3">
+                    <label>Select Medicine:</label>
+                    <select class="form-control" id="medicine" name="medicine[]" multiple>
+                      <?php
+                      $queryTests = "SELECT * FROM drugs";
+                      $resultTests = mysqli_query($con, $queryTests);
+                      while ($row = mysqli_fetch_assoc($resultTests)) {
+                        echo "<option value='{$row['name']}' data-type='{$row['type']}'>{$row['name']}</option>";
+                      }
+                      ?>
+                    </select>
+                    <label for=""> please select one medicine and to add more press CTRL and choose the another
+                      medicines <span style="color:red;">*</span> </label>
+                  </div>
+                  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+                  <script>
+                    $(document).ready(function () {
+                      $("#medicine").change(function () {
+                        var selectedMedicines = $(this).val();
+                        $.ajax({
+                          url: "process.php",
+                          method: "POST",
+                          data: {
+                            selectedMedicines: selectedMedicines
+                          },
+                          success: function (data) {
+                            $("#loop").html(data);
+                          }
+                        });
+                      });
+                    });
+                  </script>
+
+                  <input type="hidden" name="doc_name" value="<?php echo $doctor ?>" />
+                  <input type="hidden" name="fname" value="<?php echo $fname ?>" />
+                  <input type="hidden" name="user_date" value="<?php echo $user_date ?>" />
+                  <input type="hidden" name="lname" value="<?php echo $lname ?>" />
+                  <input type="hidden" name="appdate" value="<?php echo $appdate ?>" />
+                  <input type="hidden" name="apptime" value="<?php echo $apptime ?>" />
+                  <input type="hidden" name="pid" value="<?php echo $pid ?>" />
+                  <input type="hidden" name="ID" value="<?php echo $ID ?>" />
+                  <div class="container" id="loop"></div>
+                  <div class="container">
+                    <input type="submit" name="prescribe" value="Prescribe" class="btn btn-primary" style="margin-left: 24pc;width: 20%;">
+                  </div>
+
+                </form>
+
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div><br><br>
+
+
+  </div>
   </div>

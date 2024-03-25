@@ -126,10 +126,13 @@ $username = $_SESSION['username'];
         <div class="row">
             <div class="col-md-4" style="max-width:25%;margin-top: 3%;">
                 <div class="list-group" id="list-tab" role="tablist">
-                    <a class="list-group-item list-group-item-action " href="admin-panel3.php" href="#list-dash" role="tab" aria-controls="home">Dashboard</a>
-                    <a class="list-group-item list-group-item-action active" href="viewprofile.php" href="#list-doc">View Profile</a>
+                    <a class="list-group-item list-group-item-action " id="list-dash-list" data-toggle="list" href="admin-panel3" role="tab" aria-controls="home">Dashboard</a>
+                    <a class="list-group-item list-group-item-action active" href="viewprofile.php" href="#list-doc">Profile</a>
+                    <a class="list-group-item list-group-item-action " href="changepassstaff.php">Change Password</a>
+                    <a class="list-group-item list-group-item-action " href="ofine.php" href="#list-doc">Offline Appointment</a>
+                    <a class="list-group-item list-group-item-action " href="offline.php" href="#list-doc">View Offline Appointment</a>
                     <a class="list-group-item list-group-item-action " href="leave.php" href="#list-doc">Leave Application</a>
-                    <a class="list-group-item list-group-item-action " href="ofine.php" href="#list-doc">Offline booking</a>
+                    <a class="list-group-item list-group-item-action " href="viewleave.php">View Leave Application</a>
 
                 </div><br>
             </div>

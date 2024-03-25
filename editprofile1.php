@@ -3,8 +3,8 @@
 include('func.php');
 include('newfunc.php');
 $con = mysqli_connect("localhost", "root", "", "myhmsdb");
-$doctor = $_SESSION['dname'];
-$sql = "select * from doctb where username='$doctor'";
+$demail = $_SESSION['demail'];
+$sql = "select * from doctb where email='$demail'";
 $rs = mysqli_query($con, $sql);
 if (isset($_POST['submit'])) {
     $fname = $_POST['username'];
@@ -12,14 +12,24 @@ if (isset($_POST['submit'])) {
     $email = $_POST['email'];
     $age = $_POST['age'];
     $contact = $_POST['contact'];
+    $location = $_POST['location'];
     $docFee = $_POST['docfee'];
     $district = $_POST['district'];
     $place = $_POST['place'];
     $qualification = $_POST['qualification'];
-    $avialabletime = $_POST['avialabletime'];
+
+    if (isset($_POST['availableDays']) && is_array($_POST['availableDays'])) {
+        $availableDays = implode(',', $_POST['availableDays']); // Convert array to comma-separated string
+    } else {
+        // Retrieve existing available days from the database
+        $sql = "SELECT avialabletime FROM doctb WHERE username='$doctor'";
+        $result = mysqli_query($con, $sql);
+        $row = mysqli_fetch_assoc($result);
+        $availableDays = $row['avialabletime']; // Use existing value if no days are selected
+    }
     $experience = $_POST['experience'];
 
-    $sql = "UPDATE doctb SET username='$fname',spec='$spec',email='$email',age='$age',contact='$contact',docFees='$docFee',district='$district',place='$place',qualification='$qualification',avialabletime='$avialabletime',experience='$experience' WHERE username='$doctor'";
+    $sql = "UPDATE doctb SET username='$fname',spec='$spec',email='$email',age='$age',contact='$contact',docFees='$docFee',district='$district',place='$place',qualification='$qualification',avialabletime='$availableDays',experience='$experience',location='$location' WHERE email='$demail'";
 
     if ($con->query($sql) === TRUE) {
         echo "<script>alert('Record updated successfully')
@@ -60,11 +70,13 @@ if (isset($_POST['submit'])) {
                 background-color: #f8f9fa;
                 border-color: #f8f9fa;
             }
-        </style>
 
-        <style>
             .bg-primary {
                 background: -webkit-linear-gradient(left, #3931af, #00c6ff);
+            }
+
+            .col-md-4 {
+                max-width: 20% !important;
             }
 
             .list-group-item.active {
@@ -78,6 +90,97 @@ if (isset($_POST['submit'])) {
                 color: #342ac1 !important;
             }
 
+            #cpass {
+                display: -webkit-box;
+            }
+
+            #list-app {
+                font-size: 15px;
+            }
+
+            .btn-primary {
+                text-align: center;
+                color: #fff;
+                padding: 10px 20px;
+                border: none;
+                border-radius: 4px;
+                cursor: pointer;
+                font-size: 16px;
+                width: 25%;
+            }
+
+            .btn-danger {
+                text-align: center;
+                color: #fff;
+                padding: 10px 20px;
+                border: none;
+                border-radius: 4px;
+                cursor: pointer;
+                font-size: 16px;
+                width: 15%;
+            }
+
+
+            .container {
+                max-width: 1000px;
+                margin: 0 auto;
+                padding: 30px;
+                background-color: #fff;
+                border-radius: 5px;
+                box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+
+            }
+
+            .heading {
+                color: green !important;
+                font-weight: bold;
+
+
+            }
+
+            h2 {
+                text-align: center;
+                margin-bottom: 30px;
+            }
+
+
+            body {
+                font-family: Arial, sans-serif;
+                background-color: #f2f2f2;
+            }
+
+            .bg-primary {
+                background: -webkit-linear-gradient(left, #3931af, #00c6ff);
+            }
+
+            .col-md-4 {
+                max-width: 20% !important;
+            }
+
+            .list-group-item.active {
+                z-index: 2;
+                color: #fff;
+                background-color: #342ac1;
+                border-color: #007bff;
+            }
+
+            .text-primary {
+                color: #342ac1 !important;
+            }
+
+            #cpass {
+                display: -webkit-box;
+            }
+
+            #list-app {
+                font-size: 15px;
+            }
+
+            .btn-primary {
+                background-color: #3c50c1;
+                border-color: #3c50c1;
+            }
+
             .btn-success {
                 text-align: center;
                 padding: 10px 20px;
@@ -85,7 +188,10 @@ if (isset($_POST['submit'])) {
                 border-radius: 4px;
                 cursor: pointer;
                 font-size: 16px;
-                width: 25%;
+                width: 15%;
+            }
+            table{
+                width:100%;
             }
         </style>
 
@@ -119,7 +225,7 @@ if (isset($_POST['submit'])) {
 <body style="padding-top:50px;">
     <div class="container-fluid" style="margin-top:50px;">
         <h3 style="margin-left: 40%; padding-bottom: 20px;font-family:'IBM Plex Sans', sans-serif;"> Welcome &nbsp DR.
-            <?php echo $_SESSION['dname'] ?>
+            <?php echo $_SESSION['demail'] ?>
         </h3>
         <div class="row">
             <div class="col-md-4" style="max-width:18%;margin-top: 3%;">
@@ -128,15 +234,16 @@ if (isset($_POST['submit'])) {
                     <a class="list-group-item list-group-item-action active" href="doctor-panel.php" aria-controls="home">Update Profile</a>
                     <a class="list-group-item list-group-item-action" href="doctor-panel.php" data-toggle="list" aria-controls="home">Appointments</a>
                     <a class="list-group-item list-group-item-action" href="doctor-panel.php" aria-controls="home">
-                        Prescription List</a>
-
+                        Prescription List
+                    </a>
                 </div><br>
             </div>
-            <div class="col-md-8" style="margin-top: 3%;">
-                <div class="tab-content" id="nav-tabContent" style="width: 950px;">
-
-                    <div class="card-body">
+            <div class="container">
+                <h2 class="heading">DOCTOR PROFILE</h2>
+                <div class="form-content" style="margin-top: 3%;">
+                    <div class="tab-content" id="nav-tabContent">
                         <form name="myForm" method="POST" onsubmit="return validation();">
+
                             <table>
                                 <tbody>
                                     <!-- <tr>
@@ -184,15 +291,19 @@ if (isset($_POST['submit'])) {
                                         </tr>
                                         <tr>
                                             <td><span id="email1" style="color:red;"> </span></td>
-                                        </tr>
+                                        </tr><br>
                                         <tr>
                                             <td>DOB</td>
                                             <td>:</td>
                                             <td>
-                                                <input type="text" class="form-control" value="<?php echo $row['age']; ?> " rows="5" id="age" name="age" required maxlength="30">
+
+
+                                                <input type="text" class="form-control" value="<?php echo $row['age']; ?> " id="age" name="age" required minlength="3" maxlength="4">
+
+
                                             </td>
                                         </tr>
-
+                                        <br>
                                         <tr>
                                             <td>Phone Number</td>
                                             <td>:</td>
@@ -206,7 +317,13 @@ if (isset($_POST['submit'])) {
                                         <td>Doctor Fee</td>
                                         <td>:</td>
                                         <td>
-                                            <input type="text" class="form-control" value="<?php echo $row['docFees']; ?> " id="docfee" name="docfee" required maxlength="30">
+                                            <input type="text" class="form-control" value="<?php echo $row['docFees']; ?> " id="docfee" name="docfee" required minlength="3" maxlength="4">
+                                        </td>
+                                        </tr>
+                                        <td>Address</td>
+                                        <td>:</td>
+                                        <td>
+                                            <input type="text" class="form-control" value="<?php echo $row['location']; ?> " id="location" name="location" required>
                                         </td>
                                         </tr>
                                         <td>District</td>
@@ -215,7 +332,7 @@ if (isset($_POST['submit'])) {
                                             <input type="text" class="form-control" value="<?php echo $row['district']; ?> " min="10" maxlength="10" id="district" name="district" required>
                                         </td>
                                         </tr>
-                                        <td>Address</td>
+                                        <td>State</td>
                                         <td>:</td>
                                         <td>
                                             <input type="text" class="form-control" value="<?php echo $row['place']; ?> " id="place" name="place" required>
@@ -230,7 +347,33 @@ if (isset($_POST['submit'])) {
                                         <td>Available Days</td>
                                         <td>:</td>
                                         <td>
-                                            <input type="text" class="form-control" value="<?php echo $row['avialabletime']; ?> " id="avialabletime" name="avialabletime" required>
+                                            <div class="input-group">
+                                                <input type="text" class="form-control" value="<?php echo $row['avialabletime']; ?>" id="avialabletime" name="avialabletime" readonly>
+                                                <span class="input-group-btn">
+                                                    <button type="button" class="btn btn-outline-primary transparent-button" onclick="toggleEdit()">
+                                                        <i class="bi bi-pencil-square"></i> <svg xmlns="http://www.w3.org/2000/svg" width="16" height="20" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
+                                                            <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z" />
+                                                            <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z" />
+                                                        </svg>
+                                                    </button>
+                                                </span>
+                                            </div>
+                                            <!-- Checkbox group -->
+                                            <div id="checkboxGroup" style="display: none;">
+                                                <?php
+                                                $daysOfWeek = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
+                                                foreach ($daysOfWeek as $index => $day) {
+                                                ?>
+                                                    <div class="form-check">
+                                                        <input class="form-check-input" type="checkbox" value="<?= $day ?>" id="day<?= $index + 1 ?>" name="availableDays[]">
+                                                        <label class="form-check-label" for="day<?= $index + 1 ?>">
+                                                            <?= $day ?>
+                                                        </label>
+                                                    </div>
+                                                <?php
+                                                }
+                                                ?>
+                                            </div>
                                         </td>
                                         </tr>
                                         <td>Experience</td>
@@ -239,27 +382,45 @@ if (isset($_POST['submit'])) {
                                             <input type="text" class="form-control" value="<?php echo $row['experience']; ?> " id="experience" name="experience" required>
                                         </td>
                                         </tr>
+                                        <td>Resignation Date/Leave</td>
+                                        <td>:</td>
+                                        <td>
+                                            <input type="text" class="form-control" value="<?php echo $row['resignDate']; ?> " id="resignDate" name="resignDate" readonly>
+                                        </td>
+                                        </tr>
                                     <?php
                                     } ?>
                                 </tbody>
                             </table>
-                            <div>
-                                <input type="submit" class="btn-success" value="Update Your Profile" id="btn" name="submit">
+                            <br><br>
+                            <div style="text-align: center;">
+                                <input type="submit" class="btn-success" value="Submit" id="btn" name="submit">
+                                <a href="doctor-panel.php" id="btn" class="btn btn-danger">Back</a>
                             </div>
                         </form>
                     </div>
                 </div>
             </div>
         </div>
-        <!-- Optional JavaScript -->
-        <!-- jQuery first, then Popper.js, then Bootstrap JS -->
-        <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js" integrity="sha384-b/U6ypiBEHpOf/4+1nzFpr53nxSS+GLCkfwBdFNTxtclqqenISfwAzpKaMNFNmj4" crossorigin="anonymous"></script>
-        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js" integrity="sha384-h0AbiXch4ZDo7tp9hKZ4TsHbi047NrKGLO3SEJAg45jXxnGIfYzk4Si90RDIqNm1" crossorigin="anonymous"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/6.10.1/sweetalert2.all.min.js">
-        </script>
+    </div>
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js" integrity="sha384-b/U6ypiBEHpOf/4+1nzFpr53nxSS+GLCkfwBdFNTxtclqqenISfwAzpKaMNFNmj4" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js" integrity="sha384-h0AbiXch4ZDo7tp9hKZ4TsHbi047NrKGLO3SEJAg45jXxnGIfYzk4Si90RDIqNm1" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/6.10.1/sweetalert2.all.min.js">
+    </script>
 
-
+    <script>
+        function toggleEdit() {
+            var checkboxGroup = document.getElementById('checkboxGroup');
+            if (checkboxGroup.style.display === 'none') {
+                checkboxGroup.style.display = 'block';
+            } else {
+                checkboxGroup.style.display = 'none';
+            }
+        }
+    </script>
 
 </body>
 

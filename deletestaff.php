@@ -41,36 +41,86 @@ include('newfunc.php');
         </script>
 
         <style>
-            .bg-primary {
-                background: -webkit-linear-gradient(left, #3931af, #00c6ff);
+            button:hover {
+                cursor: pointer;
             }
 
-            .col-md-4 {
-                max-width: 20% !important;
+            #inputbtn:hover {
+                cursor: pointer;
             }
 
-            .list-group-item.active {
-                z-index: 2;
-                color: #fff;
-                background-color: #342ac1;
-                border-color: #007bff;
+            #builder {
+                font-family: Arial, Helvetica, sans-serif;
+                border-collapse: collapse;
+                width: 100%;
             }
 
-            .text-primary {
-                color: #342ac1 !important;
+            #builder td,
+            #builder th {
+                border: 1px solid #ddd;
+                padding: 8px;
             }
 
-            #cpass {
-                display: -webkit-box;
+            /* #builder tr:nth-child(even){background-color: #f2f2f2;} */
+
+            #builder tr:hover {
+                background-color: #ddd;
             }
 
-            #list-app {
-                font-size: 15px;
+            #builder th {
+                padding-top: 12px;
+                padding-bottom: 12px;
+                text-align: left;
+                background-color: grey;
+                color: white;
             }
 
-            .btn-primary {
-                background-color: #3c50c1;
-                border-color: #3c50c1;
+            /* Style for the panel heading */
+            .panel-heading {
+                background-color: #007bff;
+                /* Blue background color */
+                color: #ffffff;
+                /* White text color */
+                padding: 10px;
+                /* Add padding around the text */
+                font-size: 20px;
+                /* Increase font size */
+                font-weight: bold;
+                /* Make text bold */
+                border-radius: 5px 5px 0 0;
+                /* Add rounded corners to the top */
+            }
+
+            #builder th {
+                padding-top: 12px;
+                padding-bottom: 12px;
+                text-align: left;
+                background-color: #007bff;
+                color: white;
+            }
+
+            /* Styles for the status switch */
+            .status-switch {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+            }
+
+            .status-btn {
+                padding: 5px 10px;
+                cursor: pointer;
+                border: none;
+                border-radius: 5px;
+            }
+
+            .active {
+                background-color: #82ff73;
+                color: black;
+            }
+
+            .inactive {
+                background-color: #ff341f;
+                color: black;
             }
         </style>
 
@@ -86,57 +136,7 @@ include('newfunc.php');
         </div>
     </nav>
 </head>
-<style type="text/css">
-    button:hover {
-        cursor: pointer;
-    }
 
-    #inputbtn:hover {
-        cursor: pointer;
-    }
-
-    #builder {
-        font-family: Arial, Helvetica, sans-serif;
-        border-collapse: collapse;
-        width: 100%;
-    }
-
-    #builder td,
-    #builder th {
-        border: 1px solid #ddd;
-        padding: 8px;
-    }
-
-    /* #builder tr:nth-child(even){background-color: #f2f2f2;} */
-
-    #builder tr:hover {
-        background-color: #ddd;
-    }
-
-    #builder th {
-        padding-top: 12px;
-        padding-bottom: 12px;
-        text-align: left;
-        background-color: grey;
-        color: white;
-    }
-
-    /* Style for the panel heading */
-    .panel-heading {
-        background-color: #007bff;
-        /* Blue background color */
-        color: #ffffff;
-        /* White text color */
-        padding: 10px;
-        /* Add padding around the text */
-        font-size: 20px;
-        /* Increase font size */
-        font-weight: bold;
-        /* Make text bold */
-        border-radius: 5px 5px 0 0;
-        /* Add rounded corners to the top */
-    }
-</style>
 
 
 <body style="padding-top:50px;">
@@ -182,7 +182,7 @@ include('newfunc.php');
                 </div><br>
             </div>
             <div class="col-md-8" style="margin-top: 3%;">
-                <div class="tab-content" id="nav-tabContent" style="width: 1200px;">
+                <div class="tab-content" id="nav-tabContent" style="width: 1100px;">
                     <div class="row">
                         <div class="col-md-12">
                             <!-- Advanced Tables -->
@@ -201,6 +201,7 @@ include('newfunc.php');
                                             <thead>
                                                 <table id="builder" class="content-table">
 
+
                                                     <tr>
                                                         <th>Id</th>
                                                         <th> First name</th>&nbsp;&nbsp;
@@ -210,11 +211,11 @@ include('newfunc.php');
                                                         <th>Email</th>
                                                         <th>Gender</th>
                                                         <th>Phone no</th>
-                                                        <th>Address</th>
+                                                        <!-- <th>Address</th>
                                                         <th>District</th>
-                                                        <th>State</th>
-
-                                                        <th>Delete</th>
+                                                        <th>State</th> -->
+                                                        <th>Status</th>
+                                                        <th>Action</th>
                                                     </tr>
                                                     <?php
                                                     $s = 1;
@@ -223,6 +224,8 @@ include('newfunc.php');
                                                     while ($row = mysqli_fetch_array($result)) {
                                                         // Assuming $dobb contains the date of birth in the format '199-04-11'
                                                         $dobb = $row['age'];
+                                                        $staff_id = $row['staff_id'];
+                                                        $fname = $row['fname'];
 
                                                         // Convert the date of birth to a DateTime object
                                                         $dobDateTime = DateTime::createFromFormat('Y-m-d', $dobb);
@@ -253,7 +256,7 @@ include('newfunc.php');
                                                             </td>
                                                             <!-- <td><img src="<?php echo "msg_img/" . $row['proof']; ?>" width="200px" height="200px" alt=" Images" />
                                                             </td> -->
-                                                            <td >
+                                                            <td>
                                                                 <?php echo $age; ?>
 
                                                             </td>
@@ -266,7 +269,7 @@ include('newfunc.php');
                                                             <td>
                                                                 <?php echo $row['phone']; ?>
                                                             </td>
-                                                            <td>
+                                                            <!-- <td>
                                                                 <?php echo $row['location']; ?>
                                                             </td>
                                                             <td>
@@ -274,23 +277,47 @@ include('newfunc.php');
                                                             </td>
                                                             <td>
                                                                 <?php echo $row['state']; ?>
-                                                            </td>
+                                                            </td> -->
 
 
                                                             <td>
-                                                                <form action="" method="POST">
-                                                                    <input type="hidden" name="id" value="<?php echo $row['staff_id']; ?>" />
-                                                                    <button type="submit" name="delete" class="btn btn-danger" onclick="return confirm('Do you really want to delete?')">Delete</button>
+                                                                <?php
+                                                                $status = $row['status'];
+                                                                $button_class = ($status == 'active') ? 'btn-success' : 'btn-danger';
+                                                                ?>
+                                                                <div class="status-switch">
+                                                                    <form action="inactive2.php" method="GET" onsubmit="return confirmStatusChange(<?php echo $staff_id; ?>, '<?php echo $status; ?>')">
+                                                                        <input type="hidden" id="sid_<?php echo $staff_id; ?>" name="sid" value="<?php echo $staff_id ?>">
+                                                                        <input type="hidden" name="fname" value="<?php echo $fname; ?>">
+                                                                        <button type="submit" class="btn <?php echo $button_class; ?>">
+                                                                            <i class="fa fa-pen"></i>
+                                                                            <input type="hidden" id="status_<?php echo $staff_id; ?>" name="status" value="<?php echo $status ?>">
+                                                                            <?php echo $status; ?>
+                                                                        </button>
+                                                                        <input type="hidden" id="reason_<?php echo $staff_id; ?>" name="reason">
+                                                                    </form>
+                                                                </div>
+                                                            </td>
 
-                                                                </form>
+
+
+                                                            <td>
+                                                                <a href="staffviewmore.php?sid=<?php echo $staff_id; ?>&fname=<?php echo $fname; ?>">
+                                                                    <button type="button" class="btn btn-outline-primary">
+                                                                        <i class="fa fa-pen"></i> View More
+                                                                    </button>
+                                                                </a>
                                                             </td>
                                                         </tr>
 
                                                     <?php
+                                                        $s++;
                                                     }
                                                     ?>
                                                 </table>
+
                                     </div>
+
                                     <?php
 
                                     if (isset($_POST['delete'])) {
@@ -333,7 +360,44 @@ include('newfunc.php');
             });
         });
     </script>
+    <!-- active and inactive -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            $(".status-btn").click(function() {
+                // Toggle the 'active' class
+                $(this).toggleClass("active inactive");
 
+                // Toggle the text between 'Active' and 'Inactive'
+                var newText = $(this).text() === "Active" ? "Inactive" : "Active";
+                $(this).text(newText);
+
+                // Add your logic to handle the state change here
+            });
+        });
+    </script>
+
+    <!-- descriptionBox -->
+    <script>
+        function confirmStatusChange(sid, status) {
+            alert("ID: " + sid + ", Status: " + status);
+            var reasonInput = document.getElementById('reason_' + sid);
+            var statusInput = document.getElementById('status_' + sid);
+
+            if (status === 'active') {
+                var reason = prompt('Please provide a reason for changing status to inactive:');
+                if (reason !== null) {
+                    reasonInput.value = reason;
+                    return true; // Continue with the form submission
+                } else {
+                    return false; // Cancel the form submission
+                }
+            } else {
+                reasonInput.value = '';
+                return true; // Continue with the form submission
+            }
+        }
+    </script>
 </body>
 
 </html>

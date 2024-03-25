@@ -1,7 +1,11 @@
 <?php
 include('func1.php');
 $con = mysqli_connect("localhost", "root", "", "myhmsdb");
-$doctor = $_SESSION['dname'];
+$doctor = $_SESSION['demail'];
+$doc_query = mysqli_query($con, "SELECT username FROM `doctb` WHERE email='$doctor'");
+$doc_row = mysqli_fetch_array($doc_query);
+$doc_row_name = $doc_row['username'];
+
 ?>
 
 <html lang="en">
@@ -23,38 +27,40 @@ $doctor = $_SESSION['dname'];
 
   <link href="https://fonts.googleapis.com/css?family=IBM+Plex+Sans&display=swap" rel="stylesheet">
   <style>
-      .btn-outline-light:hover {
-        color: #25bef7;
-        background-color: #f8f9fa;
-        border-color: #f8f9fa;
-      }
-      .bg-primary {
-        background: -webkit-linear-gradient(left, #3931af, #00c6ff);
-      }
+    .btn-outline-light:hover {
+      color: #25bef7;
+      background-color: #f8f9fa;
+      border-color: #f8f9fa;
+    }
 
-      .list-group-item.active {
-        z-index: 2;
-        color: #fff;
-        background-color: #342ac1;
-        border-color: #007bff;
-      }
+    .bg-primary {
+      background: -webkit-linear-gradient(left, #3931af, #00c6ff);
+    }
 
-      .text-primary {
-        color: #342ac1 !important;
-      }
-      button:hover {
-        cursor: pointer;
-      }
+    .list-group-item.active {
+      z-index: 2;
+      color: #fff;
+      background-color: #342ac1;
+      border-color: #007bff;
+    }
 
-      #inputbtn:hover {
-        cursor: pointer;
-      }
-    </style>
-  
+    .text-primary {
+      color: #342ac1 !important;
+    }
+
+    button:hover {
+      cursor: pointer;
+    }
+
+    #inputbtn:hover {
+      cursor: pointer;
+    }
+  </style>
+
 </head>
 
 
-<body >
+<body>
   <nav class="navbar navbar-expand-lg navbar-dark bg-primary fixed-top">
     <a class="navbar-brand" href="#"><i class="fa fa-user-plus" aria-hidden="true"></i> NEETHI Hospital </a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -80,7 +86,7 @@ $doctor = $_SESSION['dname'];
   <div class="container-fluid" style="margin-top:100px;">
     <div class="text-center">
       <h3 style="font-family:'IBM Plex Sans', sans-serif;"> Welcome &nbsp DR.
-        <?php echo $_SESSION['dname'] ?>
+        <?php echo $_SESSION['demail'] ?>
       </h3>
     </div>
     <div class="row">
@@ -88,9 +94,10 @@ $doctor = $_SESSION['dname'];
         <div class="list-group" id="list-tab" role="tablist">
           <a class="list-group-item list-group-item-action " href="doctor-panel.php">Dashboard</a>
           <a class="list-group-item list-group-item-action" id="list-update-list" data-toggle="list" href="doctor-panel.php">Update Profile</a>
+          <a class="list-group-item list-group-item-action" href="changepassdoc.php">Change Password</a>
           <a class="list-group-item list-group-item-action" href="doctor-panel.php" id="list-app-list" role="tab" data-toggle="list" aria-controls="home">Online Appointments</a>
-          <a class="list-group-item list-group-item-action active" href="doctor-panel.php" id="list-off-list" role="tab" data-toggle="list" aria-controls="home">Offline Appointments</a>
-          <a class="list-group-item list-group-item-action" href="doctor-panel.php" id="list-pres-list" role="tab" data-toggle="list" aria-controls="home"> Prescription List</a>
+          <a class="list-group-item list-group-item-action active" href="offline.php">Offline Appointments</a>
+          <a class="list-group-item list-group-item-action" href="viewpre.php"> Prescription List</a>
 
         </div>
       </div>
@@ -101,80 +108,91 @@ $doctor = $_SESSION['dname'];
             <div class="container-fluid container-fullw bg-white">
               <div class="row">
 
-            <table class="table table-hover">
-              <thead>
-                <tr>
+                <table class="table table-hover">
+                  <thead>
+                    <tr>
 
-                  <th scope="col">Apppointment ID</th>
+                      <th scope="col">Apppointment ID</th>
+                      <th scope="col">Patient Name</th>
+                      <th scope="col"> Age</th>
+                      <th scope="col"> Address</th>
+                      <th scope="col">Phone Number</th>
+                      <th scope="col">Appointment Date</th>
+                      <th scope="col">Patient Added By</th>
+                      <th scope="col">Registered Date and Time</th>
+                      <th scope="col">Action</th>
 
-                  <th scope="col">First Name</th>
-                  <th scope="col">Patient Age</th>
-                  <th scope="col">Patient Job</th>
-                  <th scope="col">Patient phone Number</th>
-                  <th scope="col">Appointment Date</th>
-                  <th scope="col">Appointment Time</th>
-                  <!-- <th scope="col">Registered Date  and Time</th> -->
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <?php
 
-                </tr>
-              </thead>
-              <tbody>
-                <?php
+                    $con = mysqli_connect("localhost", "root", "", "myhmsdb");
+                    global $con;
 
-                $con = mysqli_connect("localhost", "root", "", "myhmsdb");
-                global $con;
+                    $query = "SELECT * FROM offline_appointments WHERE doctor_name='$doc_row_name' AND DATE(created_at) >= CURDATE() ORDER BY created_at DESC";
 
-                $query = "SELECT * FROM offline_appointments WHERE username='$doctor' ORDER BY date";
+                    $result = mysqli_query($con, $query);
+                    if (!$result) {
+                      echo mysqli_error($con);
+                    }
+                    $row_count = mysqli_num_rows($result);
 
-                $result = mysqli_query($con, $query);
-                if (!$result) {
-                  echo mysqli_error($con);
-                }
+                    if ($row_count > 0) {
 
+                      while ($row = mysqli_fetch_array($result)) {
+                    ?>
+                        <tr>
+                          <td>
+                            <?php echo $row['AppoID']; ?>
+                          </td>
+                          <td>
+                            <?php echo $row['patname']; ?>
+                          </td>
+                          <td>
+                            <?php echo $row['patage']; ?>
+                          </td>
+                          <td>
+                            <?php echo $row['patwork']; ?>
+                          </td>
+                          <td>
+                            <?php echo $row['contact']; ?>
+                          </td>
+                          <td>
+                            <?php echo $row['date']; ?>
+                          </td>
+                          <td>
+                            <?php echo $row['added_by']; ?>
+                          </td>
+                          <td>
+                            <?php echo $row['created_at']; ?>
+                          </td>
 
-                while ($row = mysqli_fetch_array($result)) {
-                ?>
-                  <tr>
-                  <td>
-                      <?php echo $row['AppoID']; ?>
-                    </td>
-                    <td>
-                      <?php echo $row['patname']; ?>
-                    </td>
-                    <td>
-                      <?php echo $row['patage']; ?>
-                    </td>
-                    <td>
-                      <?php echo $row['patwork']; ?>
-                    </td>
-                    <td>
-                      <?php echo $row['contact']; ?>
-                    </td>
-                    <td>
-                      <?php echo $row['date']; ?>
-                    </td>
-                    <td>
-                      <?php echo $row['time']; ?>
-                    </td>
-                    <td>
-                      <!-- <?php echo $row['created_at']; ?>S -->
-                    </td>
-
-                  </tr>
-                <?php }
-                ?>
-              </tbody>
-            </table>
+                          <td>
+                            <a href="prescribeoff.php?docname=<?php echo $row['doctor_name'] ?>&ID=<?php echo $row['AppoID'] ?>&patname=<?php echo $row['patname'] ?>&patage=<?php echo $row['patage'] ?>&patwork=<?php echo $row['patwork'] ?>&contact=<?php echo $row['contact'] ?>&date=<?php echo $row['date'] ?>&created_at=<?php echo $row['created_at'] ?>&offid=<?php echo $row['offid'] ?>" tooltip-placement="top" tooltip="Remove" title="prescribe">
+                              <button class="btn btn-success">Prescibe</button></a>
+                          </td>
+                        </tr>
+                      <?php }
+                    } else { ?>
+                      <tr>
+                        <td><?php echo "No Appointments  😑 ";  ?></td>
+                      </tr>
+                    <?php
+                    } ?>
+                  </tbody>
+                </table>
+              </div>
+            </div>
           </div>
-          </div>
+        </div>
       </div>
-    </div>
-  </div>
-  <!-- Optional JavaScript -->
-  <!-- jQuery first, then Popper.js, then Bootstrap JS -->
-  <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js" integrity="sha384-b/U6ypiBEHpOf/4+1nzFpr53nxSS+GLCkfwBdFNTxtclqqenISfwAzpKaMNFNmj4" crossorigin="anonymous"></script>
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js" integrity="sha384-h0AbiXch4ZDo7tp9hKZ4TsHbi047NrKGLO3SEJAg45jXxnGIfYzk4Si90RDIqNm1" crossorigin="anonymous"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/6.10.1/sweetalert2.all.min.js"></script>
+      <!-- Optional JavaScript -->
+      <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+      <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js" integrity="sha384-b/U6ypiBEHpOf/4+1nzFpr53nxSS+GLCkfwBdFNTxtclqqenISfwAzpKaMNFNmj4" crossorigin="anonymous"></script>
+      <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js" integrity="sha384-h0AbiXch4ZDo7tp9hKZ4TsHbi047NrKGLO3SEJAg45jXxnGIfYzk4Si90RDIqNm1" crossorigin="anonymous"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/6.10.1/sweetalert2.all.min.js"></script>
 </body>
 
 </html>

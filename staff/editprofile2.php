@@ -116,7 +116,7 @@ if (isset($_POST['submit'])) {
                 border-radius: 4px;
                 cursor: pointer;
                 font-size: 16px;
-                width: 25%;
+                width: 15%;
             }
 
 
@@ -221,13 +221,13 @@ if (isset($_POST['submit'])) {
         <div class="row">
             <div class="col-md-4" style="max-width:25%;margin-top: 3%;">
                 <div class="list-group" id="list-tab" role="tablist">
-                    <a class="list-group-item list-group-item-action " href="admin-panel3.php" href="#list-dash" role="tab" aria-controls="home">Dashboard</a>
+                    <a class="list-group-item list-group-item-action " id="list-dash-list" data-toggle="list" href="#list-dash" role="tab" aria-controls="home">Dashboard</a>
                     <a class="list-group-item list-group-item-action active" href="viewprofile.php" href="#list-doc">Profile</a>
-                    <a class="list-group-item list-group-item-action " href="leave.php" href="#list-doc">Leave apply</a>
-                    <a class="list-group-item list-group-item-action " href="ofine.php" href="#list-doc">Offline
-                        booking</a>
-                    <a class="list-group-item list-group-item-action " href="offline.php" href="#list-doc">view Offline
-                        booking</a>
+                    <a class="list-group-item list-group-item-action " href="changepassstaff.php">Change Password</a>
+                    <a class="list-group-item list-group-item-action " href="ofine.php" href="#list-doc">Offline Appointment</a>
+                    <a class="list-group-item list-group-item-action " href="offline.php" href="#list-doc">View Offline Appointment</a>
+                    <a class="list-group-item list-group-item-action " href="leave.php" href="#list-doc">Leave Application</a>
+                    <a class="list-group-item list-group-item-action " href="viewleave.php">View Leave Application</a>
                 </div><br>
             </div>
             <div class="container">
@@ -237,17 +237,9 @@ if (isset($_POST['submit'])) {
 
 
                         <form name="myForm" method="POST" onsubmit="return validation();">
-                            <table>
+                            <table class="mx-auto">
                                 <tbody>
-                                    <!-- <tr>
-                                        <td>Name</td>
-                                        <td>:</td>
-                                        <td>
-                                            <?php
-                                            echo $_SESSION['username'];
-                                            ?>
-                                        </td>
-                                    </tr> -->
+
                                     <?php
                                     while ($row = mysqli_fetch_array($rs)) {
                                     ?>
@@ -255,7 +247,7 @@ if (isset($_POST['submit'])) {
                                             <td>First Name</td>
                                             <td>:</td>
                                             <td>
-                                                <input type="text" class="form-control" name="fname" id="name" value="<?php echo $row['fname']; ?>" autocomplete="off">
+                                                <input type="text" class="form-control" name="fname" id="name" value="<?php echo $row['fname']; ?>" autocomplete="off" readonly>
                                             </td>
 
                                         </tr>
@@ -289,7 +281,7 @@ if (isset($_POST['submit'])) {
                                             <td>DOB</td>
                                             <td>:</td>
                                             <td>
-                                                <input type="text" class="form-control" value="<?php echo $row['age']; ?> " rows="5" id="age" name="age" required maxlength="11">
+                                                <input type="text" class="form-control" value="<?php echo $row['age']; ?> " rows="5" id="age" name="age" required maxlength="11" readonly>
                                             </td>
                                         </tr>
 
@@ -306,7 +298,7 @@ if (isset($_POST['submit'])) {
                                         <td>State</td>
                                         <td>:</td>
                                         <td>
-                                            <input type="text" class="form-control" value="<?php echo $row['state']; ?> " min="10" maxlength="10" id="state" name="state" required maxlength="30">
+                                            <input type="text" class="form-control" value="<?php echo $row['state']; ?> " min="10" maxlength="10" id="state" name="state" required maxlength="30" readonly>
                                         </td>
                                         </tr>
                                         <td>District</td>
@@ -337,8 +329,10 @@ if (isset($_POST['submit'])) {
                                     } ?>
                                 </tbody>
                             </table>
+                            <br><br>
                             <div style="text-align: center;">
                                 <input type="submit" class="btn btn-success" onclick="return confirm('Are you sure you want to update the details?')" value="Submit" id="submit" name="submit">
+                                <a href="javascript:history.go(-1);" class="btn btn-outline-secondary btn-lg ml-2">Back</a>
                             </div>
                         </form>
                     </div>

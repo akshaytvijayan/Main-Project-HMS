@@ -32,6 +32,8 @@ if (isset($_POST['patsub1'])) {
     $result = mysqli_query($con, $query);
 
     if ($result) {
+      $pid = mysqli_insert_id($con);
+      $_SESSION['pid']=$pid;
       $_SESSION['username'] = $fname . " " . $lname;
       $_SESSION['fname'] = $fname;
       $_SESSION['lname'] = $lname;

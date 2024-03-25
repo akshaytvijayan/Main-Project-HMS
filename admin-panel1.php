@@ -5,6 +5,11 @@ $con = mysqli_connect("localhost", "root", "", "myhmsdb");
 include('newfunc.php');
 
 
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
+require 'Exception.php';
+require 'PHPMailer.php';
+require 'SMTP.php';
 
 $querys = "SELECT email,contact FROM doctb";
 $results = mysqli_query($con, $querys);
@@ -46,6 +51,7 @@ if (isset($_POST['tbl_doctor_add'])) {
   $demail = $_POST['email'];
   $spec = $_POST['Specialization'];
   $place = $_POST['inputState'];
+  $location = $_POST['location'];
   $district = $_POST['inputDistrict'];
   $experience = $_POST['experience'];
   $docFees = $_POST['docFees'];
@@ -54,17 +60,58 @@ if (isset($_POST['tbl_doctor_add'])) {
     $img_name = $_FILES['imagefile']['name'];
     $tmp_img_name = $_FILES['imagefile']['tmp_name'];
     $folder = 'msg_img/';
-    $query = "INSERT INTO `doctb`(`username`, `password`, `email`, `spec`, `docFees`, `name`, `age`, `qualification`, `gender`, `avialabletime`, `experience`, `place`, `district`,`contact`,`image`, `status`) VALUES ('$name','$dpassword','$demail','$spec','$docFees','$name','$age','$qualification','$gender','$availabletime','$experience','$place','$district','$contact','$img_name','probation')";
+    $query = "INSERT INTO `doctb`(`username`, `password`, `email`, `spec`, `docFees`, `name`, `age`, `qualification`, `gender`, `avialabletime`, `experience`, `place`, `location`, `district`,`contact`,`image`, `status`) VALUES ('$name','$dpassword','$demail','$spec','$docFees','$name','$age','$qualification','$gender','$availabletime','$experience','$place','$location','$district','$contact','$img_name','probation')";
     $result = mysqli_query($con, $query);
     if ($result) {
       move_uploaded_file($tmp_img_name, $folder . $img_name);
       echo "<script>alert('Doctor added successfully!');</script>";
+
+      $u=$_POST['email'];
+      $p=$_POST['password'];
+      $e=$_POST['email'];
+      sendMail($e,$u,$p);
+      
+      echo "<script> alert('Details are sent to the mail');</script>";
+          
     }
   } else {
     echo 'No file uploaded';
   }
 }
-
+function sendMail($e,$u,$p){
+  require 'vendor/autoload.php';
+  $mail = new PHPMailer(true);
+  try {
+    $email = $e;
+    $mail->SMTPOptions = array(
+    'ssl' => array(
+    'verify_peer' => false,
+    'verify_peer_name' => false,
+    'allow_self_signed' => true
+    )
+    );                      //Enable verbose debug output
+    $mail->isSMTP();                                            //Send using SMTP
+    $mail->Host       = 'smtp.gmail.com';                     //Set the SMTP server to send through
+    $mail->SMTPAuth   = true;                                   //Enable SMTP authentication
+    $mail->Username   = 'emailid';                     //SMTP username
+    $mail->Password   = 'password';                               //SMTP password
+    $mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;            //Enable implicit TLS encryption
+    $mail->Port       = 465;                                    //TCP port to connect to; use 587 if you have set `SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS`
+    $mail->setFrom('emal id','Admin');
+    $mail->addAddress($email);    
+    //Content
+    $mail->isHTML(true);                                  //Set email format to HTML
+    $mail->Subject = 'Neethi Group';
+    $mail->Body    = "Congratlations💐!! Doctor to be a part of Neethi Group.We look forward to your services.<br> 
+                        You can login the website using<br>username:$u<br>password:$p";
+    $mail->send();
+    //   header("otp.php");
+    return true;
+  } catch (Exception $e) {
+    echo "Message could not be sent. Mailer Error: {$mail->ErrorInfo}";
+    return false;
+  }
+}
 
 if (isset($_POST['docsub1'])) {
   $demail = $_POST['demail'];
@@ -776,7 +823,7 @@ if (isset($_POST['docsub1'])) {
                       </div>
                     </div>
                     <div class="col-6">
-                      <label for="address">Address</label>
+                      <label for="location">Address</label>
                       <textarea name="location" style="resize:none;" onchange="capitalizeFirstLetter(this)" placeholder="Enter Address" class="form-control" id="location" cols="30" rows="3"></textarea>
                     </div>
                   </div>

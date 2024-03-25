@@ -43,6 +43,7 @@
             }
         }
     </script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 
 </head>
 
@@ -72,6 +73,16 @@
                         </a>
                     </li>
 
+                    <li class="nav-item">
+                        <a class="nav-link js-scroll-trigger" href="odlms/index.php" style="color: white;font-family: 'IBM Plex Sans', sans-serif;">
+                            <h6>LABORATORY</h6>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link js-scroll-trigger" href="PRM/build/" style="color: white;font-family: 'IBM Plex Sans', sans-serif;">
+                            <h6>PHARMACEUTICALS</h6>
+                        </a>
+                    </li>
                     <li class="nav-item">
                         <a class="nav-link js-scroll-trigger" href="contact.html" style="color: white;font-family: 'IBM Plex Sans', sans-serif;">
                             <h6>CONTACT</h6>
@@ -106,6 +117,8 @@
                         <a class="nav-link" id="profile-tab" data-toggle="tab" href="#admin" role="tab" aria-controls="admin" aria-selected="false">Admin</a>
                     </li>
                 </ul>
+
+                <!-- patient registartion -->
                 <div class="tab-content" id="myTabContent">
                     <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
                         <h3 class="register-heading"><b>Register as Patient</b></h3>
@@ -176,14 +189,14 @@
                         </form>
                     </div>
 
-
+                    <!-- doctor login -->
                     <div class="tab-pane fade show" id="profile" role="tabpanel" aria-labelledby="profile-tab">
                         <h3 class="register-heading"><b>Login as Doctor</b></h3>
                         <form method="post" action="func1.php">
                             <div class="row register-form">
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <input type="text" class="form-control" placeholder="User Name " name="username3" onkeydown="return alphaOnly(event);" required />
+                                        <input type="email" class="form-control" placeholder="User Name " name="username3" id="username3" required />
                                     </div>
                                 </div>
                                 <div class="col-md-6">
@@ -255,12 +268,12 @@
                                         </span>
                                     </div>
 
+
                                     <style>
                                         .eye-icon {
                                             position: absolute;
                                             top: 50%;
                                             right: 10px;
-                                            /* Adjust as needed */
                                             transform: translateY(-50%);
                                             cursor: pointer;
                                         }
@@ -278,6 +291,7 @@
                                             togglePasswordButton2.querySelector('i').classList.toggle('fa-eye');
                                         });
                                     </script>
+
 
                                     <input type="submit" class="btnRegister" name="adsub" value="Login" />
                                 </div>

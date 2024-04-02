@@ -150,10 +150,10 @@ include("header.php");
               <h3 style="margin-top: 10%">Patient Login</h3><br>
               <form class="form-group" method="POST" action="func.php">
                 <div class="row" style="margin-top: 10%">
-                  <div class="col-md-4"><label>Email-ID: </label></div>
+                  <div class="col-md-4"><label><strong>Email-ID : </strong></label></div>
                   <div class="col-md-8"><input type="text" name="email" class="form-control" placeholder="enter email ID" required data-parsley-type="email" data-parsley-trigger="keyup" /></div><br><br>
 
-                  <div class="col-md-4" style="margin-top: 8%"><label>Password: </label></div>
+                  <div class="col-md-4" style="margin-top: 8%"><label><strong>Password : </strong></label></div>
                   <div class="col-md-8" style="margin-top: 8%">
                     <div class="position-relative">
                       <input type="password" class="form-control" id="password2" name="password2" placeholder="Enter password" required data-parsley-trigger="keyup">

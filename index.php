@@ -61,34 +61,35 @@
             </button>
             <div class="collapse navbar-collapse" id="navbarResponsive">
                 <ul class="navbar-nav ml-auto">
-                    <li class="nav-item" style="margin-right: 40px;">
-                        <a class="nav-link js-scroll-trigger" href="index.php" style="color: white;font-family: 'IBM Plex Sans', sans-serif;">
-                            <h6>HOME</h6>
-                        </a>
-                    </li>
+                    <ul class="navbar-nav ml-auto">
+                        <li class="nav-item">
+                            <a class="nav-link js-scroll-trigger" href="./PRM/build/home.php" style="color: white;font-family: 'IBM Plex Sans', sans-serif;">
+                                <h6>HOME</h6>
+                            </a>
+                        </li>
 
-                    <li class="nav-item" style="margin-right: 40px;">
-                        <a class="nav-link js-scroll-trigger" href="services.html" style="color: white;font-family: 'IBM Plex Sans', sans-serif;">
-                            <h6>ABOUT US</h6>
-                        </a>
-                    </li>
+                        <li class="nav-item">
+                            <a class="nav-link js-scroll-trigger" href="index.php" style="color: white;font-family: 'IBM Plex Sans', sans-serif;">
+                                <h6>PATIENT LOGIN</h6>
+                            </a>
+                        </li>
 
-                    <li class="nav-item">
-                        <a class="nav-link js-scroll-trigger" href="odlms/index.php" style="color: white;font-family: 'IBM Plex Sans', sans-serif;">
-                            <h6>LABORATORY</h6>
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link js-scroll-trigger" href="PRM/build/" style="color: white;font-family: 'IBM Plex Sans', sans-serif;">
-                            <h6>PHARMACEUTICALS</h6>
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link js-scroll-trigger" href="contact.html" style="color: white;font-family: 'IBM Plex Sans', sans-serif;">
-                            <h6>CONTACT</h6>
-                        </a>
-                    </li>
-                </ul>
+                        <li class="nav-item">
+                            <a class="nav-link js-scroll-trigger" href="lab2/index.html.php" style="color: white;font-family: 'IBM Plex Sans', sans-serif;">
+                                <h6>LABORATORY</h6>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link js-scroll-trigger" href="PRM/build/" style="color: white;font-family: 'IBM Plex Sans', sans-serif;">
+                                <h6>PHARMACEUTICALS</h6>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link js-scroll-trigger" href="contact.html" style="color: white;font-family: 'IBM Plex Sans', sans-serif;">
+                                <h6>CONTACT</h6>
+                            </a>
+                        </li>
+                    </ul>
             </div>
         </div>
     </nav>
@@ -128,22 +129,22 @@
                                 <div class="col-md-6">
 
                                     <div class="form-group">
-                                        <label for="fname">First Name :</label>
+                                        <label for="fname"><strong>First Name :</strong></label>
                                         <input type="text" class="form-control" onchange="capitalizeFirstLetter(this)" id="fname" placeholder="First Name " name="fname" onkeydown="return alphaOnly(event);" required />
                                     </div>
 
-                                    <div class="form-group"> <label for="fname">Email :</label>
+                                    <div class="form-group"> <label for="fname"><strong>Email :</strong></label>
                                         <input type="email" class="form-control" placeholder="Your Email " name="email" pattern="[^@\s]+@[^@\s]+\.[^@\s]+" title="Invalid email address" required />
                                     </div>
 
-                                    <div class="form-group"><label for="fname">Age :</label>
+                                    <div class="form-group"><label for="fname"><strong>Age :</strong></label>
                                         <input type="text" class="form-control" placeholder="Your Age " name="age" required />
                                     </div>
 
-                                    <div class="form-group"><label for="fname">Your District :</label>
+                                    <div class="form-group"><label for="fname"><strong>Your District :</strong></label>
                                         <input type="text" class="form-control" placeholder="Your District " onchange="capitalizeFirstLetter(this)" name="district" required />
                                     </div>
-                                    <div class="form-group"><label for="fname">Password :</label>
+                                    <div class="form-group"><label for="fname"><strong>Password :</strong></label>
                                         <input type="password" class="form-control" placeholder="Password " id="password" name="password" onkeyup='check();' required />
                                     </div>
                                     <div class="form-group">
@@ -166,21 +167,26 @@
                                 </div>
 
                                 <div class="col-md-6">
-                                    <div class="form-group"><label for="fname">Last Name :</label>
+                                    <div class="form-group"><label for="fname"><strong>Last Name :</strong></label>
                                         <input type="text" class="form-control" placeholder="Last Name " onchange="capitalizeFirstLetter(this)" name="lname" onkeydown="return alphaOnly(event);" />
                                     </div>
 
-                                    <div class="form-group"><label for="fname">Contact :</label>
+                                    <div class="form-group"><label for="fname"><strong>Contact :</strong></label>
                                         <input type="tel" minlength="10" maxlength="10" name="contact" class="form-control" placeholder="Your Phone " required />
                                     </div>
-                                    <div class="form-group"><label for="fname">Your Place :</label>
+                                    <div class="form-group"><label for="fname"><strong>Your Place :</strong></label>
                                         <input type="text" class="form-control" placeholder="Your Place " onchange="capitalizeFirstLetter(this)" name="place" required />
                                     </div>
-                                    <div class="form-group"><label for="fname">Your State :</label>
+                                    <div class="form-group"><label for="fname"><strong>Your State :</strong></label>
                                         <input type="text" class="form-control" placeholder="Your State " onchange="capitalizeFirstLetter(this)" name="state" required />
                                     </div>
-                                    <div class="form-group"><label for="fname">Confirm Password :</label>
+                                    <div class="form-group"><label for="fname"><strong>Confirm Password :</strong></label>
                                         <input type="password" class="form-control" id="cpassword" placeholder="Confirm Password " name="cpassword" onkeyup='check();' required /><span id='message'></span>
+                                    </div>
+                                    <div class="text-center" style="margin-right:50%;">
+                                        <input type="checkbox" id="showPasswordCheckbox" onchange="togglePasswordVisibility()">
+                                        <label for="showPasswordCheckbox">Show Password</label>
+
                                     </div>
                                     <input type="submit" class="btnRegister" name="patsub1" onclick="return checklen();" value="Register" />
                                 </div>
@@ -195,12 +201,12 @@
                         <form method="post" action="func1.php">
                             <div class="row register-form">
                                 <div class="col-md-6">
-                                    <div class="form-group">
+                                    <div class="form-group"> <label for="fname"><strong>Email :</strong></label>
                                         <input type="email" class="form-control" placeholder="User Name " name="username3" id="username3" required />
                                     </div>
                                 </div>
                                 <div class="col-md-6">
-                                    <div class="form-group position-relative">
+                                    <div class="form-group position-relative"><label for="fname"><strong>Password :</strong></label>
                                         <input type="password" class="form-control" id="password3" name="password3" placeholder="Password" required />
                                         <span class="eye-icon" id="togglePassword3">
                                             <i class="fa fa-eye-slash" aria-hidden="true"></i>
@@ -208,6 +214,20 @@
                                     </div>
 
                                     <script>
+                                        function togglePasswordVisibility() {
+                                            var passwordField = document.getElementById('password');
+                                            var confirmPasswordField = document.getElementById('cpassword');
+                                            var showPasswordCheckbox = document.getElementById('showPasswordCheckbox');
+
+                                            if (showPasswordCheckbox.checked) {
+                                                passwordField.type = 'text';
+                                                confirmPasswordField.type = 'text';
+                                            } else {
+                                                passwordField.type = 'password';
+                                                confirmPasswordField.type = 'password';
+                                            }
+                                        }
+
                                         const passwordField3 = document.getElementById('password3');
                                         const togglePasswordButton3 = document.getElementById('togglePassword3');
 
@@ -232,12 +252,12 @@
                         <form method="post" action="func3.php">
                             <div class="row register-form">
                                 <div class="col-md-6">
-                                    <div class="form-group">
+                                    <div class="form-group"> <label for="fname"><strong>Email :</strong></label>
                                         <input type="email" class="form-control" placeholder="Email " name="username1" required />
                                     </div>
                                 </div>
                                 <div class="col-md-6">
-                                    <div class="form-group position-relative">
+                                    <div class="form-group position-relative"><label for="fname"><strong>Password :</strong></label>
                                         <input type="password" class="form-control" id="password2" name="password2" placeholder="Password" required />
                                         <span class="eye-icon" id="togglePassword2">
                                             <i class="fa fa-eye-slash" aria-hidden="true"></i>
@@ -272,7 +292,7 @@
                                     <style>
                                         .eye-icon {
                                             position: absolute;
-                                            top: 50%;
+                                            top: 70%;
                                             right: 10px;
                                             transform: translateY(-50%);
                                             cursor: pointer;

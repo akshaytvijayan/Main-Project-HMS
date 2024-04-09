@@ -285,7 +285,99 @@ $username = $_SESSION['username'];
               </div>
             </div>
 
+            <div class="col">
+              <div class="card number-card">
+                <div class="card-body">
+                  <div class="card-title-container">
+                    <div class="icon-container">
+                      <h6><i class="fas fa-vial" aria-hidden="true" style="font-size: 300%;"></i></h6>
+                    </div>
+                    <div class="title-container">
+                      <h5 class="card-title">Sample Collected</h5>
+                    </div>
+                  </div>
+                  <p class="card-text">
+                    <?php
+                    // Establish database connection
+                    $con = mysqli_connect("localhost", "root", "", "myhmsdb");
 
+                    // Check if the connection is successful
+                    if (mysqli_connect_errno()) {
+                      echo "Failed to connect to MySQL: " . mysqli_connect_error();
+                      exit();
+                    }
+
+                    // Query to retrieve the count of appointments with sample collected
+                    $query = "SELECT COUNT(*) AS sample_collected_appointments FROM appointments WHERE status = 'sample_collected'";
+
+                    // Execute the query
+                    $result = mysqli_query($con, $query);
+
+                    // Check if the query was executed successfully
+                    if ($result) {
+                      // Fetch the count of appointments with sample collected
+                      $row = mysqli_fetch_assoc($result);
+                      $sampleCollectedAppointments = $row['sample_collected_appointments'];
+                      echo $sampleCollectedAppointments;
+                    } else {
+                      // If an error occurred while executing the query
+                      echo "Error fetching appointments with sample collected";
+                    }
+
+                    // Close the database connection
+                    mysqli_close($con);
+                    ?>
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <div class="col">
+              <div class="card number-card">
+                <div class="card-body">
+                  <div class="card-title-container">
+                    <div class="icon-container">
+                      <h6><i class="fas fa-flask" aria-hidden="true" style="font-size: 300%;"></i></h6>
+                    </div>
+                    <div class="title-container">
+                      <h5 class="card-title">Sample Testing</h5>
+                    </div>
+                  </div>
+                  <p class="card-text">
+                    <?php
+                    // Establish database connection
+                    $con = mysqli_connect("localhost", "root", "", "myhmsdb");
+
+                    // Check if the connection is successful
+                    if (mysqli_connect_errno()) {
+                      echo "Failed to connect to MySQL: " . mysqli_connect_error();
+                      exit();
+                    }
+
+                    // Query to retrieve the count of appointments on test
+                    $query = "SELECT COUNT(*) AS on_test_appointments FROM appointments WHERE status = 'on_test'";
+
+                    // Execute the query
+                    $result = mysqli_query($con, $query);
+
+                    // Check if the query was executed successfully
+                    if ($result) {
+                      // Fetch the count of appointments on test
+                      $row = mysqli_fetch_assoc($result);
+                      $onTestAppointments = $row['on_test_appointments'];
+                      echo $onTestAppointments;
+                    } else {
+                      // If an error occurred while executing the query
+                      echo "Error fetching appointments on test";
+                    }
+
+                    // Close the database connection
+                    mysqli_close($con);
+                    ?>
+                  </p>
+                </div>
+              </div>
+            </div>
 
             <div class="col">
               <div class="card number-card">
@@ -296,7 +388,7 @@ $username = $_SESSION['username'];
                       </h6>
                     </div>
                     <div class="title-container">
-                      <h5 class="card-title">Rejected Appointments</h5>
+                      <h5 class="card-title">Rejected Appointments and Testings</h5>
                     </div>
                   </div>
                   <p class="card-text">

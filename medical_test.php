@@ -21,9 +21,11 @@ $curentpwd = $display['password'];
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="vendor/fontawesome/css/font-awesome.min.css">
     <link rel="shortcut icon" type="image/x-icon" href="images/favicon.png" />
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css" integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css"
+        integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+        integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 
     <link href="https://fonts.googleapis.com/css?family=IBM+Plex+Sans&display=swap" rel="stylesheet">
     <style>
@@ -63,7 +65,8 @@ $curentpwd = $display['password'];
 <body>
     <nav class="navbar navbar-expand-lg navbar-dark bg-primary fixed-top">
         <a class="navbar-brand" href="#"><i class="fa fa-user-plus" aria-hidden="true"></i> NEETHI Hospital </a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
 
@@ -101,40 +104,41 @@ $curentpwd = $display['password'];
             </div>
             <div class="col-md-8 mt-5">
                 <div class="tab-content mt-5" id="nav-tabContent" style="width: 950px;">
-                    <div class="tab-pane fade show active" id="list-dash" role="tabpanel" aria-labelledby="list-dash-list">
+                    <div class="tab-pane fade show active" id="list-dash" role="tabpanel"
+                        aria-labelledby="list-dash-list">
 
                         <div class="card" style="margin-left:15%;">
                             <div class="card-header">
-                                <?php
+                            <?php
                                 $available_tests = array(
-                                    "Blood Pressure",
-                                    "Blood Sugar",
-                                    "Cholesterol",
-                                    "Thyroid Function",
-                                    "Complete Blood Count",
-                                    "Lipid Profile",
-                                    "Liver Function",
-                                    "Renal Function",
-                                    "Urinalysis",
-                                    "Electrocardiogram",
-                                    "Spirometry",
-                                    "Magnetic Resonance Imaging",
-                                    "Colonoscopy",
-                                    "Endoscopy",
-                                    "Biopsy",
-                                    "Bone Density Scan",
-                                    "Computed Tomography Scan",
-                                    "Echocardiogram",
-                                    "Electroencephalogram",
-                                    "Mammogram",
-                                    "Pap Smear",
-                                    "Prostate Specific Antigen Test",
-                                    "Sigmoidoscopy",
-                                    "Stress Test",
-                                    "Treadmill Test",
-                                    "Visual Acuity Test",
-                                    "Skin Prick Test",
-                                    "X-Ray"
+                                    "Blood Pressure" => 30,
+                                    "Blood Sugar" => 25,
+                                    "Cholesterol" => 40,
+                                    "Thyroid Function" => 50,
+                                    "Complete Blood Count" => 35,
+                                    "Lipid Profile" => 45,
+                                    "Liver Function" => 55,
+                                    "Renal Function" => 60,
+                                    "Urinalysis" => 20,
+                                    "Electrocardiogram" => 75,
+                                    "Spirometry" => 65,
+                                    "Magnetic Resonance Imaging" => 200,
+                                    "Colonoscopy" => 300,
+                                    "Endoscopy" => 250,
+                                    "Biopsy" => 150,
+                                    "Bone Density Scan" => 120,
+                                    "Computed Tomography Scan" => 180,
+                                    "Echocardiogram" => 80,
+                                    "Electroencephalogram" => 100,
+                                    "Mammogram" => 90,
+                                    "Pap Smear" => 30,
+                                    "Prostate Specific Antigen Test" => 70,
+                                    "Sigmoidoscopy" => 220,
+                                    "Stress Test" => 85,
+                                    "Treadmill Test" => 70,
+                                    "Visual Acuity Test" => 25,
+                                    "Skin Prick Test" => 15,
+                                    "X-Ray" => 50
                                 );
                                 $pid = $_SESSION['pid'];
                                 $disease = $_SESSION['disease'];
@@ -152,28 +156,35 @@ $curentpwd = $display['password'];
                                 $id = $_SESSION['id'];
 
 
-                                // Handle form submission to process selected medical tests
                                 if ($_SERVER["REQUEST_METHOD"] == "POST") {
                                     // Retrieve selected medical tests
                                     $selected_tests = $_POST['medical_tests'];
-
+                                
                                     // Store selected medical tests in the database or session
                                     // For simplicity, we'll just print them here
-
                                     foreach ($selected_tests as $test) {
-                                        $sql = "INSERT INTO patient_medical_tests (pid, medical_test) VALUES (?, ?)";
+                                        // Fetch the price of the test from $available_tests array
+                                        $price = $available_tests[$test];
+                                
+                                        // Perform database operations
+                                        $sql = "INSERT INTO patient_medical_tests (pid, medical_test, price) VALUES (?, ?, ?)";
                                         $stmt = $con->prepare($sql);
-                                        $stmt->bind_param("is", $pid, $test);
+                                        // Assuming $pid is your patient ID and $id is your appointment ID, you need to define them somewhere in your code
+                                        $stmt->bind_param("iss", $pid, $test, $price);
                                         $stmt->execute();
                                     }
+                                
+                                    // Update appointment status
                                     $query2 = "UPDATE `appointmenttb` SET `status` = 'approve' WHERE `ID` = ?";
                                     $stmt2 = $con->prepare($query2);
                                     $stmt2->bind_param("i", $id);
                                     $stmt2->execute();
+                                
                                     echo "<script>alert('Prescribed successfully!');</script>";
-
+                                
                                     exit();
                                 }
+                                
                                 ?>
 
                                 <!DOCTYPE html>
@@ -246,7 +257,7 @@ $curentpwd = $display['password'];
                                         var checkboxes = document.querySelectorAll('input[type="checkbox"]');
 
                                         if (checkbox.value === "No Test") {
-                                            checkboxes.forEach(function(item) {
+                                            checkboxes.forEach(function (item) {
                                                 if (item !== checkbox) {
                                                     item.disabled = checkbox.checked;
                                                 }
@@ -265,18 +276,20 @@ $curentpwd = $display['password'];
                                         <input type="hidden" name="disease" value="<?php echo $disease; ?>">
 
                                         <div class="checkbox-container">
-                                            <?php foreach ($available_tests as $test) { ?>
+                                            <?php foreach ($available_tests as $test => $price) { ?>
                                                 <div class="checkbox-item">
                                                     <input type="checkbox" id="<?php echo $test; ?>" name="medical_tests[]" value="<?php echo $test; ?>" onchange="handleCheckboxChange(this)">
                                                     <label for="<?php echo $test; ?>">
-                                                        <?php echo $test; ?>
+                                                        <?php echo $test . " (<b>" . $price . "</b> /rs)"; ?>
                                                     </label>
                                                 </div>
                                             <?php } ?>
                                         </div>
+
                                         <hr>
                                         <div class="checkbox-item">
-                                            <input type="checkbox" id="noTest" name="medical_tests[]" value="No Test" onchange="handleCheckboxChange(this)">
+                                            <input type="checkbox" id="noTest" name="medical_tests[]" value="No Test"
+                                                onchange="handleCheckboxChange(this)">
                                             <label for="noTest">No Test</label>
                                         </div>
 
@@ -308,9 +321,15 @@ $curentpwd = $display['password'];
 </div>
 <!-- Optional JavaScript -->
 <!-- jQuery first, then Popper.js, then Bootstrap JS -->
-<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js" integrity="sha384-b/U6ypiBEHpOf/4+1nzFpr53nxSS+GLCkfwBdFNTxtclqqenISfwAzpKaMNFNmj4" crossorigin="anonymous"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js" integrity="sha384-h0AbiXch4ZDo7tp9hKZ4TsHbi047NrKGLO3SEJAg45jXxnGIfYzk4Si90RDIqNm1" crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+    integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+    crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js"
+    integrity="sha384-b/U6ypiBEHpOf/4+1nzFpr53nxSS+GLCkfwBdFNTxtclqqenISfwAzpKaMNFNmj4"
+    crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js"
+    integrity="sha384-h0AbiXch4ZDo7tp9hKZ4TsHbi047NrKGLO3SEJAg45jXxnGIfYzk4Si90RDIqNm1"
+    crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/6.10.1/sweetalert2.all.min.js"></script>
 </body>
 

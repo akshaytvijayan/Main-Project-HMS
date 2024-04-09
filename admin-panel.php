@@ -779,19 +779,15 @@ function get_specs()
 
                           let upcomingDates = [];
 
-                          // Calculate upcoming dates for the selected day in the current month
-                          for (let date = currentDay + 1; date <= 31; date++) {
-                            const day = new Date(currentYear, currentMonth, date);
-                            if (day.getDay() === selectedDayIndex && day.getMonth() === currentMonth) {
-                              upcomingDates.push(day);
-                            }
-                          }
+                          // Calculate upcoming dates for the selected day within the next 3 months
+                          for (let monthOffset = 0; monthOffset < 3; monthOffset++) {
+                            const targetMonth = currentMonth + monthOffset;
+                            const targetYear = currentYear + Math.floor((currentMonth + monthOffset) / 12);
+                            const daysInMonth = new Date(targetYear, targetMonth + 1, 0).getDate();
 
-                          // If no upcoming dates found in the current month, find dates in the next month
-                          if (upcomingDates.length === 0) {
-                            for (let date = 1; date <= 31; date++) {
-                              const day = new Date(currentYear, currentMonth + 1, date);
-                              if (day.getDay() === selectedDayIndex && day.getMonth() === currentMonth + 1) {
+                            for (let date = currentDay + 1; date <= daysInMonth; date++) {
+                              const day = new Date(targetYear, targetMonth, date);
+                              if (day.getDay() === selectedDayIndex) {
                                 upcomingDates.push(day);
                               }
                             }
@@ -814,6 +810,7 @@ function get_specs()
 
                         // Populate initial upcoming dates
                         populateUpcomingDates(document.getElementById('userdate').value);
+                      </script>
                       </script>
                       <div class="col-md-12 text-center mt-5">
                         <input type="submit" name="app-submit" value="Create Appointment" class="btn btn-primary" id="inputbtn">
@@ -940,7 +937,7 @@ function get_specs()
                 $con = mysqli_connect("localhost", "root", "", "myhmsdb");
                 global $con;
 
-                $query = "select *   from appointmenttb where pid='$pid' and status='approve';";
+                $query = "select * from appointmenttb where pid='$pid' and status='approve' ORDER BY id DESC;";
 
                 $result = mysqli_query($con, $query);
                 if (!$result) {

@@ -24,7 +24,10 @@ $doc_row_name = $doc_row['username'];
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css" integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css" integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M" crossorigin="anonymous">
+    <!-- Include jsPDF and html2canvas libraries -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/0.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
     <link href="https://fonts.googleapis.com/css?family=IBM+Plex+Sans&display=swap" rel="stylesheet">
     <style>
         .btn-outline-light:hover {
@@ -258,14 +261,25 @@ $doc_row_name = $doc_row['username'];
                         }
                     }
                     ?>
-                    <div class="text-center">
-                        <button class="btn btn-outline-info curve-btn" onclick="goBack()">Back</button>
-                        <script>
-                            function goBack() {
-                                window.history.back();
-                            }
-                        </script>
+                    <div class="row">
+                        <div>
+                            <form method="get" action="bill2.php">
+                                <input type="hidden" name="ID" value="<?php echo $row['ID'] ?>" />
+                                <input type="submit" name="generate_bill" class="btn btn-outline-dark curve-btn" value="View Bill" />
+                            </form>
+                        </div>
+                        <div class="col">
+                            <button class="btn btn-outline-info curve-btn" onclick="goBack()">Back</button>
+                            <script>
+                                function goBack() {
+                                    window.history.back();
+                                }
+                            </script>
+                        </div>
                     </div>
+
+
+
                 </div>
 
             </body>

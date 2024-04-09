@@ -3,7 +3,7 @@ $con = mysqli_connect("localhost", "root", "", "myhmsdb");
 // Assuming you have already established a database connection
 $username = urldecode($_GET['username']);
 // Fetch appointments data from the database
-$query = "SELECT * FROM appointments WHERE status NOT IN ('success', 'rejected')";
+$query = "SELECT DISTINCT * FROM appointments WHERE status NOT IN ('success', 'rejected')";
 
 $result = mysqli_query($con, $query);
 

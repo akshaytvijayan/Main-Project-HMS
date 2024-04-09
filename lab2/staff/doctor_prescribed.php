@@ -144,6 +144,7 @@ $username = $_SESSION['username'];
 
         </div>
       </div>
+      <!-- modal booking -->
       <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModal" aria-hidden="true">
         <div class="modal-dialog" role="document">
           <div class="modal-content">
@@ -159,6 +160,7 @@ $username = $_SESSION['username'];
                 <div class="form-group">
                   <label for="editEmail">Email:</label>
                   <input style="background-color:lightgrey;" type="email" class="form-control" id="editEmail" name="editEmail" readonly>
+                  <input style="background-color:lightgrey;" type="hidden" class="form-control" id="test_id" name="test_id" readonly>
                 </div>
                 <div class="form-group">
                   <label for="editMedicalTest">Medical Test:</label>
@@ -172,21 +174,21 @@ $username = $_SESSION['username'];
                   <label for="editDoctor">Doctor:</label>
                   <input style="background-color:lightgrey;" type="text" class="form-control" id="editDoctor" name="editDoctor" readonly>
                 </div>
+
                 <div class="form-group">
                   <label for="editUserdate">Cost</label>
-                  <input style="background-color:lightgrey;" type="text" class="form-control" id="editCost" name="editCost" required>
+                  <input style="background-color:lightgrey;" type="text" class="form-control" id="editCost" name="editCost" readonly>
                 </div>
                 <div class="form-group">
                   <label for="editUserdate">User Date:</label>
-                  <input type="Date" class="form-control" id="editUserdate" name="editUserdate">
+                  <input type="date" class="form-control" id="editUserdate" name="editUserdate">
                 </div>
-
                 <div class="form-group">
                   <label for="time">Time </label><span style="color:red;"> *</span>
                   <input class="form-control" type="time" id="time" name="time" onchange="validateTime()" required>
                 </div>
                 <div class="modal-footer">
-                  <button class="btn btn-success" id="book" onclick="bookAppointment()" type="submit">Book Appointment</button>
+                  <button class="btn btn-success" id="book" type="submit">Book Appointment</button>
                 </div>
               </form>
               <div id="message"></div>
@@ -194,77 +196,6 @@ $username = $_SESSION['username'];
           </div>
         </div>
       </div>
-
-      <script>
-        function opens(patientName, email, medicalTest, doctor, userdate) {
-          $("#editName").val(patientName);
-          $("#editEmail").val(email);
-          $("#editMedicalTest").val(medicalTest);
-          $("#editDoctor").val(doctor);
-          $("#editUserdate").val(userdate);
-          // alert(patientName);
-          // alert(email);
-          // alert(medicalTest);
-          // alert(doctor);
-          // alert(userdate);
-
-          $('#myModal').modal('show');
-        }
-
-        function validateTime() {
-          var selectedTime = document.getElementById('time').value;
-          var openingTime = new Date();
-          openingTime.setHours(9, 0, 0); // 9:00 AM
-          var closingTime = new Date();
-          closingTime.setHours(16, 0, 0); // 4:00 PM
-
-          var selectedTimeHours = parseInt(selectedTime.split(':')[0]);
-          var selectedTimeMinutes = parseInt(selectedTime.split(':')[1]);
-          var selectedDateTime = new Date();
-          selectedDateTime.setHours(selectedTimeHours, selectedTimeMinutes, 0);
-
-          if (!(selectedDateTime >= openingTime && selectedDateTime <= closingTime)) {
-            document.getElementById('message').innerHTML = "Appointment time must be between 9:00 AM and 4:00 PM.";
-            document.getElementById('time').style.border = "2px solid red";
-            document.getElementById("book").disabled = true;
-
-
-          } else {
-            document.getElementById('message').innerHTML = "";
-            document.getElementById('time').style.border = "";
-            document.getElementById("book").disabled = false;
-          }
-        }
-
-        function bookAppointment() {
-          // Gather form data
-          var formData = {
-            patientName: $("#editName").val(),
-            email: $("#editEmail").val(),
-            medicalTest: $("#editMedicalTest").val(),
-            description: $("#editDescription").val(),
-            doctor: $("#editDoctor").val(),
-            userdate: $("#editUserdate").val(),
-            cost: $("#editCost").val(),
-            time: $("#time").val()
-          };
-
-          // Send AJAX request
-          $.ajax({
-            type: "POST",
-            url: "booking_appointment.php", // PHP script to handle the request
-            data: formData,
-            success: function(response) {
-              // Handle the response
-              alert(response);
-            }
-          });
-
-          // Prevent default form submission
-          return false;
-        }
-      </script>
-
 
       <div class="content" style="height: 100vh;">
         <!-- Main content goes here -->
@@ -277,8 +208,8 @@ $username = $_SESSION['username'];
                   <th class="th-sm">Patient Name</th>
                   <th class="th-sm">Patient Email</th>
                   <th class="th-sm">Test</th>
+                  <th class="th-sm">Price</th>
                   <th class="th-sm">Prescribed Doc_id</th>
-
                   <th class="th-sm">Prescribed Date</th>
                   <th class="th-sm">Action</th>
                 </tr>
@@ -355,64 +286,91 @@ $username = $_SESSION['username'];
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 
   <script>
-    // AJAX request to fetch appointments
     fetchAppointments();
 
     function fetchAppointments() {
-      // Get the username from PHP and encode it for URL
+
       var username = '<?php echo urlencode($username); ?>';
 
       $.ajax({
-        url: 'fetch_doc_appointments.php', // Path to your PHP script to fetch appointments
+        url: 'fetch_doc_appointments.php',
         type: 'GET',
         data: {
           username: username
-        }, // Pass the username as a parameter
+        },
         success: function(response) {
           $('#appointmentTableBody').html(response);
         },
         error: function(xhr, status, error) {
           console.error(error);
-          // Handle error if needed
         }
       });
     }
-  </script>
 
-  <script>
-    function openModal(id) {
-      //     // Get the modal
-      //     // var modal = document.getElementById("myModal_" + id);
-      //     // // var modal = "myModal_" + id;
-      //     // // alert(modal);
-      //     // // Get the button that opens the modal
-      //     // var btn = document.getElementById("myBtn");
-      //     // // Get the <span> element that closes the modal
-      //     // var span = document.getElementsByClassName("close")[0];
-      //     // // When the user clicks the button, open the modal
-      //     // modal.style.display = "block";
-      //     // // When the user clicks on <span> (x), close the modal
-      //     // span.onclick = function() {
-      //     //     modal.style.display = "none";
-      //     // }
-      //     // // When the user clicks anywhere outside of the modal, close it
-      //     // window.onclick = function(event) {
-      //     //     if (event.target == modal) {
-      //     //         modal.style.display = "none";
-      //     //     }
-      //     // }
-      $('#myModal_' + id).modal('show');
+    function opens(patientName, email, test_id, medicalTest, price, doctor, userdate) {
+      $("#editName").val(patientName);
+      $("#editEmail").val(email);
+      $("#test_id").val(test_id);
+      $("#editMedicalTest").val(medicalTest);
+      $("#editCost").val(price);
+      $("#editDoctor").val(doctor);
+      $("#editUserdate").val(userdate);
+      $('#myModal').modal('show');
+    }
+
+    function validateTime() {
+      var selectedTime = document.getElementById('time').value;
+      var openingTime = new Date();
+      openingTime.setHours(9, 0, 0); // 9:00 AM
+      var closingTime = new Date();
+      closingTime.setHours(16, 0, 0); // 4:00 PM
+
+      var selectedTimeHours = parseInt(selectedTime.split(':')[0]);
+      var selectedTimeMinutes = parseInt(selectedTime.split(':')[1]);
+      var selectedDateTime = new Date();
+      selectedDateTime.setHours(selectedTimeHours, selectedTimeMinutes, 0);
+
+      if (!(selectedDateTime >= openingTime && selectedDateTime <= closingTime)) {
+        document.getElementById('message').innerHTML = "Appointment time must be between 9:00 AM and 4:00 PM.";
+        document.getElementById('time').style.border = "2px solid red";
+        document.getElementById("book").disabled = true;
+
+
+      } else {
+        document.getElementById('message').innerHTML = "";
+        document.getElementById('time').style.border = "";
+        document.getElementById("book").disabled = false;
+      }
+    }
+
+    function bookAppointment() {
+      var formData = {
+        patientName: $("#editName").val(),
+        email: $("#editEmail").val(),
+        test_id: $("#test_id").val(),
+        medicalTest: $("#editMedicalTest").val(),
+        description: $("#editDescription").val(),
+        doctor: $("#editDoctor").val(),
+        userdate: $("#editUserdate").val(),
+        cost: $("#editCost").val(),
+        time: $("#time").val()
+      };
+
+      $.ajax({
+        type: "POST",
+        url: "booking_appointment.php",
+        data: formData,
+        success: function(response) {
+          alert(response);
+          $('#myModal').modal('hide');
+          fetchAppointments();
+        }
+      });
+
+      return false;
     }
   </script>
-  <!-- <script>
-    // Wait for the document to be fully loaded
-    $(document).ready(function() {
-        // Function to open modal
-        function openModal(id) {
-            $('#myModal_' + id).modal('show');
-        }
-    });
-</script> -->
+
 
 
 

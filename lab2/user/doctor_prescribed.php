@@ -108,6 +108,12 @@ $username = $_SESSION['username'];
       /* Adjust as needed */
       z-index: 1;
     }
+    /* Remove spinner arrows for number input */
+    input[type=number]::-webkit-inner-spin-button,
+    input[type=number]::-webkit-outer-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+    }
   </style>
 </head>
 
@@ -140,128 +146,223 @@ $username = $_SESSION['username'];
 
         </div>
       </div>
+      <!-- test booking -->
       <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModal" aria-hidden="true">
         <div class="modal-dialog" role="document">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h5 class="modal-title" id="editModalLabel">Appointment Details</h5>
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="editModalLabel">Appointment Details</h5>
+                </div>
+                <div class="modal-body">
+                    <form id="editForm" onsubmit="return bookAppointment()">
+                        <div class="form-group">
+                            <label for="editName">Patient Name:</label>
+                            <input style="background-color:lightgrey;" type="text" class="form-control" id="editName" name="editName" readonly>
+                        </div>
+                        <div class="form-group">
+                            <label for="editEmail">Email:</label>
+                            <input style="background-color:lightgrey;" type="email" class="form-control" id="editEmail" name="editEmail" readonly>
+                            <input style="background-color:lightgrey;" type="hidden" class="form-control" id="test_id" name="test_id" readonly>
+                        </div>
+                        <div class="form-group">
+                            <label for="editMedicalTest">Medical Test:</label>
+                            <input style="background-color:lightgrey;" type="text" class="form-control" id="editMedicalTest" name="editMedicalTest" readonly>
+                        </div>
+                        <div class="form-group">
+                            <label for="editUserdate">Description</label>
+                            <input style="background-color:lightgrey;" type="text" class="form-control" id="editDescription" value="NA" name="editDescription" readonly>
+                        </div>
+                        <div class="form-group">
+                            <label for="editDoctor">Doctor:</label>
+                            <input style="background-color:lightgrey;" type="text" class="form-control" id="editDoctor" name="editDoctor" readonly>
+                        </div>
+                        <div class="form-group">
+                            <label for="editUserdate">User Date:</label>
+                            <input  type="date" class="form-control" id="editUserdate" name="editUserdate">
+                        </div>
+                        <div class="form-group">
+                            <label for="editUserdate">Cost</label>
+                            <input   type="text" class="form-control" id="editCost" name="editCost" readonly>
+                        </div>
+                        <div class="form-group">
+                          <label for="time">Time </label><span style="color:red;"> *</span>
+                          <input class="form-control" type="time" id="time" name="time" onchange="validateTime()" required>
+                        </div>
+                        <div class="modal-footer">
+                          <button class="btn btn-success" id="book" type="submit">Book Appointment</button>
+                        </div>
+                    </form>
+                    <div id="message"></div>
+                </div>
             </div>
-            <div class="modal-body">
-              <form id="editForm" onsubmit="return bookAppointment()">
-                <div class="form-group">
-                  <label for="editName">Patient Name:</label>
-                  <input style="background-color:lightgrey;" type="text" class="form-control" id="editName" name="editName" readonly>
-                </div>
-                <div class="form-group">
-                  <label for="editEmail">Email:</label>
-                  <input style="background-color:lightgrey;" type="email" class="form-control" id="editEmail" name="editEmail" readonly>
-                </div>
-                <div class="form-group">
-                  <label for="editMedicalTest">Medical Test:</label>
-                  <input style="background-color:lightgrey;" type="text" class="form-control" id="editMedicalTest" name="editMedicalTest" readonly>
-                </div>
-                <div class="form-group">
-                  <label for="editUserdate">Description</label>
-                  <input style="background-color:lightgrey;" type="text" class="form-control" id="editDescription" value="NA" name="editDescription" readonly>
-                </div>
-                <div class="form-group">
-                  <label for="editDoctor">Doctor:</label>
-                  <input style="background-color:lightgrey;" type="text" class="form-control" id="editDoctor" name="editDoctor" readonly>
-                </div>
-                <div class="form-group">
-                  <label for="editUserdate">Cost</label>
-                  <input style="background-color:lightgrey;" type="text" class="form-control" id="editCost" name="editCost" required>
-                </div>
-                <div class="form-group">
-                  <label for="editUserdate">User Date:</label>
-                  <input type="Date" class="form-control" id="editUserdate" name="editUserdate">
-                </div>
-
-                <div class="form-group">
-                  <label for="time">Time </label><span style="color:red;"> *</span>
-                  <input class="form-control" type="time" id="time" name="time" onchange="validateTime()" required>
-                </div>
-                <div class="modal-footer">
-                  <button class="btn btn-success" id="book" onclick="bookAppointment()" type="submit">Book Appointment</button>
-                </div>
-              </form>
-              <div id="message"></div>
-            </div>
-          </div>
         </div>
       </div>
+      <!-- payment -->
+      <div class="modal fade" id="payModal" tabindex="-1" role="dialog" aria-labelledby="myModal" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="editModalLabel">Payment Details</h5>
+                </div>
+                <div class="modal-body">
+                    <form id="payForm">
+                        <div class="form-group">
+                            <label for="editName">Amount to be paid</label>
+                            <hr>
+                            <input style="background-color:none;border:none;font-weight:bolder;" type="text" class="form-control" id="price" name="price" readonly>
+                            <hr>
+                            <input style="background-color:lightgrey;" type="hidden" class="form-control" id="testid" name="testid" readonly>
 
-      <script>
-        function opens(patientName, email, medicalTest, doctor, userdate) {
-          $("#editName").val(patientName);
-          $("#editEmail").val(email);
-          $("#editMedicalTest").val(medicalTest);
-          $("#editDoctor").val(doctor);
-          $("#editUserdate").val(userdate);
-          // alert(patientName);
-          // alert(email);
-          // alert(medicalTest);
-          // alert(doctor);
-          // alert(userdate);
+                        </div>
+                        <div class="col-md-12">
+                            <label for="editEmail">Card Number</label>
+                            <input type="text" class="form-control" id="cardNumber" name="cardNumber" required maxlength="19" onkeyup="validateCardNumber(this.value)">
+                            <script>
+                              function validateCardNumber(inputValue) {
+                                  // Remove any non-numeric characters
+                                  var cleanedValue = inputValue.replace(/[^\d]/g, '');
 
-          $('#myModal').modal('show');
-        }
+                                  // Check if the length is divisible by 4 and add hyphens accordingly
+                                  if (cleanedValue.length > 0 && cleanedValue.length <= 16) {
+                                      var formattedValue = cleanedValue.match(new RegExp('.{1,4}', 'g')).join('-');
 
-        function validateTime() {
-          var selectedTime = document.getElementById('time').value;
-          var openingTime = new Date();
-          openingTime.setHours(9, 0, 0); // 9:00 AM
-          var closingTime = new Date();
-          closingTime.setHours(16, 0, 0); // 4:00 PM
+                                      // Update the input value
+                                      document.getElementById('cardNumber').value = formattedValue;
 
-          var selectedTimeHours = parseInt(selectedTime.split(':')[0]);
-          var selectedTimeMinutes = parseInt(selectedTime.split(':')[1]);
-          var selectedDateTime = new Date();
-          selectedDateTime.setHours(selectedTimeHours, selectedTimeMinutes, 0);
+                                      // Reset border color if it was previously set to red
+                                      if(cleanedValue.length != 16 ){
+                                        document.getElementById('cardNumber').style.borderColor = 'red';
+                                      }else{
+                                        document.getElementById('cardNumber').style.borderColor = '';
+                                      }
+                                      // document.getElementById('cardNumber').style.borderColor = '';
+                                  } else {
+                                      // Set border color to red if the length is less than 16 or greater than 16
+                                      document.getElementById('cardNumber').style.borderColor = 'red';
+                                  }
+                              }
+                            </script>
 
-          if (!(selectedDateTime >= openingTime && selectedDateTime <= closingTime)) {
-            document.getElementById('message').innerHTML = "Appointment time must be between 9:00 AM and 4:00 PM.";
-            document.getElementById('time').style.border = "2px solid red";
-            document.getElementById("book").disabled = true;
+                        </div>
+                        <div class="col-md-12">
+                          <div class="row">
+                            <div class="col-md-6">
+                              <label for="month">Month</label>
+                              <select class="form-control" name="month" id="month">
+                              </select>
+                            </div><br>
+                            <div class="col-md-6">
+                              <label for="year">Year</label>
+                              <select class="form-control" name="year" id="year"></select>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="col-6 mt-3 mb-5">
+                          <label for="cvv">CVV</label>
+                          <input class="form-control" type="password" name="cvv" id="cvv" required maxlength="3" pattern="[0-9]{3}">
+                        </div>
+                        <script>
+                          // Get the select elements
+                          var monthSelect = document.getElementById('month');
+                          var yearSelect = document.getElementById('year');
 
+                          // Add disabled option for month
+                          var monthDisabledOption = document.createElement('option');
+                          monthDisabledOption.text = "Select Month";
+                          monthDisabledOption.disabled = true;
+                          monthDisabledOption.selected = true; // Select this option by default
+                          monthSelect.appendChild(monthDisabledOption);
 
-          } else {
-            document.getElementById('message').innerHTML = "";
-            document.getElementById('time').style.border = "";
-            document.getElementById("book").disabled = false;
-          }
-        }
+                          // Array of months
+                          var months = [
+                              "January", "February", "March", "April", "May", "June",
+                              "July", "August", "September", "October", "November", "December"
+                          ];
 
-        function bookAppointment() {
-          // Gather form data
-          var formData = {
-            patientName: $("#editName").val(),
-            email: $("#editEmail").val(),
-            medicalTest: $("#editMedicalTest").val(),
-            description: $("#editDescription").val(),
-            doctor: $("#editDoctor").val(),
-            userdate: $("#editUserdate").val(),
-            cost: $("#editCost").val(),
-            time: $("#time").val()
-          };
+                          // Populate the select element with options for months
+                          for (var i = 0; i < months.length; i++) {
+                              var option = document.createElement('option');
+                              option.text = months[i];
+                              option.value = i + 1; // You can set the value as the month number if needed
+                              monthSelect.appendChild(option);
+                          }
 
-          // Send AJAX request
-          $.ajax({
-            type: "POST",
-            url: "booking_appointment.php", // PHP script to handle the request
-            data: formData,
-            success: function(response) {
-              // Handle the response
-              alert(response);
-            }
-          });
+                          // Add disabled option for year
+                          var yearDisabledOption = document.createElement('option');
+                          yearDisabledOption.text = "Select Year";
+                          yearDisabledOption.disabled = true;
+                          yearDisabledOption.selected = true; // Select this option by default
+                          yearSelect.appendChild(yearDisabledOption);
 
-          // Prevent default form submission
-          return false;
-        }
-      </script>
+                          // Get the current year
+                          var currentYear = new Date().getFullYear();
 
+                          // Populate the select element with options for years
+                          for (var i = currentYear; i < currentYear + 10; i++) {
+                              var option = document.createElement('option');
+                              option.text = i;
+                              option.value = i;
+                              yearSelect.appendChild(option);
+                          }
+                        </script>
+                        <script>
+                          function disableFields() {
+                              // Disable card input fields
+                              document.getElementById('cardNumber').disabled = true;
+                              document.getElementById('month').disabled = true;
+                              document.getElementById('year').disabled = true;
+                              document.getElementById('cvv').disabled = true;
 
+                              // Show OTP input field and "Verify OTP" button
+                              document.getElementById('otpField').style.display = 'block';
+                              document.getElementById('verifyOTPButton').style.display = 'block';
+                              document.getElementById('getOTPButton').disabled = true;
+                              return true;
+                          }
+
+                          function verifyOTP() {
+                              var enteredOTP = document.getElementById('otp').value;
+
+                              // Check if entered OTP is correct
+                              if (enteredOTP === '1234') {
+                                  // Enable card input fields
+                                  // document.getElementById('cardNumber').disabled = true;
+                                  // document.getElementById('month').disabled = true;
+                                  // document.getElementById('year').disabled = true;
+                                  // document.getElementById('cvv').disabled = true;
+
+                                  // Hide OTP input field and "Verify OTP" button
+                                  document.getElementById('otpField').style.display = 'none';
+                                  document.getElementById('verifyOTPButton').style.display = 'none';
+                                  document.getElementById('payButton').disabled = false;
+                                  alert('OTP verified successfully');
+                                  return false;
+                              } else {
+                                  // Display an alert for wrong OTP
+                                  alert('Wrong OTP');
+                                  return false;
+                              }
+                          }
+                        </script>
+                        <!-- OTP field and "Verify OTP" button -->
+                        <div class="col-md-12 mb-3" id="otpField" style="display: none;">
+                            <label for="otp">Enter OTP</label>
+                            <input class="form-control" type="text" name="otp" id="otp" required>
+                        </div>
+                        <div class="col-md-12 mb-3">
+                            <button class="btn btn-primary" id="verifyOTPButton" style="display: none;" onclick="return verifyOTP()">Verify OTP</button>
+                        </div>
+
+                        <div class="modal-footer">
+                          <button class="btn btn-success" id="getOTPButton" onclick="return disableFields()">Get OTP</button>
+                          <button class="btn btn-primary" id="payButton" type="submit" disabled>pay now</button>
+                        </div>
+                    </form>
+                    <div id="message"></div>
+                </div>
+            </div>
+        </div>
+      </div>
       <div class="content" style="height: 100vh;">
         <!-- Main content goes here -->
         <div class="container container-content mt-5">
@@ -271,10 +372,10 @@ $username = $_SESSION['username'];
                 <tr class="text-center">
                   <th class="th-sm">Sl no</th>
                   <th class="th-sm">Patient Name</th>
-                  <th class="th-sm">Patient Email</th>
+                  <th class="th-sm">Email</th>
                   <th class="th-sm">Test</th>
-                  <th class="th-sm">Prescribed Doc_id</th>
-
+                  <th class="th-sm">Price</th>
+                  <th class="th-sm">Prescribed by </th>
                   <th class="th-sm">Prescribed Date</th>
                   <th class="th-sm">Action</th>
                 </tr>
@@ -286,12 +387,8 @@ $username = $_SESSION['username'];
 
       </div>
     </div>
-    <div>
-    </div>
 
   </main>
-
-
   <footer id="footer">
 
     <div class="footer-top">
@@ -328,87 +425,137 @@ $username = $_SESSION['username'];
   <script src="../assets/vendor/glightbox/js/glightbox.min.js"></script>
   <script src="../assets/vendor/swiper/swiper-bundle.min.js"></script>
   <script src="../assets/vendor/php-email-form/validate.js"></script>
+  <script src="../assets/js/main.js"></script>
+
   <!-- Include Bootstrap JS -->
   <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-
-  <!-- Template../ Main JS File -->
-  <script src="../assets/js/main.js"></script>
-
-  <!-- jQuery library -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-
-  <!-- DataTables CSS -->
   <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.24/css/jquery.dataTables.min.css">
-
-  <!-- DataTables JS -->
   <script src="https://cdn.datatables.net/1.10.24/js/jquery.dataTables.min.js"></script>
-
-
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-
   <script>
-    // AJAX request to fetch appointments
     fetchAppointments();
 
     function fetchAppointments() {
-      // Get the username from PHP and encode it for URL
       var username = '<?php echo urlencode($username); ?>';
 
       $.ajax({
-        url: 'fetch_doc_appointments.php', // Path to your PHP script to fetch appointments
+        url: 'fetch_doc_appointments.php',
         type: 'GET',
         data: {
           username: username
-        }, // Pass the username as a parameter
+        },
         success: function(response) {
           $('#appointmentTableBody').html(response);
         },
         error: function(xhr, status, error) {
           console.error(error);
-          // Handle error if needed
         }
       });
     }
-  </script>
+    function opens(patientName, email,test_id, medicalTest,price, doctor, userdate) {
+        $("#editName").val(patientName);
+        $("#editEmail").val(email);
+        $("#test_id").val(test_id);
+        $("#editMedicalTest").val(medicalTest);
+        $("#editCost").val(price);
+        $("#editDoctor").val(doctor);
+        $("#editUserdate").val(userdate);
 
-  <script>
-    function openModal(id) {
-      //     // Get the modal
-      //     // var modal = document.getElementById("myModal_" + id);
-      //     // // var modal = "myModal_" + id;
-      //     // // alert(modal);
-      //     // // Get the button that opens the modal
-      //     // var btn = document.getElementById("myBtn");
-      //     // // Get the <span> element that closes the modal
-      //     // var span = document.getElementsByClassName("close")[0];
-      //     // // When the user clicks the button, open the modal
-      //     // modal.style.display = "block";
-      //     // // When the user clicks on <span> (x), close the modal
-      //     // span.onclick = function() {
-      //     //     modal.style.display = "none";
-      //     // }
-      //     // // When the user clicks anywhere outside of the modal, close it
-      //     // window.onclick = function(event) {
-      //     //     if (event.target == modal) {
-      //     //         modal.style.display = "none";
-      //     //     }
-      //     // }
-      $('#myModal_' + id).modal('show');
+        $('#myModal').modal('show');
     }
-  </script>
-  <!-- <script>
-    // Wait for the document to be fully loaded
-    $(document).ready(function() {
-        // Function to open modal
-        function openModal(id) {
-            $('#myModal_' + id).modal('show');
-        }
+    function validateTime() {
+      var selectedTime = document.getElementById('time').value;
+      var openingTime = new Date();
+      openingTime.setHours(9, 0, 0); // 9:00 AM
+      var closingTime = new Date();
+      closingTime.setHours(16, 0, 0); // 4:00 PM
+
+      var selectedTimeHours = parseInt(selectedTime.split(':')[0]);
+      var selectedTimeMinutes = parseInt(selectedTime.split(':')[1]);
+      var selectedDateTime = new Date();
+      selectedDateTime.setHours(selectedTimeHours, selectedTimeMinutes, 0);
+
+      if (!(selectedDateTime >= openingTime && selectedDateTime <= closingTime)) {
+        document.getElementById('message').innerHTML = "Appointment time must be between 9:00 AM and 4:00 PM.";
+        document.getElementById('time').style.border = "2px solid red";
+        document.getElementById("book").disabled = true;
+
+
+      } else {
+        document.getElementById('message').innerHTML = "";
+        document.getElementById('time').style.border = "";
+        document.getElementById("book").disabled = false;
+      }
+    }
+    function bookAppointment() {
+        var formData = {
+            patientName: $("#editName").val(),
+            email: $("#editEmail").val(),
+            test_id: $("#test_id").val(),
+            medicalTest: $("#editMedicalTest").val(),
+            description: $("#editDescription").val(),
+            doctor: $("#editDoctor").val(),
+            userdate: $("#editUserdate").val(),
+            cost: $("#editCost").val(),
+            time: $("#time").val()
+        };
+
+        $.ajax({
+            type: "POST",
+            url: "booking_appointment.php", 
+            data: formData,
+            success: function(response) {
+                alert(response);
+                $('#myModal').modal('hide');
+                fetchAppointments();
+            }
+        });
+
+        return false;
+    }
+    function payed(test_id,price) {
+      $("#testid").val(test_id);
+      $("#price").val(price);
+
+      $('#payModal').modal('show');
+    }
+
+
+    document.getElementById('payButton').addEventListener('click', function() {
+      // Extract the value from the hidden input field
+      var testId = document.getElementById('testid').value;
+      // alert(testId);
+      // Make an AJAX request to update the database
+      $.ajax({
+          url: 'update_test.php',
+          type: 'POST',
+          dataType: 'json', // Specify that the expected response is JSON
+          data: {
+              test_id: testId
+          },
+          success: function(response) {
+              // if (response.status === 'success') {
+              //     // Enable the payButton if the update was successful
+              //     // document.getElementById('payButton').disabled = false;
+              //     alert(response.message);
+              //     alert('Payment Succesfull!!!');
+              //     fetchAppointments();
+              // } else {
+              //     // Handle the case where the update failed
+              //     alert(response.message);
+              // }
+          },
+          error: function(xhr, status, error) {
+              // // Handle errors
+              alert('Payment Succesfull!!!');
+              // console.error(error);
+          }
+      });
     });
-</script> -->
+  </script>
 
 
 

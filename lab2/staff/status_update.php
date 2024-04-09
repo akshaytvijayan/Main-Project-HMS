@@ -9,7 +9,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $appointmentId = $_POST['appointmentId'];
     $status = $_POST['status'];
 
-    $sql = "UPDATE appointments SET status='$status' WHERE id=$appointmentId";
+    $sql = "UPDATE appointments SET status='$status'WHERE id=$appointmentId";
 
     if ($con->query($sql) === TRUE) {
         $response = array('status' => 'success');

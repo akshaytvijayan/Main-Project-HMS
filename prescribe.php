@@ -46,7 +46,7 @@ if (isset($_POST['prescribe']) && isset($_POST['pid']) && isset($_POST['ID']) &&
     $prestb_id = mysqli_insert_id($con);
     // echo "<script>alert('Prescribed successfully!');</script>";
     // Loop through the submitted values based on the count
-    $count=0;
+    $count = 0;
     for ($i = 1; $i <= $M_count; $i++) {
       // Fetch the values for each medicine
       $M_qty = $_POST['M_qty' . $i];
@@ -71,8 +71,8 @@ if (isset($_POST['prescribe']) && isset($_POST['pid']) && isset($_POST['ID']) &&
       $med_query = "INSERT INTO medicines (`prestb_id`, `M_qty`, `M_type`, `med_name`, `med_type`, `time_intake`, `suggestion`) VALUES ('$prestb_id','$M_qty', '$M_type', '$med_name', '$med_type', '$time_intake', '$suggestion')";
       $med_result = mysqli_query($con, $med_query);
       if ($med_result) {
-        $count= $count+1;
-        if($count==$M_count){
+        $count = $count + 1;
+        if ($count == $M_count) {
           session_start();
           $_SESSION['pid'] = $prestb_id;
           $_SESSION['id'] = $ID;
@@ -106,17 +106,14 @@ if (isset($_POST['prescribe']) && isset($_POST['pid']) && isset($_POST['ID']) &&
 
   <link rel="stylesheet" href="vendor/fontawesome/css/font-awesome.min.css">
 
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css"
-    integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css" integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M" crossorigin="anonymous">
 
-  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
-    integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 
   <link href="https://fonts.googleapis.com/css?family=IBM+Plex+Sans&display=swap" rel="stylesheet">
   <nav class="navbar navbar-expand-lg navbar-dark bg-primary fixed-top">
     <a class="navbar-brand" href="#"><i class="fa fa-user-plus" aria-hidden="true"></i> NEETHI Hospital </a>
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
-      aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
 
@@ -187,15 +184,11 @@ if (isset($_POST['prescribe']) && isset($_POST['pid']) && isset($_POST['ID']) &&
     <div class="row">
       <div class="col-md-4" style="max-width:18%;margin-top: 3%;">
         <div class="list-group" id="list-tab" role="tablist">
-          <a class="list-group-item list-group-item-action active" href="doctor-panel.php" role="tab"
-            aria-controls="home" data-toggle="list">Dashboard</a>
-          <a class="list-group-item list-group-item-action" id="doctor-panel.php" data-toggle="list" href="#list-update"
-            role="tab" aria-controls="home">Update Profile</a>
-          <a class="list-group-item list-group-item-action" href="doctor-panel.php" id="list-app-list" role="tab"
-            data-toggle="list" aria-controls="home">Online Appointments</a>
+          <a class="list-group-item list-group-item-action active" href="doctor-panel.php" role="tab" aria-controls="home" data-toggle="list">Dashboard</a>
+          <a class="list-group-item list-group-item-action" id="doctor-panel.php" data-toggle="list" href="#list-update" role="tab" aria-controls="home">Update Profile</a>
+          <a class="list-group-item list-group-item-action" href="doctor-panel.php" id="list-app-list" role="tab" data-toggle="list" aria-controls="home">Online Appointments</a>
           <a class="list-group-item list-group-item-action" href="offline.php">Offline Appointments</a>
-          <a class="list-group-item list-group-item-action" href="doctor-panel.php" id="list-pres-list" role="tab"
-            data-toggle="list" aria-controls="home"> Prescription List</a>
+          <a class="list-group-item list-group-item-action" href="doctor-panel.php" id="list-pres-list" role="tab" data-toggle="list" aria-controls="home"> Prescription List</a>
         </div>
       </div>
 
@@ -215,41 +208,55 @@ if (isset($_POST['prescribe']) && isset($_POST['pid']) && isset($_POST['ID']) &&
 
                   <div class="col-4">
                     <label for="">Patient Name:</label>
-                    <input type="text" class="form-control f-c-r-o" name="p_name" id="p_name"
-                      value="<?php echo $fname . '&nbsp;' . $lname; ?>" readonly>
+                    <input type="text" class="form-control f-c-r-o" name="p_name" id="p_name" value="<?php echo $fname . '&nbsp;' . $lname; ?>" readonly>
                   </div>
                   <div class="col-4">
                     <label for="">Selected Day:</label>
-                    <input type="text" class="form-control f-c-r-o" name="p_day" id="p_day"
-                      style="font-weight:bolder;color:red;" value="<?php echo $appdate; ?>,<?php echo $user_date; ?>"
-                      readonly>
+                    <input type="text" class="form-control f-c-r-o" name="p_day" id="p_day" style="font-weight:bolder;color:red;" value="<?php echo $appdate; ?>,<?php echo $user_date; ?>" readonly>
                   </div>
                   <div class="col-4">
                     <label for="t_day">Today's day:</label>
-                    <input type="text" class="form-control f-c-r-o" name="t_day" id="t_day" style="font-weight:bolder;"
-                      value="<?php echo date('l'); ?>" readonly>
+                    <input type="text" class="form-control f-c-r-o" name="t_day" id="t_day" style="font-weight:bolder;" value="<?php echo date('l'); ?>" readonly>
                   </div>
                 </div>
                 <form action="" method="post">
                   <div class="row my-5">
                     <div class="col-6">
                       <label>Findings \ Disease:</label>
-                      <textarea class="form-control" style="resize:none" rows="2" name="disease" id="disease"
-                        required></textarea>
+                      <textarea class="form-control" style="resize:none" rows="2" name="disease" id="disease" required></textarea>
                     </div>
+
                     <div class="col-6">
                       <label>Allergies:</label>
-                      <textarea class="form-control" style="resize:none" rows="2" name="allergies" id="allergies"
-                        required></textarea>
+                      <textarea class="form-control" style="resize:none" rows="2" name="allergies" id="allergies" required></textarea>
                     </div>
                   </div>
+
+                  <script>
+                    document.getElementById('disease').addEventListener('input', capitalizeFirstLetter);
+                    document.getElementById('allergies').addEventListener('input', capitalizeFirstLetter);
+
+                    function capitalizeFirstLetter(event) {
+                      // Get the current value of the textarea
+                      let text = event.target.value;
+
+                      // Capitalize the first letter of each word
+                      text = text.replace(/\b\w/g, function(match) {
+                        return match.toUpperCase();
+                      });
+
+                      // Update the value of the textarea
+                      event.target.value = text;
+                    }
+                  </script>
+
 
                   <!-- medicines -->
                   <div class="rowmy-3">
                     <label>Select Medicine:</label>
                     <select class="form-control" id="medicine" name="medicine[]" multiple>
                       <?php
-                      $queryTests = "SELECT * FROM drugs";
+                      $queryTests = "SELECT * FROM drugs ORDER BY name";
                       $resultTests = mysqli_query($con, $queryTests);
                       while ($row = mysqli_fetch_assoc($resultTests)) {
                         echo "<option value='{$row['name']}' data-type='{$row['type']}'>{$row['name']}</option>";
@@ -261,8 +268,8 @@ if (isset($_POST['prescribe']) && isset($_POST['pid']) && isset($_POST['ID']) &&
                   </div>
                   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
                   <script>
-                    $(document).ready(function () {
-                      $("#medicine").change(function () {
+                    $(document).ready(function() {
+                      $("#medicine").change(function() {
                         var selectedMedicines = $(this).val();
                         $.ajax({
                           url: "process.php",
@@ -270,7 +277,7 @@ if (isset($_POST['prescribe']) && isset($_POST['pid']) && isset($_POST['ID']) &&
                           data: {
                             selectedMedicines: selectedMedicines
                           },
-                          success: function (data) {
+                          success: function(data) {
                             $("#loop").html(data);
                           }
                         });

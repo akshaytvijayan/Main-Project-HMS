@@ -20,7 +20,7 @@ if (isset($_FILES['fileToUpload']) && isset($_POST['appointmentId'])) {
         }
 
         // Prepare SQL statement to update appointment record
-        $sql = "UPDATE appointments SET file_path='$filePath', status='success' WHERE id=$appointmentId";
+        $sql = "UPDATE appointments SET file_path='$filePath', status='success'WHERE id=$appointmentId";
 
         // Execute SQL statement
         if ($con->query($sql) === TRUE) {
